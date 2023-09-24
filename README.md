@@ -1,33 +1,28 @@
 # La Cosa (frontend)
 
-## Getting Started
-
-After installing npm do this:
+Make sure you have `npm` installed running the following command:
 ```bash
-npm install react react-dom next
+npm --version
+```
+
+If not, install it like this:
+
+For Manjaro and Arch
+```bash
+sudo pacman -S npm
+```
+
+For Fedora and Ubuntu
+```bash
+sudo apt install npm
+```
+
+If so or after installing npm do this to install all dependencies:
+```bash
+npm install
 ```
 
 To run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+make run
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
