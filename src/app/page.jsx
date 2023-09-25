@@ -1,9 +1,11 @@
+import CrearUsuario from './crear-usuario/page';
 import '@/styles/page.css';
 
 export default function Home() {
   return (
-    <main className="section" >
-      <h1 className="title is-1">Tuki La Cosa</h1>
-    </main >
+    <main className="is-flex section main" >
+      <h1 className="title is-1 has-text-centered">Tuki La Cosa</h1>
+      <CrearUsuario></CrearUsuario>
+    </main>
   )
 }

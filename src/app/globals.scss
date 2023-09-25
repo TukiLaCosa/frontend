@@ -27,8 +27,9 @@ $twitter: #55acee;
 $twitter-invert: findColorInvert($twitter);
 $github: #333;
 $github-invert: findColorInvert($github);
-$tuki: #00ff08;
+$tuki: #134c15;
 $tuki-invert: findColorInvert($tuki);
+
 // 5. Add new color variables to the color map.
 @import "../../node_modules/bulma/sass/utilities/derived-variables";
 $addColors: (
