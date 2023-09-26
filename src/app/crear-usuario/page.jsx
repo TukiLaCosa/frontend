@@ -5,7 +5,7 @@ import { useState } from 'react';
 function CrearUsuario() {
 
     let [className, setClassName] = useState("is-tuki");
-    let userRegEx = /^[a-zA-Z]{4,8}$/;
+    let userRegEx = /^[a-zA-Z][a-zA-Z0-9]{3,7}$/;
     let [isCorrect, setIsCorrect] = useState(false);
 
     function checkUserName() {
