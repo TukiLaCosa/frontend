@@ -46,3 +46,7 @@ $colors: map-merge($colors, $addColors);
 html, body {
   height: 100%;
 }
+
+.ba{
+  border: 1px solid blue;
+}
