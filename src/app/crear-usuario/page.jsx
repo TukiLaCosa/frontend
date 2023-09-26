@@ -2,10 +2,13 @@ import '@/styles/crearUsuario.css'
 
 function CrearUsuario() {
     return (
-        <div className="box is-flex has-text-centered crear-usuario">
-            <label htmlFor="" className="label">Ingresa tu nombre</label>
-            <input type="text" className="input is-medium is-tuki" placeholder="Nombre" />
-            <button className="button is-tuki">Jugar!</button>
+        <div className="is-flex has-text-centered crear-usuario">
+            <h2 className='title is-3'>Ingresa tu nombre</h2>
+            <input type="text" className="input is-large is-tuki" placeholder="Nombre" />
+            <div className="is-flex buttons are-medium">
+                <button className="button is-tuki">Crear Partida</button>
+                <button className="button is-tuki">Buscar Partida</button>
+            </div>
         </div>
     )
 }
