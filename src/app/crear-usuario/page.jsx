@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from 'react';
+import axios from 'axios';
 
 function CrearUsuario() {
 
@@ -24,6 +25,10 @@ function CrearUsuario() {
         if(isCorrect){
             document.getElementById("name").setAttribute("disabled", "");
             // Hacer POST para generar usuario
+            const article = { name: 'NOMBRENOMBREsbdkd' };
+            axios.post('http://localhost:8000/players/', article)
+            .then(response => console.log(response))
+ 
             // Si todo sale bien ->
             document.getElementById("create-game").removeAttribute("disabled");
             document.getElementById("search-game").removeAttribute("disabled");
