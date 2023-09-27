@@ -47,21 +47,21 @@ function CrearUsuario() {
     }
 
     return (
-        <section className="hero is-halfheight">
-            <div className="hero-body is-flex is-flex-direction-column is-align-items-center is-justify-content-space-evenly has-text-centered">
-                <h2 className='title is-3'>Ingresa tu nombre</h2>
-                <div className="columns">
-                    <input type="text" id="name" className={`input is-medium ${className} column is-two-thirds`} onInput={checkUserName} placeholder="Nombre" />
-                    <button id='create-user' className="button is-tuki is-medium column" onClick={createUser}>Crear usuario</button>
-                </div>
-                <div className="buttons are-large">
-                    <Link href="/create-game">
-                        <button id="create-game" className="button is-tuki" disabled>Crear Partida</button>
-                    </Link>
-                    <Link href="/search-game">
-                        <button id='search-game' className="button is-tuki" disabled>Buscar Partida</button>
-                    </Link>
-                </div>
+        <section className="hero is-halfheight is-flex is-flex-direction-column is-justify-content-space-evenly is-align-items-center">
+            <div className="level section">
+                <h2 className='title is-3 level-item'>Ingresa tu nombre</h2>
+            </div>
+            <div className="level">
+                <input type="text" id="name" className={`input is-large ${className}`} onInput={checkUserName} placeholder="Nombre" />
+                <button id='create-user' className="button is-tuki is-large" onClick={createUser}>Crear usuario</button>
+            </div>
+            <div className="level buttons are-large">
+                <Link href="/create-game" className='section'>
+                    <button id="create-game" className="button is-tuki" disabled>Crear Partida</button>
+                </Link>
+                <Link href="/search-game" className='section'>
+                    <button id='search-game' className="button is-tuki" disabled>Buscar Partida</button>
+                </Link>
             </div>
         </section>
     )
