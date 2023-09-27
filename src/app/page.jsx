@@ -1,4 +1,4 @@
-import CrearUsuario from './crear-usuario/page';
+import CrearUsuario from '@/app/create-user/page';
 
 export default function Home() {
   return (
