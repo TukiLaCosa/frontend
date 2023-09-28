@@ -1,4 +1,4 @@
-// @jsx use Client
+'use client';
 import { useState } from 'react';
 
 export function Chat() {
@@ -13,15 +13,16 @@ export function Chat() {
   };
 
   return (
-    <div className="container" style={{"gridArea":"chat"}}>
+    <div className="is-flex is-flex-direction-column chat">
       <div className="section">
-        <div className="box">
+        <div className="section over">
           <div className="content">
             {chatLog.map((msg, index) => (
               <p key={index}>{msg}</p>
             ))}
           </div>
         </div>
+
         <div className="field is-grouped">
           <p className="control is-expanded">
             <input

@@ -1,5 +1,5 @@
 function Button({action,className}){
-    return <button class={className==="start"?"button is-success":"button is-danger"} className={className}>{action}</button>
+    return <button className="button is-tuki">{action}</button>
 }
 
 export default Button;

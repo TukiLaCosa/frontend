@@ -2,7 +2,7 @@ import DataGame from "@/components/DataGame";
 import ListPlayers from "@/components/ListPlayers";
 import Chat from "@/components/Chat";
 import Button from "@/components/Button";
-import './grid.scss';
+import '@/styles/grid.scss';
 
 function Sala(){
 
