@@ -7,7 +7,7 @@ import '@/styles/grid.scss';
 function Sala(){
 
     return  <div className="conteiner">
-        <DataGame className="dataGame"/>
+        <DataGame/>
         <ListPlayers className="listPlayers"/>
         <Chat className="chat"/>
         <Button action="Abandonar" className="exit"/>

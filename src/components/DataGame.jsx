@@ -1,8 +1,10 @@
-function DataGame({className}){
-    return <div className={className}>
-        <p>Partida: Los chicos del barrio</p>
-        <p>Creador: Mengano</p>
-        <p>jugadores: 3/4</p>
+import data from "../../dataGame.json"
+
+function DataGame(){
+    return <div className="notification is-tuki dataGame">
+        <p>Partida: {data.name}</p>
+        <p>Creador: {data.host}</p>
+        <p>jugadores: {data.cur_players+"/"+data.max_players}</p>
     </div>
 }
 

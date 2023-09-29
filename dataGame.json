@@ -1,0 +1,7 @@
+{
+"name":"Partidaza",
+"host":"Mengano",
+"max_players":10,
+"min_players":4,
+"cur_players":5
+}
