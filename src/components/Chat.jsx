@@ -24,7 +24,7 @@ export function Chat() {
         </div>
 
         <div className="field is-grouped">
-          <p className="control is-expanded">
+          <div className="control is-expanded">
             <input
               className="input"
               type="text"
@@ -32,33 +32,16 @@ export function Chat() {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
-          </p>
-          <p className="control">
+          </div>
+          <div className="control">
             <button className="button is-info" onClick={sendMessage}>
               Enviar
             </button>
-          </p>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
-
-
-
-// function Chat({className}){
-//     return <div className={className}>
-//         <div>
-//             <p>17:30 Funalo: Apurense papá me saca de la compu</p>
-//             <p>19:40 Mengano: Si ahí le mandamos, tranqui.</p>
-//         </div>
-//         <div>
-//             <input/>
-//             <button>enviar</button>
-//         </div>
-
-//     </div>
-// }
 
 export default Chat

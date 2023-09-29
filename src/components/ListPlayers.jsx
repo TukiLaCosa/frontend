@@ -2,16 +2,9 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-// const listUsers = () => {
-//     fetch("http://127.0.0.1:8000/players/")
-//     .then(response => response.json())
-//     .catch(data => console.log(data))
-// }
-
-
-
-function ListPlayers({className}){
+function ListPlayers(){
     const [players, setPlayers] = useState([]);
+    
     useEffect(() => {
         async function fetchPlayers() {
           try {
@@ -26,9 +19,9 @@ function ListPlayers({className}){
     }, []);
     
 
-    return <div className="box listPlayers" style={{ overflowY: 'auto' }}>
+    return <div className="block mt-2 listPlayers" style={{ overflowY: 'auto' }}>
         {players.map((player, index) => (
-            <div className="media" key={index}>
+            <div className="box media" key={index}>
             <div className="media-left">
             <figure className="image is-32x32">+☈+</figure>
             </div>

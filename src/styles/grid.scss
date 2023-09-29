@@ -13,7 +13,7 @@
       "chat chat list"
       "chat chat list"
       "chat chat list"
-      "exit start list"
+      "buttons buttons list"
       ;
   }
   
@@ -35,18 +35,7 @@
     align-self: end;
   }
   
-  .exit{
-    grid-area: exit;
-    justify-self: stretch;
+  .buttons{
+    grid-area: buttons;
     place-self: center;
-  }
-  
-  .start{
-    grid-area: start;
-    justify-self: stretch;
-    place-self: center;
-  }
-
-  .over {
-    overflow: hidden;
   }

@@ -1,10 +1,9 @@
-import data from "../../dataGame.json"
-
-function DataGame(){
+function DataGame({data}){
     return <div className="notification is-tuki dataGame">
         <p>Partida: {data.name}</p>
         <p>Creador: {data.host}</p>
-        <p>jugadores: {data.cur_players+"/"+data.max_players}</p>
+        <p>Jugadores: {data.cur_players+"/"+data.max_players}</p>
+        <p>Jugadores minimos: {data.min_players}</p>
     </div>
 }
 

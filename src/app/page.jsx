@@ -1,6 +1,5 @@
 import CrearUsuario from './crear-usuario/page';
 import '@/styles/page.css';
-import Sala from './sala/page';
 
 export default function Home() {
   return (
