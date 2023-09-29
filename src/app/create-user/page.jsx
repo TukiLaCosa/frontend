@@ -1,66 +1,76 @@
-"use client"
+'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 
+export function checkUserName(userName, setIsCorrect, setClassName) {
+    let userRegEx = /^[a-zA-Z][a-zA-Z0-9]{3,7}$/;
+
+    if (!userRegEx.test(userName)) {
+        setIsCorrect(false);
+        setClassName('is-danger');
+    }
+    else {
+        setIsCorrect(true);
+        setClassName('is-tuki');
+    }
+}
+
+export async function createUser(isCorrect, setClassName, userNameInput, createGameButton, searchGameButton) {
+    if (isCorrect) {
+        const newUser = { name: userNameInput.value };
+
+        try {
+            const response = await axios.post('http://localhost:8000/players/', newUser);
+            if (response?.status == 201) {
+                userNameInput.setAttribute('disabled', '');
+                createGameButton.removeAttribute('disabled');
+                searchGameButton.removeAttribute('disabled');
+                setClassName('is-success');
+            }
+        }
+        catch (error) {
+            if (error.code === 'ERR_BAD_REQUEST') {
+                console.log('Request error');
+            }
+            else {
+                console.log('Server Error');
+            }
+        }
+    }
+}
+
 function CrearUsuario() {
 
-    let [className, setClassName] = useState("is-tuki");
-    let userRegEx = /^[a-zA-Z][a-zA-Z0-9]{3,7}$/;
+    let userNameInput;
+    let createGameButton;
+    let searchGameButton;
+
+    let [className, setClassName] = useState('is-tuki');
     let [isCorrect, setIsCorrect] = useState(false);
 
-    function checkUserName() {
-        let inputUserName = document.getElementById("name");
-        if (!userRegEx.test(inputUserName.value)) {
-            setIsCorrect(false);
-            setClassName('is-danger');
-        }
-        else {
-            setIsCorrect(true);
-            setClassName('is-tuki');
-        }
-    }
-
-    async function createUser() {
-        if (isCorrect) {
-            const newUser = { name: document.getElementById("name").value };
-
-            try {
-                const response = await axios.post('http://localhost:8000/players/', newUser);
-                if (response?.status == 201) {
-                    document.getElementById("name").setAttribute("disabled", "");
-                    document.getElementById("create-game").removeAttribute("disabled");
-                    document.getElementById("search-game").removeAttribute("disabled");
-                    setClassName('is-success');
-                }
-            }
-            catch (error) {
-                if (error.code === "ERR_BAD_REQUEST") {
-                    console.log("Request error");
-                }
-                else {
-                    console.log("Server Error");
-                }
-            }
-        }
-    }
+    useEffect(() => {
+        userNameInput = document.getElementById('name');
+        createGameButton = document.getElementById('create-game');
+        searchGameButton = document.getElementById('search-game');
+    }, [className]);
 
     return (
-        <section className="hero is-halfheight is-flex is-flex-direction-column is-justify-content-space-evenly is-align-items-center">
-            <div className="level section">
+        <section className='hero is-halfheight is-flex is-flex-direction-column is-justify-content-space-evenly is-align-items-center'>
+            <div className='level section'>
                 <h2 className='title is-3 level-item'>Ingresa tu nombre</h2>
             </div>
-            <div className="level">
-                <input type="text" id="name" className={`input is-large ${className}`} onInput={checkUserName} placeholder="Nombre" />
-                <button id='create-user' className="button is-tuki is-large" onClick={createUser}>Crear usuario</button>
+            <div className='level'>
+                <input type='text' id='name' className={`input is-large ${className}`} onInput={() => {checkUserName(userNameInput.value, setIsCorrect, setClassName)}} placeholder='Nombre' />
+                <button id='create-user' className='button is-tuki is-large' onClick={() => {createUser(isCorrect, setClassName, userNameInput, createGameButton, searchGameButton)}}>Crear usuario</button>
             </div>
-            <div className="level buttons are-large">
-                <Link href="/create-game" className='section'>
-                    <button id="create-game" className="button is-tuki" disabled>Crear Partida</button>
+            <div className='level buttons are-large'>
+                <Link href='/create-game' className='section'>
+                    <button id='create-game' className='button is-tuki' disabled>Crear Partida</button>
                 </Link>
-                <Link href="/search-game" className='section'>
-                    <button id='search-game' className="button is-tuki" disabled>Buscar Partida</button>
+                <Link href='/search-game' className='section'>
+                    <button id='search-game' className='button is-tuki' disabled>Buscar Partida</button>
                 </Link>
             </div>
         </section>
