@@ -4,20 +4,28 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 
-export function checkUserName(userName, setIsCorrect, setClassName) {
+let userNameInput;
+let createGameButton;
+let searchGameButton;
+
+export function check(userName) {
     let userRegEx = /^[a-zA-Z][a-zA-Z0-9]{3,7}$/;
 
-    if (!userRegEx.test(userName)) {
-        setIsCorrect(false);
-        setClassName('is-danger');
-    }
-    else {
+    return userRegEx.test(userName);
+}
+
+export function checkUserName(userName, setIsCorrect, setClassName) {
+    if (check(userName)) {
         setIsCorrect(true);
         setClassName('is-tuki');
     }
+    else {
+        setIsCorrect(false);
+        setClassName('is-danger');
+    }
 }
 
-export async function createUser(isCorrect, setClassName, userNameInput, createGameButton, searchGameButton) {
+export async function createUser(isCorrect, setClassName) {
     if (isCorrect) {
         const newUser = { name: userNameInput.value };
 
@@ -41,11 +49,7 @@ export async function createUser(isCorrect, setClassName, userNameInput, createG
     }
 }
 
-function CrearUsuario() {
-
-    let userNameInput;
-    let createGameButton;
-    let searchGameButton;
+function CreateUser() {
 
     let [className, setClassName] = useState('is-tuki');
     let [isCorrect, setIsCorrect] = useState(false);
@@ -62,8 +66,8 @@ function CrearUsuario() {
                 <h2 className='title is-3 level-item'>Ingresa tu nombre</h2>
             </div>
             <div className='level'>
-                <input type='text' id='name' className={`input is-large ${className}`} onInput={() => {checkUserName(userNameInput.value, setIsCorrect, setClassName)}} placeholder='Nombre' />
-                <button id='create-user' className='button is-tuki is-large' onClick={() => {createUser(isCorrect, setClassName, userNameInput, createGameButton, searchGameButton)}}>Crear usuario</button>
+                <input type='text' id='name' className={`input is-large ${className}`} onInput={() => { checkUserName(userNameInput.value, setIsCorrect, setClassName) }} placeholder='Nombre' />
+                <button id='create-user' className='button is-tuki is-large' onClick={() => { createUser(isCorrect, setClassName) }}>Crear usuario</button>
             </div>
             <div className='level buttons are-large'>
                 <Link href='/create-game' className='section'>
@@ -77,4 +81,4 @@ function CrearUsuario() {
     )
 }
 
-export default CrearUsuario;
+export default CreateUser;
