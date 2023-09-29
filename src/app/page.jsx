@@ -1,13 +1,12 @@
+import CrearUsuario from './crear-usuario/page';
 import '@/styles/page.css';
 import Sala from './sala/page';
 
 export default function Home() {
   return (
-      <Sala/>
+    <main className="is-flex section main" >
+      <h1 className="title is-1 has-text-centered">Tuki La Cosa</h1>
+      <CrearUsuario></CrearUsuario>
+    </main>
   )
 }
-
-let main = <main className="section" >
-            <h1 className="title is-1">Tuki La Cosa</h1>
-            <Sala/>
-          </main >
