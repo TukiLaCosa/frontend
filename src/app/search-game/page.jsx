@@ -1,27 +1,48 @@
+'use client'
+
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import React from 'react';
 
-function BotonUnirse() {
+function PartidasDisponibles() {
+    const [games, setGames] = useState([]);
+
+    useEffect(() => {
+        async function fetchGames() {
+            try {
+                const response = await axios.get('http://localhost:8000/games');
+                console.log(response.data);
+                setGames(response.data);
+            } catch (error) {
+                console.error('Error getting games:', error);
+            }
+        }
+
+        fetchGames();
+    }, []);
+
     return (
-        <div class="has-text-centered">
-            <h2 class="title is-1 is-uppercase is-italic has-text-centered section">Partidas Disponibles</h2>
-            <section class="has-text-centered">
-                <div class="columns is-multiline is-centered">
-                    <div class="column is-one-third">
-                        <ul class="box has-text-centered">
-                            <li>
-                                <div class="partida is-tuki">
-                                    <h3>Partida 1</h3>
-                                    <p>Jugadores: 4/6</p>
-                                    <button class="button is-primary is-tuki">Unirse</button>
-                                </div>
-                            </li>
+        <div className="has-text-centered">
+            <h2 className="title is-1 is-uppercase is-italic has-text-centered section">Partidas Disponibles</h2>
+            <section className="has-text-centered">
+                <div className="columns is-multiline is-centered">
+                    <div className="column is-one-third">
+                        <ul className="has-text-centered">
+                            {games.map((game) => (
+                                <li className="box has-tex-centered">
+                                    <div className="partida is-tuki">
+                                        <h3>{game.name}</h3>
+                                        <p>Jugadores: {game.players_joined}/{game.max_players}</p>
+                                        <button className="button is-primary is-tuki">Unirse</button>
+                                    </div>
+                                </li>
+                            ))}
                         </ul>
                     </div>
                 </div>
             </section>
         </div>
-
     )
 }
 
-export default BotonUnirse;
+export default PartidasDisponibles;
