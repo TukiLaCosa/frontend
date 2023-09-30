@@ -6,8 +6,10 @@ import React from 'react';
 
 function PartidasDisponibles() {
     const [games, setGames] = useState([]);
+    let user;
 
     useEffect(() => {
+        user = JSON.parse(localStorage.getItem('user'));
         async function fetchGames() {
             try {
                 const response = await axios.get('http://localhost:8000/games');
