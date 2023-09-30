@@ -32,12 +32,12 @@ export async function createUser(isCorrect, setClassName) {
         try {
             const response = await axios.post('http://localhost:8000/players/', newUser);
             localStorage.clear();
-            localStorage.setItem('user', `{ "id": ${response.data.id}, "name": "${response.data.name}"}`);
             if (response?.status == 201) {
                 userNameInput.setAttribute('disabled', '');
                 createGameButton.removeAttribute('disabled');
                 searchGameButton.removeAttribute('disabled');
                 setClassName('is-success');
+                localStorage.setItem('user', `{ "id": ${response.data.id}, "name": "${response.data.name}"}`);
             }
         }
         catch (error) {

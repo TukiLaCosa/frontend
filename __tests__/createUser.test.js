@@ -155,6 +155,19 @@ describe('Tests for creating users', () => {
     describe('Tests for createUser', () => {
 
         describe('Call setClassName correctly', () => {
+            const localStorageMock = {
+                getItem: jest.fn(),
+                setItem: jest.fn(),
+                removeItem: jest.fn(),
+                clear: jest.fn(),
+            };
+
+            beforeAll(() => {
+                Object.defineProperty(window, 'localStorage', {
+                    value: localStorageMock,
+                    writable: true,
+                });
+            });
 
             test('With is NOT correct', () => {
                 setClassNameMock.mockReset();
@@ -181,22 +194,22 @@ describe('Tests for creating users', () => {
         describe('Set disabled', () => {
 
             test('At start', () => {
-                render(<CreateUser/>);
+                render(<CreateUser />);
                 expect(screen.getByRole('button', { name: /Crear Partida/i })).toBeDisabled();
                 expect(screen.getByRole('button', { name: /Buscar Partida/i })).toBeDisabled();
             });
 
             test('At wrong user name', async () => {
-                render(<CreateUser/>);
+                render(<CreateUser />);
                 const responseData = { id: '1', name: 'user', status: '201' };
                 axios.post.mockResolvedValue(responseData);
                 await createUser(false, setClassNameMock);
                 expect(screen.getByRole('button', { name: /Crear Partida/i })).toBeDisabled();
                 expect(screen.getByRole('button', { name: /Buscar Partida/i })).toBeDisabled();
             });
-            
+
             test('At wrong response', async () => {
-                render(<CreateUser/>);
+                render(<CreateUser />);
                 const responseData = { id: '1', name: 'user', status: '404' };
                 axios.post.mockResolvedValue(responseData);
                 await createUser(true, setClassNameMock);
@@ -205,7 +218,7 @@ describe('Tests for creating users', () => {
             });
 
             test('At right response', async () => {
-                render(<CreateUser/>);
+                render(<CreateUser />);
                 const responseData = { id: '1', name: 'user', status: '201' };
                 axios.post.mockResolvedValue(responseData);
                 await createUser(true, setClassNameMock);
