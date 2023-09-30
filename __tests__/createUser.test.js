@@ -6,11 +6,7 @@ import React, { useState as useStateMock } from 'react';
 import { check, checkUserName, createUser } from "@/app/create-user/page";
 import CreateUser from '@/app/create-user/page.jsx';
 
-// Mock state.
 jest.mock('react', () => ({
-    // Returns the actual module instead of a mock,
-    // bypassing all checks on whether the module should receive 
-    // a mock implementation or not.
     ...jest.requireActual('react'),
     useState: jest.fn()
 }));
@@ -19,7 +15,7 @@ jest.mock('axios');
 
 describe('Tests for creating users', () => {
 
-    describe('Test for check', () => {
+    describe('Tests for check', () => {
 
         test('Correct name', () => {
             expect(check('abc123')).toBeTruthy();
@@ -133,15 +129,15 @@ describe('Tests for creating users', () => {
 
             test('At wrong user name input', () => {
                 useStateMock.mockImplementationOnce(() => ['is-danger', setClassNameMock]);
-                checkUserName('', setIsCorrectMock, setClassNameMock);
                 render(<CreateUser />);
+                checkUserName('', setIsCorrectMock, setClassNameMock);
                 expect(screen.getByPlaceholderText('Nombre')).toHaveClass('is-danger');
             });
 
             test('At right user name input', () => {
                 useStateMock.mockImplementationOnce(() => ['is-tuki', setClassNameMock]);
-                checkUserName('abcd', setIsCorrectMock, setClassNameMock);
                 render(<CreateUser />);
+                checkUserName('abcd', setIsCorrectMock, setClassNameMock);
                 expect(screen.getByPlaceholderText('Nombre')).toHaveClass('is-tuki');
             });
         });
@@ -166,11 +162,55 @@ describe('Tests for creating users', () => {
                 expect(setClassNameMock).not.toBeCalled();
             });
 
-            test('With IS correct', async () => {
+            test('With IS correct & success response', async () => {
                 const responseData = { id: '1', name: 'user', status: '201' };
                 axios.post.mockResolvedValue(responseData);
                 await createUser(true, setClassNameMock);
                 expect(setClassNameMock).toBeCalledWith('is-success');
+            });
+
+            test('With IS correct & bad response', async () => {
+                const responseData = { id: '1', name: 'user', status: '404' };
+                axios.post.mockResolvedValue(responseData);
+                await createUser(true, setClassNameMock);
+                setClassNameMock.mockReset();
+                expect(setClassNameMock).not.toBeCalled();
+            });
+        });
+
+        describe('Set disabled', () => {
+
+            test('At start', () => {
+                render(<CreateUser/>);
+                expect(screen.getByRole('button', { name: /Crear Partida/i })).toBeDisabled();
+                expect(screen.getByRole('button', { name: /Buscar Partida/i })).toBeDisabled();
+            });
+
+            test('At wrong user name', async () => {
+                render(<CreateUser/>);
+                const responseData = { id: '1', name: 'user', status: '201' };
+                axios.post.mockResolvedValue(responseData);
+                await createUser(false, setClassNameMock);
+                expect(screen.getByRole('button', { name: /Crear Partida/i })).toBeDisabled();
+                expect(screen.getByRole('button', { name: /Buscar Partida/i })).toBeDisabled();
+            });
+            
+            test('At wrong response', async () => {
+                render(<CreateUser/>);
+                const responseData = { id: '1', name: 'user', status: '404' };
+                axios.post.mockResolvedValue(responseData);
+                await createUser(true, setClassNameMock);
+                expect(screen.getByRole('button', { name: /Crear Partida/i })).toBeDisabled();
+                expect(screen.getByRole('button', { name: /Buscar Partida/i })).toBeDisabled();
+            });
+
+            test('At right response', async () => {
+                render(<CreateUser/>);
+                const responseData = { id: '1', name: 'user', status: '201' };
+                axios.post.mockResolvedValue(responseData);
+                await createUser(true, setClassNameMock);
+                expect(screen.getByRole('button', { name: /Crear Partida/i })).not.toBeDisabled();
+                expect(screen.getByRole('button', { name: /Buscar Partida/i })).not.toBeDisabled();
             });
         });
     });
