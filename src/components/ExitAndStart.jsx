@@ -43,11 +43,13 @@ function ExitAndStart({curP, minP, isHost, name}){
                     <div className="modal-background" onClick={closeModal}></div>
                     <div className="modal-card">
                         <header className="modal-card-head">
-                            <p className="modal-card-title">¿Realmente vas a dejar plantada a la gente?</p>
+                            <p className="modal-card-title">¿Estas seguro de abandonar la partida?</p>
                             <button className="delete" aria-label="close" onClick={closeModal}></button>
                         </header>
                         <section className="modal-card-body">
-                            Dale, ¿Que tenés que hacer que es más importante? Una partidita no más, y después te vas.
+                            {isHost 
+                            ?"Sos el creador de la partida, si abandonas se cerrara esta Sala expulsando a todos los jugadores" 
+                            :"Tus compañeros te van a extrañar..."}
                         </section>
                         <footer className="modal-card-foot">
                             <Link href="/search-game" className="button is-danger">

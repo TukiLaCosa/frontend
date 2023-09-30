@@ -7,34 +7,30 @@ import ExitAndStart from "@/components/ExitAndStart";
 import '@/styles/grid.scss';
 
 function Lobby() {
-    const [players, setPlayers] = useState([]);
+    const [dataGame, setDataGame] = useState([]);
     
     useEffect(() => {
-        async function fetchPlayers() {
+        async function fetchDataGame() {
             try {
                 const response = await fetch('http://localhost:8000/games/Partidaza');
-
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-
                 const data = await response.json();
-                console.log(data)
-                setPlayers(data);
+                setDataGame(data);
             } catch (error) {
                 console.error('Error getting players:', error);
             }
         }
-        fetchPlayers();
-        console.log(players);
+        fetchDataGame();
     }, []);
     
     return (
         <div className="conteiner">
-            <DataGame data={players}/>
-            <ListPlayers players={players.playersJoined}/>
-            <Chat className="chat"/>
-            <ExitAndStart curP={players.curPlayer} minP={players.minPlayer} isHost={false} name={players.name}/>
+            <DataGame data={dataGame}/>
+            <ListPlayers players={dataGame.playersJoined}/>
+            <Chat/>
+            <ExitAndStart curP={dataGame.curPlayer} minP={dataGame.minPlayer} isHost={false} name={dataGame.name}/>
         </div>
     );
 }
