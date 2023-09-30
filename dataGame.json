@@ -1,7 +1,29 @@
 {
-"name":"Partidaza",
-"host":"Mengano",
-"max_players":10,
-"min_players":4,
-"cur_players":5
-}
+    "name": "Partidaza",
+    "host": "Menguito",
+    "minPlayer": 4,
+    "maxPlayer": 12,
+    "curPlayer": 4,
+    "playersJoined": [
+      {
+        "name": "Menguito",
+        "id": 1,
+        "position": -1
+      },
+      {
+        "name": "solo",
+        "id": 3,
+        "position": -1
+      },
+      {
+        "name": "ultimo",
+        "id": 6,
+        "position": -1
+      },
+      {
+        "name": "ultimo",
+        "id": 9,
+        "position": -1
+      }
+    ]
+  }
