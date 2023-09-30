@@ -1,23 +1,35 @@
 'use client';
-import { useState } from "react";
-import { useRouter } from 'next/router';
+import { useState, Link } from "react";
+
 
 function ExitAndStart({curP,minP,isHost}){
     const [ready,setReady] = useState(curP>=minP)
-    // const router = useRouter();
-    // const handleStartClick = () => {
-    //     if (ready){
-    //         router.push('/crear-usuario');
-    //     }else{
-    //         alert("No hay suficientes jugadores")
-    //     }
-    // }
+   
+
+    const handleStartClick = () => {
+        if (ready){
+            alert("funciona")
+        }else{
+            alert("No hay suficientes jugadores")
+        }
+    }
+    const handleExitClick = () =>{
+        
+    }
     return <div className="colums buttons">
             <div className="column">
-            <button className="button is-danger is-large">Abandonar</button>
+            <button className="button is-danger is-large" onClick={handleExitClick}>Abandonar</button>
             </div>
             <div className="column">
-            <button className="button is-success is-large">Iniciar</button>
+            {
+            ready ?
+            <Link href="/">
+            <button className="button is-success is-large" onClick={handleStartClick}>Iniciar</button>
+            </Link>
+            :
+            <button className="button is-success is-large" disabled>Iniciar</button>
+            }
+    
             </div>
     </div>
 }
