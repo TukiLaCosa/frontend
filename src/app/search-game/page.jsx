@@ -61,7 +61,7 @@ function SearchGame() {
                                         <h3>{game.name}</h3>
                                         <p>Jugadores: {game.players_joined}/{game.max_players}</p>
                                     </div>
-                                    <div className="level-right">
+                                    <div className="level-right buttons">
                                         {game.is_private ? <input id='pass' className='button' type='password' placeholder='Password' onInput={handlerInput}></input> : <></>}
                                         <button className="button is-primary is-tuki" onClick={() => { handlerClick(pass, game.name) }}>Unirse</button>
                                     </div>
