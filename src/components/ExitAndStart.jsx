@@ -25,7 +25,12 @@ function ExitAndStart({curP, minP, isHost, name}){
     return (
         <div className="colums buttons">
             <div className="column">
-                <button className="button is-danger is-large" onClick={handleExitClick}>Abandonar</button>
+                {
+                    isHost ?
+                    <button className="button is-danger is-large" onClick={handleExitClick}>Cancelar</button>
+                    :
+                    <button className="button is-danger is-large" disabled>Cancelar</button>
+                }
             </div>
             <div className="column">
             {
@@ -38,7 +43,7 @@ function ExitAndStart({curP, minP, isHost, name}){
             }
             </div>
 
-            {showModal && (
+            {showModal && isHost && (
                 <div className="modal is-active">
                     <div className="modal-background" onClick={closeModal}></div>
                     <div className="modal-card">
@@ -52,7 +57,7 @@ function ExitAndStart({curP, minP, isHost, name}){
                             :"Tus compañeros te van a extrañar..."}
                         </section>
                         <footer className="modal-card-foot">
-                            <Link href="/search-game" className="button is-danger">
+                            <Link href="/search-game" className="button is-danger" >
                                 Irse
                             </Link>
                             <button className="button is-tuki" onClick={closeModal}>{"Irsen't"}</button>

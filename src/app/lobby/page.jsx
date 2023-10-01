@@ -9,10 +9,12 @@ import '@/styles/grid.scss';
 function Lobby() {
     const [dataGame, setDataGame] = useState([]);
     const user = JSON.parse(localStorage.getItem('user'));
+    
     useEffect(() => {
+        const game = JSON.parse(localStorage.getItem('game'))
         async function fetchDataGame() {
             try {
-                const response = await fetch('http://localhost:8000/games/Partidaza');
+                const response = await fetch(`http://localhost:8000/games/${game.name}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
