@@ -8,9 +8,9 @@ import '@/styles/grid.scss';
 
 function Lobby() {
     const [dataGame, setDataGame] = useState([]);
-    const user = JSON.parse(localStorage.getItem('user'));
     
     useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
         const game = JSON.parse(localStorage.getItem('game'))
         async function fetchDataGame() {
             try {
