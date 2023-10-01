@@ -8,11 +8,10 @@ import '@/styles/grid.scss';
 
 function Lobby() {
     const [dataGame, setDataGame] = useState([]);
-    
+    const user = JSON.parse(localStorage.getItem('user'));
     useEffect(() => {
         async function fetchDataGame() {
             try {
-                const response = await fetch('http://localhost:8000/games/Partidaza');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
@@ -28,9 +27,9 @@ function Lobby() {
     return (
         <div className="conteiner">
             <DataGame data={dataGame}/>
-            <ListPlayers players={dataGame.playersJoined}/>
-            <Chat/>
-            <ExitAndStart curP={dataGame.curPlayer} minP={dataGame.minPlayer} isHost={false} name={dataGame.name}/>
+            <ListPlayers players={dataGame.list_of_players}/>
+            <Chat />
+            <ExitAndStart curP={dataGame.num_of_players} minP={dataGame.min_players} isHost={user.id===dataGame.host_player_id} name={dataGame.name}/>
         </div>
     );
 }
