@@ -9,8 +9,7 @@ import { useRouter } from 'next/navigation';
 function SearchGame() {
     const [games, setGames] = useState([]);
     const router = useRouter();
-    let input;
-    const [pass, setPass] = useState('');
+    const [passwords, setPasswords] = useState({}); // Usar un objeto para almacenar las contraseñas
 
     useEffect(() => {
         async function fetchGames() {
@@ -25,9 +24,16 @@ function SearchGame() {
         fetchGames();
     }, []);
 
-    async function handlerClick(password, game) {
+    function handlerInput(event, game) {
+        const newPasswords = { ...passwords }; // copia del objeto passwords para no modificar el original
+        newPasswords[game.name] = event.target.value; // asignar la contraseña al juego correcto
+        setPasswords(newPasswords);
+    }
+
+    async function handlerClick(game) {
         let user = JSON.parse(localStorage.getItem('user'));
         console.log(user);
+        const password = passwords[game.name] || ''; // obtener la contraseña del objeto password
         try {
             const data_patch = {
                 "player_id": user.id,
@@ -42,11 +48,6 @@ function SearchGame() {
         catch (error) {
             console.error("Error:", error);
         }
-    }
-
-    function handlerInput() {
-        input = document.getElementById('pass');
-        setPass(input.value);
     }
     return (
         <div className="has-text-centered">
@@ -65,8 +66,22 @@ function SearchGame() {
                                             <p>Jugadores: {game.players_joined}/{game.max_players}</p>
                                         </div>
                                         <div className="level-right buttons">
-                                            {game.is_private ? <input id='pass' className='button' type='password' placeholder='Password' onInput={handlerInput}></input> : <></>}
-                                            <button className="button is-primary is-tuki" onClick={() => { handlerClick(pass, game.name) }}>Unirse</button>
+                                            {game.is_private ? (
+                                                <input
+                                                    className='button'
+                                                    type='password'
+                                                    placeholder='Password'
+                                                    onInput={(event) => handlerInput(event, game.name)} // game o game.name?
+                                                />
+                                            ) : (
+                                                <></>
+                                            )}
+                                            <button
+                                                className="button is-primary is-tuki"
+                                                onClick={() => handlerClick(game.name)} // game.name
+                                            >
+                                                Unirse
+                                            </button>
                                         </div>
                                     </div>
                                 </li>
@@ -76,7 +91,7 @@ function SearchGame() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default SearchGame;
