@@ -7,15 +7,14 @@ import { useRouter } from 'next/navigation';
 
 
 function SearchGame() {
-    const [games, setGames] = useState([]); // variables de estado
+    const [games, setGames] = useState([]);
     const router = useRouter();
-    const [passwords, setPasswords] = useState({}); // usar un objeto para almacenar las contraseñas
+    const [passwords, setPasswords] = useState({});
 
     useEffect(() => {
         async function fetchGames() {
             try {
                 const response = await axios.get('http://localhost:8000/games');
-                //console.log(response.data);
                 setGames(response.data);
             } catch (error) {
                 console.error('Error getting games:', error);
@@ -24,37 +23,38 @@ function SearchGame() {
         fetchGames();
     }, []);
 
-    function handlerInput(event, game) {
-        const newPasswords = { ...passwords }; // copia del objeto passwords para no modificar el original
-        newPasswords[game.name] = event.target.value; // asignar la contraseña al juego correcto
+    function handlerInput(event, gameName) {
+        const newPasswords = { ...passwords };
+        newPasswords[gameName] = event.target.value;
+        console.log(gameName);
         setPasswords(newPasswords);
     }
 
-    async function handlerClick(game) {
+    async function handlerClick(gameName) {
         let user = JSON.parse(localStorage.getItem('user'));
-        console.log(user);
-        const password = passwords[game.name] || ''; // obtener la contraseña del objeto password
+        const password = passwords[gameName] || '';
         try {
             const data_patch = {
                 "player_id": user.id,
                 "password": password !== '' ? password : null
             }
-            const response = await axios.patch(`http://localhost:8000/games/join/${game}`, data_patch);
-            //console.log(response);
+            const response = await axios.patch(`http://localhost:8000/games/join/${gameName}`, data_patch);
             if (response?.status == 200) {
-                router.push('/sala');
+                localStorage.setItem('game', `{ "name": "${gameName}"}`);
+                router.push('/lobby');
             }
         }
         catch (error) {
             console.error("Error:", error);
         }
     }
+
     return (
         <div className="has-text-centered">
             <h2 className="title is-1 is-uppercase is-italic has-text-centered section">Partidas Disponibles</h2>
             <div className="columns is-centered">
                 <div className="column is-two-thirds">
-                    {games.length === 0 ? ( // Verificar si no hay partidas disponibles
+                    {games.length === 0 ? (
                         <p className="notification is-warning">No hay partidas disponibles en este momento. Intentá más tarde o creá una.</p>
                     ) : (
                         <ul>
@@ -71,14 +71,14 @@ function SearchGame() {
                                                     className='button'
                                                     type='password'
                                                     placeholder='Password'
-                                                    onInput={(event) => handlerInput(event, game.name)} // game o game.name?
+                                                    onInput={(event) => handlerInput(event, game.name)}
                                                 />
                                             ) : (
                                                 <></>
                                             )}
                                             <button
                                                 className="button is-primary is-tuki"
-                                                onClick={() => handlerClick(game.name)} // game.name
+                                                onClick={() => handlerClick(game.name)}
                                             >
                                                 Unirse
                                             </button>
