@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import Game from '@/components/Game'
 
 
 function SearchGame() {
@@ -23,14 +24,14 @@ function SearchGame() {
         fetchGames();
     }, []);
 
-    function handlerInput(event, gameName) {
+    function handleInput(event, gameName) {
         const newPasswords = { ...passwords };
         newPasswords[gameName] = event.target.value;
         console.log(gameName);
         setPasswords(newPasswords);
     }
 
-    async function handlerClick(gameName) {
+    async function handleClick(gameName) {
         let user = JSON.parse(localStorage.getItem('user'));
         const password = passwords[gameName] || '';
         try {
@@ -54,40 +55,18 @@ function SearchGame() {
             <h2 className="title is-1 is-uppercase is-italic has-text-centered section">Partidas Disponibles</h2>
             <div className="columns is-centered">
                 <div className="column is-two-thirds">
-                    {games.length === 0 ? (
-                        <p className="notification is-warning">No hay partidas disponibles en este momento. Intentá más tarde o creá una.</p>
-                    ) : (
-                        <ul>
-                            {games.map((game, index) => (
-                                <li className="box has-text-centered" key={index}>
-                                    <div className="level">
-                                        <div className="level-left is-flex is-flex-direction-column">
-                                            <h3>{game.name}</h3>
-                                            <p>Jugadores: {game.players_joined}/{game.max_players}</p>
-                                        </div>
-                                        <div className="level-right buttons">
-                                            {game.is_private ? (
-                                                <input
-                                                    className='button'
-                                                    type='password'
-                                                    placeholder='Password'
-                                                    onInput={(event) => handlerInput(event, game.name)}
-                                                />
-                                            ) : (
-                                                <></>
-                                            )}
-                                            <button
-                                                className="button is-primary is-tuki"
-                                                onClick={() => handlerClick(game.name)}
-                                            >
-                                                Unirse
-                                            </button>
-                                        </div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
+                    {
+                        games.length === 0 ?
+                        (
+                            <p className="notification is-warning">No hay partidas disponibles en este momento. Intentá más tarde o creá una.</p>
+                        ) :
+                        (
+                            <ul>
+                                {games.map((game, index) => (
+                                    <Game key={index} game={game} handleClick={handleClick} handleInput={handleInput}></Game>
+                                ))}
+                            </ul>
+                        )}
                 </div>
             </div>
         </div>
