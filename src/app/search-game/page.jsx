@@ -7,9 +7,9 @@ import { useRouter } from 'next/navigation';
 
 
 function SearchGame() {
-    const [games, setGames] = useState([]);
+    const [games, setGames] = useState([]); // variables de estado
     const router = useRouter();
-    const [passwords, setPasswords] = useState({}); // Usar un objeto para almacenar las contraseñas
+    const [passwords, setPasswords] = useState({}); // usar un objeto para almacenar las contraseñas
 
     useEffect(() => {
         async function fetchGames() {
