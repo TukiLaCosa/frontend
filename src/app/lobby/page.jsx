@@ -12,6 +12,7 @@ function Lobby() {
     useEffect(() => {
         async function fetchDataGame() {
             try {
+                const response = await fetch('http://localhost:8000/games/Partidaza');
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
