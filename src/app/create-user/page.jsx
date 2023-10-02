@@ -44,10 +44,10 @@ export async function createUser(isCorrect, setClassName) {
         }
         catch (error) {
             if (error.code === 'ERR_BAD_REQUEST') {
-                console.log('Request error');
+                console.error('Request error');
             }
             else {
-                console.log('Server Error');
+                console.error('Server Error');
             }
         }
     }
@@ -68,7 +68,7 @@ function CreateUser() {
     return (
         <section className='hero is-halfheight is-flex is-flex-direction-column is-justify-content-space-evenly is-align-items-center'>
             <div className='level section'>
-                <h2 className='title is-3 level-item'>Ingresa tu nombre</h2>
+                <h2 className='title is-3 level-item'>Ingresa un nombre de usuario</h2>
             </div>
             <div className='level'>
                 <input type='text' id='name' className={`input is-large ${className}`} onInput={() => { checkUserName(userNameInput.value, setIsCorrect, setClassName) }} placeholder='Nombre' />
