@@ -14,6 +14,10 @@ export function getHost(){
     return JSON.parse(localStorage.getItem('user')).id;
 }
 
+export function saveGameStorage(gameName){
+    localStorage.setItem('game', `{ "name": "${gameName}" }`);
+}
+
 export function makeBodyRequest(data){
     let host = getHost();
     let password = data.password !== '' ? data.password : null
@@ -26,9 +30,6 @@ export function makeBodyRequest(data){
     };
 }
 
-export function saveGameStorage(gameName){
-    localStorage.setItem('game', `{ "name": "${gameName}" }`);
-}
 
 export async function createGame(data, router) {
     const newGame = makeBodyRequest(data);
@@ -116,7 +117,7 @@ function CreateGame() {
                             className={`input ${errors.password ? 'is-danger' : 'is-tuki'}`}
                             {...register('password', {
                                 pattern: {
-                                    value: /^[a-zA-Z0-9]{1,10}$/,
+                                    value: /^[a-zA-Z0-9]{1,16}$/,
                                     message: "Contraseña invalida"
                                 }
                             })} />
