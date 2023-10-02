@@ -24,7 +24,6 @@ function ExitAndStart({ curP, minP, isHost, name }) {
   async function cancelGame() {
     let id = localStorage.getItem("user").id;
     try {
-      console.log(name)
       const response = await axios.delete(`http://localhost:8000/games/${name}`);
       localStorage.removeItem('game');
     } catch (error) {
