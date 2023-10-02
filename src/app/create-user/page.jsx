@@ -7,6 +7,7 @@ import Link from 'next/link';
 let userNameInput;
 let createGameButton;
 let searchGameButton;
+let createUserButton;
 
 export function check(userName) {
     let userRegEx = /^[a-zA-Z][a-zA-Z0-9]{3,7}$/;
@@ -36,6 +37,7 @@ export async function createUser(isCorrect, setClassName) {
                 userNameInput.setAttribute('disabled', '');
                 createGameButton.removeAttribute('disabled');
                 searchGameButton.removeAttribute('disabled');
+                createUserButton.setAttribute('disabled', '');
                 setClassName('is-success');
                 localStorage.setItem('user', `{ "id": ${response.data.id}, "name": "${response.data.name}"}`);
             }
@@ -60,6 +62,7 @@ function CreateUser() {
         userNameInput = document.getElementById('name');
         createGameButton = document.getElementById('create-game');
         searchGameButton = document.getElementById('search-game');
+        createUserButton = document.getElementById('create-user');
     }, [className]);
 
     return (

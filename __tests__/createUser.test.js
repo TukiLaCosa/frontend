@@ -116,9 +116,6 @@ describe('Tests for creating users', () => {
         describe('Right className', () => {
 
             beforeEach(() => {
-                // @ts-ignore
-                // Accepts a function that will be used as an implementation of the mock for one call to the mocked function. 
-                // Can be chained so that multiple function calls produce different results.
                 useStateMock.mockImplementation((init) => [init, setState]);
             });
 
