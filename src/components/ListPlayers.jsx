@@ -2,7 +2,7 @@
 import Image from "next/image";
 
 function ListPlayers({ players, hostID }) {
-  const monstersContext = require.context('!@svgr/webpack!../monsters', false, /\.svg$/);
+  const monstersContext = require.context('!@svgr/webpack!../../public/monsters', false, /\.svg$/);
   const monsters = monstersContext.keys().map(monstersContext);
 
   function RandomMonster() {
