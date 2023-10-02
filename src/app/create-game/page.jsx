@@ -36,6 +36,7 @@ export async function createGame(data, router) {
         console.log(newGame);
         const response = await axios.post('http://localhost:8000/games/', newGame);
         if (response?.status == 201) {
+            saveGameStorage(newGame.name);
             router.push('/lobby');
         }
     }
