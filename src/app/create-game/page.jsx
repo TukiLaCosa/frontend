@@ -5,6 +5,11 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
+export function verifyUser(router){
+    let user = localStorage.getItem('user');
+    if(user == null) router.push('/');
+}
+
 export function getHost(){
     return JSON.parse(localStorage.getItem('user')).id;
 }
@@ -49,6 +54,10 @@ function CreateGame() {
     } = useForm();
 
     const router = useRouter();
+
+    useEffect(() => {
+        verifyUser(router);
+    });
 
     return (
         <section className='hero is-halfheight is-flex is-flex-direction-column is-justify-content-space-evenly is-align-items-center'>
