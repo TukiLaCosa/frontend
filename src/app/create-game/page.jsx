@@ -26,6 +26,10 @@ export function makeBodyRequest(data){
     };
 }
 
+export function saveGameStorage(gameName){
+    localStorage.setItem('game', `{ "name": ${gameName} }`);
+}
+
 export async function createGame(data, router) {
     const newGame = makeBodyRequest(data);
     try {
