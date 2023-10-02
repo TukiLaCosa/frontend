@@ -8,9 +8,10 @@ import '@/styles/grid.scss';
 
 function Lobby() {
     const [dataGame, setDataGame] = useState([]);
+    const [refresh, setRefresh] = useState(false)
+    const user = JSON.parse(localStorage.getItem('user'));
     
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem('user'));
         const game = JSON.parse(localStorage.getItem('game'))
         async function fetchDataGame() {
             try {
@@ -25,11 +26,11 @@ function Lobby() {
             }
         }
         fetchDataGame();
-    }, []);
+    }, [refresh]);
     
     return (
         <div className="conteiner">
-            <DataGame data={dataGame}/>
+            <DataGame data={dataGame} refresh={setRefresh}/>
             <ListPlayers players={dataGame.list_of_players}/>
             <Chat />
             <ExitAndStart curP={dataGame.num_of_players} minP={dataGame.min_players} isHost={user.id===dataGame.host_player_id} name={dataGame.name}/>
