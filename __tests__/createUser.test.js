@@ -5,6 +5,7 @@ import React, { useState as useStateMock } from 'react';
 
 import { check, checkUserName, createUser } from "@/app/create-user/page";
 import CreateUser from '@/app/create-user/page.jsx';
+import { after } from 'node:test';
 
 jest.mock('react', () => ({
     ...jest.requireActual('react'),
@@ -151,6 +152,14 @@ describe('Tests for creating users', () => {
 
     describe('Tests for createUser', () => {
 
+        beforeAll(() => {
+            console.error = jest.fn();
+        });
+
+        afterAll(() => {
+            console.error.mockRestore();
+        })
+
         describe('Call setClassName correctly', () => {
             const localStorageMock = {
                 getItem: jest.fn(),
@@ -183,7 +192,7 @@ describe('Tests for creating users', () => {
                 const responseData = { id: '1', name: 'user', status: '404' };
                 axios.post.mockResolvedValue(responseData);
                 await createUser(true, setClassNameMock);
-                setClassNameMock.mockReset();
+                setClassNameMock.mockReset();;
                 expect(setClassNameMock).not.toBeCalled();
             });
         });
