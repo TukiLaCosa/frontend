@@ -26,6 +26,7 @@ function Lobby() {
             }
         }
         fetchDataGame();
+        setRefresh(false)
     }, [refresh]);
     
     return (
