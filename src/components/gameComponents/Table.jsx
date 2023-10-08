@@ -80,7 +80,6 @@ export function handleDragEnd(event, setCardsPlayer, setPlayBG, setDiscardBG) {
     } else {
       setDiscardBG(`/cards/rev/revPanic.png`);
     }
-
   }
   else if (over.id == 'play-card') {
     // Playing
@@ -95,13 +94,11 @@ export function handleDragEnd(event, setCardsPlayer, setPlayBG, setDiscardBG) {
     } else {
       setPlayBG(`/cards/rev/109Rev.png`);
     }
-
   }
   else {
     // Just sorting
     sortCards(setCardsPlayer, over.id, active.id)
   }
-
 }
 
 export function newCard(setCardsPlayer) {
@@ -146,18 +143,38 @@ function Table() {
 
               </div>
               <div className="is-flex is-align-items-end is-justify-content-space-around item">
-                <Chair rotation={0} size={200} type={'Whole'} />
-                <Chair rotation={0} size={200} type={'Whole'} />
+                <Chair
+                  rotation={0}
+                  size={200}
+                  type={'Whole'}
+                  className='is-flex is-flex-direction-column has-text-centered' />
+                <Chair
+                  rotation={0}
+                  size={200}
+                  type={'Whole'}
+                  className='is-flex is-flex-direction-column has-text-centered' />
               </div>
               <div className="is-flex is-align-items-end is-justify-content-space-around item">
-                <Chair rotation={0} size={200} type={'Whole'} />
-                <Chair rotation={0} size={200} type={'Whole'} />
+                <Chair
+                  rotation={0}
+                  size={200}
+                  type={'Whole'}
+                  className='is-flex is-flex-direction-column has-text-centered' />
+                <Chair
+                  rotation={0}
+                  size={200}
+                  type={'Whole'}
+                  className='is-flex is-flex-direction-column has-text-centered' />
               </div>
               <div className="is-flex is-align-items-end is-justify-content-start item">
 
               </div>
               <div className="is-flex is-align-items-center is-justify-content-end item">
-                <Chair rotation={-90} size={120} type={'Right'} />
+                <Chair
+                  rotation={-90}
+                  size={120}
+                  type={'Right'}
+                  className='is-flex is-flex-direction-row has-text-centered' />
               </div>
               <div
                 className="is-flex is-justify-content-space-evenly is-align-items-center item table-cells"
@@ -186,24 +203,52 @@ function Table() {
                 />
               </div>
               <div className="is-flex is-align-items-center is-justify-content-start item">
-                <Chair rotation={90} size={120} type={'Left'} />
+                <Chair
+                  rotation={90}
+                  size={120}
+                  type={'Left'}
+                  className='is-flex is-flex-direction-row-reverse has-text-centered' />
               </div>
               <div className="is-flex is-align-items-center is-justify-content-end item">
-                <Chair rotation={-90} size={120} type={'Left'} />
+                <Chair
+                  rotation={-90}
+                  size={120}
+                  type={'Left'}
+                  className='is-flex is-flex-direction-row has-text-centered' />
               </div>
               <div className="is-flex is-align-items-center is-justify-content-start item">
-                <Chair rotation={90} size={120} type={'Right'} />
+                <Chair
+                  rotation={90}
+                  size={120}
+                  type={'Right'}
+                  className='is-flex is-flex-direction-row-reverse has-text-centered' />
               </div>
               <div className="is-flex is-align-items-start is-justify-content-end item">
 
               </div>
               <div className="is-flex is-align-items-start is-justify-content-space-around item">
-                <Chair rotation={180} size={200} type={'Whole'} />
-                <Chair rotation={180} size={200} type={'Whole'} />
+                <Chair
+                  rotation={180}
+                  size={200}
+                  type={'Whole'}
+                  className='is-flex is-flex-direction-column-reverse has-text-centered' />
+                <Chair
+                  rotation={180}
+                  size={200}
+                  type={'Whole'}
+                  className='is-flex is-flex-direction-column-reverse has-text-centered' />
               </div>
               <div className="is-flex is-align-items-start is-justify-content-space-around item">
-                <Chair rotation={180} size={200} type={'Whole'} />
-                <Chair rotation={180} size={200} type={'Whole'} />
+                <Chair
+                  rotation={180}
+                  size={200}
+                  type={'Whole'}
+                  className='is-flex is-flex-direction-column-reverse has-text-centered' />
+                <Chair
+                  rotation={180}
+                  size={200}
+                  type={'Whole'}
+                  className='is-flex is-flex-direction-column-reverse has-text-centered' />
               </div>
               <div className="is-flex is-align-items-start is-justify-content-start item item">
 
