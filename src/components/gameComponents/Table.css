@@ -18,7 +18,7 @@
 .table-cells {
     grid-column: span 2;
     grid-row: span 2;
-    background-color: brown;
+    /* background-color: brown; */
     margin: 10px;
     border-radius: 30px;
     border: 8px solid black;
@@ -26,4 +26,8 @@
 
 .table-cards {
     flex: 0 0 80%;
+}
+
+.cards > * {
+    margin-left: 20px;
 }
