@@ -3,7 +3,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-function DiscardDeck({ id, src}) {
+function PlayCard({ id, src}) {
 
     const {
         attributes,
@@ -35,4 +35,4 @@ function DiscardDeck({ id, src}) {
     );
 }
 
-export default DiscardDeck;
+export default PlayCard;

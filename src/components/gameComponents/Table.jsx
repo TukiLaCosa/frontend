@@ -3,16 +3,18 @@
 import './Table.css';
 import Chat from '../Chat';
 import Card from './Card';
-import DiscarDeck from './DiscardDeck';
+import { setPath } from './Card';
+import DiscardDeck from './DiscardDeck';
+import PlayCard from './PlayCard';
 import { useEffect, useState } from 'react';
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy, arrayMove } from '@dnd-kit/sortable';
 
 const cardsPlayerMock = [
   { id: 1, name: "1" },
-  { id: 2, name: "2" },
-  { id: 3, name: "3" },
-  { id: 4, name: "4" },
+  { id: 99, name: "2" },
+  { id: 32, name: "3" },
+  { id: 50, name: "4" },
   // { id: 5, name: "5" },
 ];
 
@@ -31,40 +33,88 @@ export function selectCard(event) {
   // console.log(element.style)
 }
 
-export function handleDragEnd(event, setCardsPlayer) {
+export function removeFromHand(setCardsPlayer, id){
+  setCardsPlayer((cardsPlayer) => {
+    const remove = cardsPlayer.findIndex((elem) => elem.id === id);
+    cardsPlayer.splice(remove, 1);
+    return arrayMove(cardsPlayer, 0, 0);
+  });
+}
+
+export function addToHand(setCardsPlayer, id){
+  setCardsPlayer((cardsPlayer) => {
+    if (cardsPlayer.length < 5) {
+      return cardsPlayer.concat({ id: id, name: "5" });
+    }
+    return cardsPlayer;
+  });
+}
+
+export function handleDragEnd(event, setCardsPlayer, setPlayBG) {
   const { active, over } = event;
 
   if (over.id == 'discard-deck') {
-    setCardsPlayer((cardsPlayer) => {
-      const remove = cardsPlayer.findIndex((elem) => elem.id === active.id);
-      cardsPlayer.splice(remove, 1);
-      return arrayMove(cardsPlayer, 0, 0);;
-    });
+    // Discarding
+    if (active.id == 1) {
+      alert('So grasioso bo?');
+      alert('`ja eso ái');
+      return;
+    }
+    else if (false) { // Checkque turno
+      alert('Paraaaaaaaaa!');
+      return;
+    }
+    removeFromHand(setCardsPlayer, active.id)
   }
-  else  {
+  else if (over.id == 'play-card') {
+    // Playing
+    if(active.id == 1){
+      alert('raja de aca ca`eza');
+      return;
+    }
+    if (confirm("¿Quieres jugar esta carta?") == true) {
+      let path = setPath(active.id);
+      setPlayBG(path);
+      removeFromHand(setCardsPlayer, active.id);
+    } else {
+      setPlayBG(`/cards/rev/109Rev.png`);
+    }
+    
+  }
+  else {
+    // Just sorting
+    console.log(over.id)
     setCardsPlayer((cardsPlayer) => {
       const oldIndex = cardsPlayer.findIndex((elem) => elem.id === active.id);
       const newIndex = cardsPlayer.findIndex((elem) => elem.id === over.id);
       return arrayMove(cardsPlayer, oldIndex, newIndex);
     });
   }
-  
+
+}
+
+export function newCard(setCardsPlayer) {
+  let random = Math.floor(Math.random() * (108 - 2 + 1) + 2);
+  addToHand(setCardsPlayer, random);
 }
 
 function Table() {
+
   let [cardsPlayer, setCardsPlayer] = useState(cardsPlayerMock);
-  let items = [...cardsPlayer, 'discard-deck'];
+  let [playBG, setPlayBG ] = useState(`/cards/rev/109Rev.png`);
+  let items = [...cardsPlayer, 'discard-deck', 'play-card'];
 
   useEffect(() => {
     // Make get
   }, []);
+
 
   return (
     <div className="table is-flex is-flex-direction-row">
       <div className="table-cards is-flex is-flex-direction-column">
         <DndContext
           collisionDetection={closestCenter}
-          onDragEnd={(event) => { handleDragEnd(event, setCardsPlayer) }} //as onChange
+          onDragEnd={(event) => { handleDragEnd(event, setCardsPlayer, setPlayBG) }} //as onChange
         >
           <SortableContext
             items={items}
@@ -91,16 +141,19 @@ function Table() {
               <div className="is-flex is-justify-content-space-evenly is-align-items-center item table-cells">
                 <img
                   id='deck'
-                  // className='card-img'
                   src={`/cards/rev/revTakeAway.png`}
                   width={180}
                   alt=''
-                  onClick={(e) => { selectCard(e) }}
+                  style={{borderRadius: '5%'}}
+                  onClick={() => { newCard(setCardsPlayer) }}
                 />
-                <DiscarDeck
+                <PlayCard
+                  id='play-card'
+                  src={playBG}
+                />
+                <DiscardDeck
                   id='discard-deck'
                   src={`/cards/rev/revPanic.png`}
-                  selectCard={selectCard}
                 />
               </div>
               <div className="is-flex is-align-items-center is-justify-content-start item">
@@ -131,7 +184,7 @@ function Table() {
               {
 
                 cardsPlayer.map((card, index) => {
-                  if(card){
+                  if (card) {
                     return (
                       <Card id={card.id} selectCard={selectCard} key={card.id} rotation={angle[card.id - 1]}></Card>
                     )
