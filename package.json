@@ -10,6 +10,9 @@
     "test": "jest --verbose"
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.0.8",
+    "@dnd-kit/sortable": "^7.0.2",
+    "@dnd-kit/utilities": "^3.2.1",
     "axios": "^1.5.0",
     "bulma": "^0.9.4",
     "eslint": "8.49.0",

@@ -34,8 +34,8 @@ export function Chat() {
     }
   }
   return (
-    <div className="box is-shadowless is-flex is-flex-direction-column is-justify-content-space-between chat full-grid-area">
-      <div className="messages-container" style={{height: '90vh' ,overflowY: 'auto' }}>
+    <div className="box is-shadowless is-flex is-flex-direction-column is-justify-content-end chat full-grid-area" style={{ minHeight: '100%'}}>
+      <div className="messages-container" style={{ overflowY: 'auto' }}>
         {chatLog.map((msg, index) => (
           <div key={index} className={`message ${msg.type}`}>
             <span className="user-name">{userName}</span> <span>{msg.content}</span>
@@ -55,7 +55,7 @@ export function Chat() {
             onKeyDown={handleKeyDown}
           />
         </div>
-        <div className="control" style={{position: "sticky", bottom: "0" ,}}>
+        <div className="control">
           <button className="button is-info" onClick={sendMessage}>
             Enviar
           </button>

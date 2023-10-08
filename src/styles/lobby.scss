@@ -1,86 +1,87 @@
 .conteiner {
-  display: grid;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  grid-template-columns: 25% 25% 50%;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-areas:
-    "data data list"
-    "data data list"
-    "chat chat list"
-    "chat chat list"
-    "chat chat list"
-    "buttons buttons list"
-  ;
-}
-
-.dataGame {
-  grid-area: data;
-  justify-self: stretch;
-  border: 2px solid black;
-  padding: 1.5rem;
-  /* Espaciado interno */
+    display: grid;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    grid-template-columns: 25% 25% 50%;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas:
+      "data data list"
+      "data data list"
+      "chat chat list"
+      "chat chat list"
+      "chat chat list"
+      "buttons buttons list"
+      ;
+  }
+  
+  .dataGame {
+    grid-area: data;
+    justify-self: stretch;
+    border: 2px solid black;
+    padding: 1.5rem;  /* Espaciado interno */
 }
 
 .is-tuki-modified {
-  background-color: #42ab49;
-  color: #333;
+    background-color:#42ab49;
+    color: #333;  
 }
+  
+  .listPlayers{
+    grid-area: list;
+    justify-self: stretch;
+  }
 
-.listPlayers {
-  grid-area: list;
-  justify-self: stretch;
-}
+  .monster-image {
+    width: 64px;
+    height: 64px;
+  }
 
-.monster-image {
-  width: 64px;
-  height: 64px;
-}
+  .buttons{
+    grid-area: buttons;
+    place-self: center;
+  }
 
-.buttons {
-  grid-area: buttons;
-  place-self: center;
-}
+  .chat{
+    grid-area: chat;
+    align-self: end;
+    border: 1px solid #ccc; 
+    border-radius: 10px;
+    padding: 10px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .message.sent {
+    align-self: flex-end;
+    background-color: #e6f4ea;
+    border-radius: 10px;
+    margin: 5px 0;
+    padding: 0px 10px;
+    max-width: 70%;
+  }
 
-.chat {
-  grid-area: chat;
-  align-self: end;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 10px;
-  height: 100%;
-}
+  .user-name {
+    font-weight: bold;
+    color: #007BFF;
+  }
 
-.message.sent {
-  align-self: flex-end;
-  background-color: #e6f4ea;
-  border-radius: 10px;
-  margin: 5px 0;
-  padding: 0px 10px;
-  max-width: 70%;
-}
-
-.user-name {
-  font-weight: bold;
-  color: #007BFF;
-}
-
-.message.received {
-  align-self: flex-start;
-  background-color: #f4e6ea;
-  border-radius: 10px;
-  margin: 5px 0;
-  padding: 5px 10px;
-  max-width: 70%;
-}
-
-.messages-container {
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 10px;
-  flex-grow: 1;
-  overflow-y: auto;
-}
+  .message.received {
+    align-self: flex-start;
+    background-color: #f4e6ea;
+    border-radius: 10px;
+    margin: 5px 0;
+    padding: 5px 10px;
+    max-width: 70%;
+  }
+  
+  .messages-container {
+    border: 1px solid #ccc; 
+    border-radius: 10px;
+    padding: 10px; 
+    flex-grow: 1;
+    overflow-y: auto; 
+  }

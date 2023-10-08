@@ -1,18 +1,16 @@
-.table{
-    height: 100vh;
+.table {
+    max-height: 100vh;
 }
 
 .room {
-    border: 1px solid black;
     display: grid;
     grid-template-columns: 2fr repeat(2, 5fr) 2fr;
     grid-template-rows: repeat(4, 1fr);
-    flex: 0 0 70%;
+    height: 100vh;
 }
 
 .item {
-    border: 1px solid black;
-    color:black;
+    color: black;
     font-size: 24px;
     font-weight: bold;
 }
@@ -22,15 +20,10 @@
     grid-row: span 2;
     background-color: brown;
     margin: 10px;
-    /* border-radius: 50%; */
+    border-radius: 30px;
     border: 8px solid black;
 }
 
-.card {
-    border: 1px solid red;
-}
-
-.card:hover{
-    z-index: 10;
-    scale: 1.5;
+.table-cards {
+    flex: 0 0 80%;
 }
