@@ -3,13 +3,8 @@
 import { useEffect } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import './Card.css'
-
-export function setPath(id){
-    const zeros = '0'.repeat((3 - id.toString().length) % 3);
-    const path = `/cards/front/${zeros}${id}.png`;
-    return path;
-}
+import './Card.css';
+import { setPath } from '@/services/setPath';
 
 function Card({ id, selectCard, rotation }) {
 
