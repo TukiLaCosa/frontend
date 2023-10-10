@@ -15,6 +15,7 @@ import { swapCards } from '@/services/swapCards';
 import { useEffect, useState } from 'react';
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+import axios from 'axios';
 
 const cardsPlayerMock = [
   { id: 1, name: "1" },
@@ -36,7 +37,7 @@ export function handleDragEnd(event, setCardsPlayer, setPlayBG, setDiscardBG) {
   }
   else {
     // Just sorting
-    sortCards(setCardsPlayer, over.id, active.id)
+    sortCards(setCardsPlayer, over.id, active.id);
   }
 }
 
@@ -48,9 +49,15 @@ function Table() {
   // let [items, setItems] = useState([...cardsPlayerMock, 'discard-deck', 'play-card']); /* Si lo hago asi no funciona bien xdn't */
   let items = [...cardsPlayer, 'discard-deck', 'play-card'];
   const angle = [-15, -10, 10, 15, 20];
-
+  let [players, setPlayers] = useState('Vacio');
+  
   useEffect(() => {
-    // Make get
+    const gameName = JSON.parse(localStorage.getItem('game')).name;
+    const gameData = axios.get(`http://localhost:8000/games/${gameName}`)
+                .then((data) => {
+                  console.log(data);
+                  setPlayers(data.data.list_of_players);
+                });
   }, []);
 
 
@@ -82,24 +89,28 @@ function Table() {
                   rotation={0}
                   size={200}
                   type={'Whole'}
-                  className='is-flex is-flex-direction-column has-text-centered' />
+                  className='is-flex is-flex-direction-column has-text-centered'
+                  player={players[0]} />
                 <Chair
                   rotation={0}
                   size={200}
                   type={'Whole'}
-                  className='is-flex is-flex-direction-column has-text-centered' />
+                  className='is-flex is-flex-direction-column has-text-centered'
+                  player={players[1]} />
               </div>
               <div className="is-flex is-align-items-end is-justify-content-space-around item">
                 <Chair
                   rotation={0}
                   size={200}
                   type={'Whole'}
-                  className='is-flex is-flex-direction-column has-text-centered' />
+                  className='is-flex is-flex-direction-column has-text-centered'
+                  player={players[2]} />
                 <Chair
                   rotation={0}
                   size={200}
                   type={'Whole'}
-                  className='is-flex is-flex-direction-column has-text-centered' />
+                  className='is-flex is-flex-direction-column has-text-centered'
+                  player={players[3]} />
               </div>
               <div className="is-flex is-align-items-end is-justify-content-start item">
 
@@ -109,7 +120,8 @@ function Table() {
                   rotation={-90}
                   size={120}
                   type={'Right'}
-                  className='is-flex is-flex-direction-row has-text-centered' />
+                  className='is-flex is-flex-direction-row has-text-centered'
+                  player={players[4]} />
               </div>
               <div
                 className="is-flex is-justify-content-space-evenly is-align-items-center item table-cells"
@@ -142,21 +154,24 @@ function Table() {
                   rotation={90}
                   size={120}
                   type={'Left'}
-                  className='is-flex is-flex-direction-row-reverse has-text-centered' />
+                  className='is-flex is-flex-direction-row-reverse has-text-centered'
+                  player={players[5]} />
               </div>
               <div className="is-flex is-align-items-center is-justify-content-end item">
                 <Chair
                   rotation={-90}
                   size={120}
                   type={'Left'}
-                  className='is-flex is-flex-direction-row has-text-centered' />
+                  className='is-flex is-flex-direction-row has-text-centered'
+                  player={players[6]} />
               </div>
               <div className="is-flex is-align-items-center is-justify-content-start item">
                 <Chair
                   rotation={90}
                   size={120}
                   type={'Right'}
-                  className='is-flex is-flex-direction-row-reverse has-text-centered' />
+                  className='is-flex is-flex-direction-row-reverse has-text-centered'
+                  player={players[7]} />
               </div>
               <div className="is-flex is-align-items-start is-justify-content-end item">
 
@@ -166,24 +181,28 @@ function Table() {
                   rotation={180}
                   size={200}
                   type={'Whole'}
-                  className='is-flex is-flex-direction-column-reverse has-text-centered' />
+                  className='is-flex is-flex-direction-column-reverse has-text-centered'
+                  player={players[8]} />
                 <Chair
                   rotation={180}
                   size={200}
                   type={'Whole'}
-                  className='is-flex is-flex-direction-column-reverse has-text-centered' />
+                  className='is-flex is-flex-direction-column-reverse has-text-centered'
+                  player={players[9]} />
               </div>
               <div className="is-flex is-align-items-start is-justify-content-space-around item">
                 <Chair
                   rotation={180}
                   size={200}
                   type={'Whole'}
-                  className='is-flex is-flex-direction-column-reverse has-text-centered' />
+                  className='is-flex is-flex-direction-column-reverse has-text-centered'
+                  player={players[10]} />
                 <Chair
                   rotation={180}
                   size={200}
                   type={'Whole'}
-                  className='is-flex is-flex-direction-column-reverse has-text-centered' />
+                  className='is-flex is-flex-direction-column-reverse has-text-centered'
+                  player={players[11]} />
               </div>
               <div className="is-flex is-align-items-start is-justify-content-start item item">
 

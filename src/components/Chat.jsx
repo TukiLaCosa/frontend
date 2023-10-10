@@ -15,12 +15,14 @@ export function Chat() {
   } catch (error) {
     console.error("Error obteniendo el nombre de usuario:", error);
   }
+
   const sendMessage = () => {
     if (message) {
       setChatLog([...chatLog, { content:`${message}`, type: 'sent' }]);
       setMessage('');
     }
   };
+  
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });

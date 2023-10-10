@@ -9,7 +9,7 @@ function ExitAndStart({ curP, minP, isHost, name }) {
   const router = useRouter();
 
   const handleStartClick = () => {
-    router.push(`/game/${name}`);
+    router.push(`/game`);
   }
 
   const handleExitClick = () => {
@@ -19,7 +19,6 @@ function ExitAndStart({ curP, minP, isHost, name }) {
   const closeModal = () => {
     setShowModal(false);
   }
-
 
   async function cancelGame() {
     let id = localStorage.getItem("user").id;

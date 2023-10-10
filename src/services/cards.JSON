@@ -1,0 +1,689 @@
+{
+	"name": {
+		"theThing": [
+			1,
+			1
+		],
+		"infected": [
+			2,
+			21
+		],
+		"flamethrowe": [
+			22,
+			26
+		],
+		"analysis": [
+			27,
+			29
+		],
+		"axe": [
+			30,
+			31
+		],
+		"suspicion": [
+			32,
+			39
+		],
+		"whisky": [
+			40,
+			42
+		],
+		"determination": [
+			43,
+			47
+		],
+		"watchYourBack": [
+			48,
+			49
+		],
+		"changeOfLocation": [
+			50,
+			55
+		],
+		"youBetterRun": [
+			55,
+			59
+		],
+		"seduction": [
+			60,
+			66
+		],
+		"frightening": [
+			67,
+			70
+		],
+		"iAmFineHere": [
+			71,
+			73
+		],
+		"noThanks": [
+			74,
+			77
+		],
+		"youMissed": [
+			78,
+			80
+		],
+		"noBarbecues": [
+			81,
+			83
+		],
+		"quarantine": [
+			84,
+			85
+		],
+		"lockedDoor": [
+			86,
+			88
+		],
+		"rottenRopes": [
+			89,
+			90
+		],
+		"oneTwo": [
+			91,
+			92
+		],
+		"threeFour": [
+			93,
+			94
+		],
+		"isThePartyHere": [
+			95,
+			96
+		],
+		"getOutOfHere": [
+			97,
+			97
+		],
+		"forgetful": [
+			98,
+			98
+		],
+		"roundAndRound": [
+			99,
+			100
+		],
+		"weCanNotBeFriends": [
+			101,
+			102
+		],
+		"blindDate": [
+			103,
+			104
+		],
+		"ups": [
+			105,
+			105
+		],
+		"letItStayBetweenUs": [
+			105,
+			107
+		],
+		"revelations": [
+			108,
+			108
+		],
+		"turn": [
+			109,
+			109
+		]
+	},
+	"type": {
+		"takeAway": [
+			2,
+			88
+		],
+		"panic": [
+			88,
+			108
+		]
+	},
+	"cards": [
+		{
+			"name": "The Thing",
+			"type": "The Thing",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Infected!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Flamethrower",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Flamethrower",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Flamethrower",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Flamethrower",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Flamethrower",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Analysis",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Analysis",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Analysis",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Axe",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Axe",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Suspicion",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Suspicion",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Suspicion",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Suspicion",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Suspicion",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Suspicion",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Suspicion",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Suspicion",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Whisky",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Whisky",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Whisky",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Determination",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Determination",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Determination",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Determination",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Determination",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Watch Your Back",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Watch Your Back",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Switch",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Switch",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Switch",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Switch",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Switch",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "You Better Run",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "You Better Run",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "You Better Run",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "You Better Run",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "You Better Run",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Seduction",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Seduction",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Seduction",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Seduction",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Seduction",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Seduction",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Seduction",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Frightening",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Frightening",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Frightening",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Frightening",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "I'm Fine Here",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "I'm Fine Here",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "I'm Fine Here",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "No, Thanks!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "No, Thanks!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "No, Thanks!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "No, Thanks!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "You Missed!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "You Missed!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "You Missed!",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "No Barbacue",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "No Barbacue",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "No Barbacue",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Quarantine",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Quarantine",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Locked Door",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Locked Door",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Locked Door",
+			"type": "Take Away",
+			"description": ""
+		},
+		{
+			"name": "Rotten Ropes",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Rotten Ropes",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "One, Two...",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "One, Two...",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Three, Four...",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Three, Four...",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Is The Party Here?",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Is The Party Here?",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Get Out Of Here!",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Forgetful",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Round And Round",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Round And Round",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "We Can Not Be Friends?",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "We Can Not Be Friends?",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Blind Date",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Blind Date",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Ups!",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Let Stay It Between Us",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Let Stay It Between Us",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Revelations",
+			"type": "Panic",
+			"description": ""
+		},
+		{
+			"name": "Turn",
+			"type": "Turn",
+			"description": ""
+		}
+	]
+}
