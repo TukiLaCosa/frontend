@@ -1,33 +1,65 @@
-'use client';
+'use client'
+
 import { useState, useRef, useEffect } from 'react';
+import { useWebSocket } from '@/services/WebSocketContext';
 
 export function Chat() {
   const [message, setMessage] = useState('');
   const [chatLog, setChatLog] = useState([]);
   const messagesEndRef = useRef(null);
   let userName = "";
+  let gameName = "";
 
-  try {
+  const { socket, initializeWebSocket } = useWebSocket();
+
+  if (typeof window !== 'undefined') {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.name) {
-      userName = user.name + ":";
+    const game = JSON.parse(localStorage.getItem('game'));
+    if (user && game && user.name && game.name) {
+      userName = user.name;
+      gameName = game.name
     }
-  } catch (error) {
-    console.error("Error obteniendo el nombre de usuario:", error);
+  } else {
+    console.log('You are on the server')
   }
 
   const sendMessage = () => {
     if (message) {
-      setChatLog([...chatLog, { content:`${message}`, type: 'sent' }]);
+      setChatLog((chatLog) => [...chatLog, { content: `${message}`, type: 'sent', name: `${userName}` }]);
+      const send = `{
+        "event":"message",
+        "message":"${message}",
+        "from":"${userName}",
+        "game_name":"${gameName}"
+      }`
+      socket.send(send);
       setMessage('');
     }
   };
-  
+
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [chatLog]);
+
+  useEffect(() => {
+    initializeWebSocket(JSON.parse(localStorage.getItem('user')).id);
+    return (() => {
+      socket?.close();
+    })
+  }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.addEventListener('message', (event) => {
+        if (JSON.parse(event.data).event == 'message') {
+          const messageData = JSON.parse(event.data);
+          setChatLog((chatLog) => [...chatLog, { content: `${messageData.message}`, type: 'received', name: `${messageData.from}` }]);
+        }
+      });
+    }
+  }, [socket]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -35,12 +67,13 @@ export function Chat() {
       sendMessage();
     }
   }
+
   return (
-    <div className="box is-shadowless is-flex is-flex-direction-column is-justify-content-end chat full-grid-area" style={{ minHeight: '100%'}}>
+    <div className="box is-shadowless is-flex is-flex-direction-column is-justify-content-end chat full-grid-area" style={{ minHeight: '100%' }}>
       <div className="messages-container" style={{ overflowY: 'auto' }}>
         {chatLog.map((msg, index) => (
           <div key={index} className={`message ${msg.type}`}>
-            <span className="user-name">{userName}</span> <span>{msg.content}</span>
+            <span className="user-name">{msg.name}</span> <span>{msg.content}</span>
           </div>
         ))}
         <div ref={messagesEndRef}></div>
