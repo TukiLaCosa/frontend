@@ -4,33 +4,42 @@ export const WebSocketContext = createContext();
 
 export function WebSocketProvider({ children }) {
 
-    const [socket , setSocket] = useState(null);
+    const [socket, setSocket] = useState(null);
+    const [event, setEvent] = useState(null);
 
     const initializeWebSocket = (id) => {
         if (id) {
             const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/${id}`);
             setSocket(newSocket);
 
-            // newSocket.onopen = () => {
-            //     console.log('WebSocket connection opened');
-            //     // Send user ID to the server when the connection is established
-            //     // newSocket.send(`User ID: ${userId}`);
-            // };
+            newSocket.onopen = () => {
+                console.log('WebSocket connection opened');
+            };
 
-            // newSocket.onmessage = (event) => {
-            //     console.log('Received a websocket message:', event.data);
-            //     // Handle WebSocket messages here
-            // };
+            newSocket.onmessage = (e) => {
+                console.log('Received a websocket message:', e.data);
+                setEvent(e.data);
+            };
 
-            // newSocket.onclose = () => {
-            //     console.log('WebSocket connection closed');
-            //     // Handle reconnection logic if needed
-            // };
+            newSocket.onclose = () => {
+                console.log('WebSocket connection closed');
+                setSocket(new WebSocket(`ws://127.0.0.1:8000/ws/${id}`));
+            };
         }
-      };
+    };
+
+    const sendMessage = (message, userName, gameName) => {
+        const send = `{
+            "event":"message",
+            "message":"${message}",
+            "from":"${userName}",
+            "game_name":"${gameName}"
+          }`
+        socket.send(send);
+    }
 
     return (
-        <WebSocketContext.Provider value={{ socket, initializeWebSocket }}>
+        <WebSocketContext.Provider value={{ event, initializeWebSocket, sendMessage }}>
             {children}
         </WebSocketContext.Provider>
     );

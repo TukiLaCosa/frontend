@@ -10,7 +10,7 @@ export function Chat() {
   let userName = "";
   let gameName = "";
 
-  const { socket, initializeWebSocket } = useWebSocket();
+  const { event, sendMessage } = useWebSocket();
 
   if (typeof window !== 'undefined') {
     const user = JSON.parse(localStorage.getItem('user'));
@@ -23,16 +23,10 @@ export function Chat() {
     console.log('You are on the server')
   }
 
-  const sendMessage = () => {
+  const sendMessages = () => {
     if (message) {
       setChatLog((chatLog) => [...chatLog, { content: `${message}`, type: 'sent', name: `${userName}` }]);
-      const send = `{
-        "event":"message",
-        "message":"${message}",
-        "from":"${userName}",
-        "game_name":"${gameName}"
-      }`
-      socket.send(send);
+      sendMessage(message, userName, gameName);
       setMessage('');
     }
   };
@@ -44,27 +38,19 @@ export function Chat() {
   }, [chatLog]);
 
   useEffect(() => {
-    initializeWebSocket(JSON.parse(localStorage.getItem('user')).id);
-    return (() => {
-      socket?.close();
-    })
-  }, []);
-
-  useEffect(() => {
-    if (socket) {
-      socket.addEventListener('message', (event) => {
-        if (JSON.parse(event.data).event == 'message') {
-          const messageData = JSON.parse(event.data);
-          setChatLog((chatLog) => [...chatLog, { content: `${messageData.message}`, type: 'received', name: `${messageData.from}` }]);
-        }
-      });
+    let eventJSON = JSON.parse(event);
+    if (eventJSON?.event == 'message') {
+      setChatLog((chatLog) => [
+        ...chatLog,
+        { content: `${eventJSON.message}`, type: 'received', name: `${eventJSON.from}` }
+      ]);
     }
-  }, [socket]);
+  }, [event]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      sendMessage();
+      sendMessages();
     }
   }
 
@@ -91,7 +77,7 @@ export function Chat() {
           />
         </div>
         <div className="control">
-          <button className="button is-info" onClick={sendMessage}>
+          <button className="button is-info" onClick={sendMessages}>
             Enviar
           </button>
         </div>

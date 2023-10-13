@@ -11,7 +11,7 @@ function ExitAndStart() {
   const [hostID, setHostId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
-  const { socket, initializeWebSocket } = useWebSocket();
+  const { event } = useWebSocket();
 
   async function fetchDataGame() {
 
@@ -35,35 +35,25 @@ function ExitAndStart() {
   async function initGame() {
     const url = `http://127.0.0.1:8000/games/${gameName}/init?host_player_id=${hostID}`;
     const response = await axios.patch(url);
-    console.log(response);
-    // router.push(`/game`);
+    router.push(`/game`);
   }
 
   useEffect(() => {
-    let ID = JSON.parse(localStorage.getItem('user')).id;
-    initializeWebSocket(ID);
     let name = JSON.parse(localStorage.getItem('game')).name;
     setGameName(name);
     fetchDataGame();
-    return (() => {
-      socket?.close();
-    })
   }, []);
 
   useEffect(() => {
-    if (socket) {
-      socket.addEventListener('message', (event) => {
-        const message = JSON.parse(event.data);
-        if (message.event == 'player_joined') {
-          fetchDataGame();
-        } else if (message.event == 'game_started') {
-          router.push(`/game`);
-        } else if (message.event == 'game_deleted') {
-          router.push(`/search-game`);
-        }
-      });
+    let eventType = JSON.parse(event)?.event;
+    if (eventType == 'player_joined') {
+      fetchDataGame();
+    } else if (eventType == 'game_started') {
+      router.push(`/game`);
+    } else if (eventType == 'game_deleted') {
+      router.push(`/search-game`);
     }
-  }, [socket]);
+  }, [event]);
 
   const handleStartClick = () => {
     initGame();

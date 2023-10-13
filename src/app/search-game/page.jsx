@@ -41,7 +41,7 @@ function SearchGame() {
 	const [games, setGames] = useState([]);
 	const [passwords, setPasswords] = useState({});
 	const router = useRouter();
-	const { socket, initializeWebSocket } = useWebSocket();
+	const { event } = useWebSocket();
 
 	async function fetchGames() {
 		try {
@@ -54,23 +54,14 @@ function SearchGame() {
 
 	useEffect(() => {
 		fetchGames();
-		initializeWebSocket(JSON.parse(localStorage.getItem('user')).id);
-
-		return (() => {
-			socket?.close();
-		})
 	}, []);
 
 	useEffect(() => {
-		if (socket) {
-			socket.addEventListener('message', (event) => {
-				const message = JSON.parse(event.data).event;
-				if (message == 'game_deleted' || message == 'game_created') {
-					fetchGames();
-				}
-			});
+		let eventType = JSON.parse(event)?.event;
+		if(eventType == 'game_deleted' || eventType == 'game_created'){
+			fetchGames();
 		}
-	}, [socket]);
+	}, [event]);
 
 	return (
 		<div className='has-text-centered'>

@@ -1,7 +1,5 @@
 'use client'
 
-// import Image from 'next/image';
-
 import { useEffect, useState } from "react";
 
 function DataGame() {
@@ -33,11 +31,6 @@ function DataGame() {
         <p className="has-text-weight-bold">Jugadores: {data.num_of_players}/{data.max_players}</p>
         <p className="has-text-weight-bold">Jugadores mínimos: {data.min_players}</p>
       </div>
-      {/* <div>
-        <button className="button is-warning is-large" onClick={() => refresh(true)}>
-          <Image src="/images/refresh.svg" alt="Refresh" width={64} height={64} />
-        </button>
-      </div> */}
     </div>
   );
 }

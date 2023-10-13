@@ -5,10 +5,9 @@ import { useEffect, useState } from "react";
 import { useWebSocket } from '@/services/WebSocketContext';
 import axios from "axios";
 
-
 function ListPlayers() {
   const [dataGame, setDataGame] = useState({});
-  const { socket, initializeWebSocket } = useWebSocket();
+  const { event } = useWebSocket();
   const [gameName, setGameName] = useState(JSON.parse(localStorage.getItem('game')).name);
   const [hostID, setHostId] = useState(null);
 
@@ -32,27 +31,17 @@ function ListPlayers() {
   }
 
   useEffect(() => {
-    let ID = JSON.parse(localStorage.getItem('user')).id;
-    initializeWebSocket(ID);
     let name = JSON.parse(localStorage.getItem('game')).name;
     setGameName(name);
     fetchDataGame();
-
-    return (() => {
-      socket?.close();
-    })
   }, []);
 
   useEffect(() => {
-    if (socket) {
-      socket.addEventListener('message', (event) => {
-        const message = JSON.parse(event.data).event;
-        if (message == 'player_joined' || message == 'game_updated') {
-          fetchDataGame();
-        }
-      });
+    let eventType = JSON.parse(event)?.event;
+    if(eventType == 'player_joined' || eventType == 'game_updated') {
+      fetchDataGame();
     }
-  }, [socket]);
+  }, [event]);
 
   function RandomMonster() {
     const randomIndex = Math.floor(Math.random() * monsters.length);

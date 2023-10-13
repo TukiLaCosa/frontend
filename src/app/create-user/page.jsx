@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import { useWebSocket } from '@/services/WebSocketContext';
 
 let userNameInput;
 let searchGameButton;
@@ -41,10 +42,9 @@ export async function editUser(setExistUser){
 	const url = `http://127.0.0.1:8000/players/${userID}`;
 	const response = await axios.delete(url);
 	localStorage.clear();
-	console.log(response);
 }
 
-export async function createUser(isCorrect, setClassName, setExistUser) {
+export async function createUser(isCorrect, setClassName, setExistUser, initializeWebSocket) {
 	if (isCorrect) {
 		const newUser = { name: userNameInput.value };
 
@@ -53,6 +53,7 @@ export async function createUser(isCorrect, setClassName, setExistUser) {
 			if (response?.status == 201) {
 				onUserExist(setExistUser);
 				setClassName('is-success');
+				initializeWebSocket(response.data.id);
 				localStorage.setItem('user', `{ "id": ${response.data.id}, "name": "${response.data.name}"}`);
 			}
 		}
@@ -71,6 +72,7 @@ function CreateUser() {
 	let [className, setClassName] = useState('is-tuki');
 	let [isCorrect, setIsCorrect] = useState(false);
 	let [existUser, setExistUser] = useState(false);
+	let { initializeWebSocket } = useWebSocket();
 
 	useEffect(() => {
 		userNameInput = document.getElementById('name');
@@ -96,7 +98,7 @@ function CreateUser() {
 				<input type='text' id='name' className={`input is-large ${className}`} onInput={() => { checkUserName(userNameInput.value, setIsCorrect, setClassName) }} placeholder='Nombre' />
 				{
 					!existUser ?
-						<button id='create-user' className='button is-tuki is-large' onClick={() => { createUser(isCorrect, setClassName, setExistUser) }}>Crear usuario</button>
+						<button id='create-user' className='button is-tuki is-large' onClick={() => { createUser(isCorrect, setClassName, setExistUser, initializeWebSocket) }}>Crear usuario</button>
 						:
 						<button id='edit-user' className='button is-tuki is-large' onClick={() => { editUser(setExistUser) }} disabled={false}>Editar Usuario</button>
 				}
