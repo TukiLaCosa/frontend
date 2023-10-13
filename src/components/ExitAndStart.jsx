@@ -1,30 +1,85 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
+import { useWebSocket } from "@/services/WebSocketContext";
 import axios from 'axios';
+import { useUserGame } from "@/services/UserGameContext";
 
-function ExitAndStart({ curP, minP, isHost, name }) {
-  const ready = (curP >= minP);
+function ExitAndStart() {
+  const { event } = useWebSocket();
+  const { user, game } = useUserGame();
+  const [gameName, setGameName] = useState(game?.name);
+  const [isHost, setIsHost] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+  const [hostID, setHostId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
-  const handleStartClick = () => {
-    router.push(`/game/${name}`);
+  async function fetchDataGame() {
+
+    try {
+      const url = `http://127.0.0.1:8000/games/${gameName}`;
+      const response = await axios.get(url);
+
+      if (response?.status != 200) {
+        throw new Error('Network response was not ok [ListPlayers]');
+      } else {
+        setIsHost(response.data.host_player_id == user.id);
+        setHostId(response.data.host_player_id);
+        setIsReady(response.data.num_of_players >= response.data.min_players);
+        setGameName(response.data.name);
+      }
+    } catch (error) {
+      console.error('Error getting players of game:', error);
+    }
   }
 
-  const handleExitClick = () => {
-    setShowModal(true);
+  async function initGame() {
+    const url = `http://127.0.0.1:8000/games/${gameName}/init?host_player_id=${hostID}`;
+    const response = await axios.patch(url);
+    router.push(`/game`);
+  }
+
+  useEffect(() => {
+    let name = game?.name;
+    setGameName(name);
+    fetchDataGame();
+  }, []);
+
+  useEffect(() => {
+    let eventType = JSON.parse(event)?.event;
+    if (eventType == 'player_joined' || eventType == 'player_left') {
+      fetchDataGame();
+    } else if (eventType == 'game_started') {
+      let gameStarted = JSON.parse(event)?.game_name;
+      if (gameStarted == gameName) {
+        router.push(`/game`);
+      }
+    } else if (eventType == 'game_canceled') {
+      router.push(`/search-game`);
+    }
+  }, [event]);
+
+  const handleStartClick = () => {
+    initGame();
+  }
+
+  const handleExitClick = (user) => {
+    if (isHost) {
+      setShowModal(true);
+    } else {
+      leaveGame(user);
+    }
   }
 
   const closeModal = () => {
     setShowModal(false);
   }
 
-
   async function cancelGame() {
-    let id = localStorage.getItem("user").id;
     try {
-      const response = await axios.delete(`http://localhost:8000/games/${name}`);
+      const url = `http://localhost:8000/games/${gameName}`;
+      const response = await axios.delete(url);
       localStorage.removeItem('game');
     } catch (error) {
       console.error('Error deleting data:', error);
@@ -33,23 +88,25 @@ function ExitAndStart({ curP, minP, isHost, name }) {
     router.push('/search-game');
   }
 
+  async function leaveGame(user) {
+    try {
+      const playerID = user.id;
+      const url = `http://localhost:8000/games/leave/${gameName}?player_id=${playerID}`;
+      const response = await axios.patch(url);
+    } catch (error) {
+      console.error('Error leaving data:', error);
+    }
+
+    router.push('/search-game');
+  }
+
   return (
     <div className="colums buttons">
       <div className="column">
-        {
-          isHost ?
-            <button className="button is-danger is-large" onClick={handleExitClick}>Cancelar</button>
-            :
-            <button className="button is-danger is-large" disabled>Cancelar</button>
-        }
+        <button className="button is-danger is-large" onClick={() => { handleExitClick(user) }}>Cancelar</button>
       </div>
       <div className="column">
-        {
-          ready && isHost ?
-            <button className="button is-success is-large" onClick={handleStartClick}>Iniciar</button>
-            :
-            <button className="button is-success is-large" disabled>Iniciar</button>
-        }
+        <button className="button is-success is-large" onClick={handleStartClick} disabled={!(isHost && isReady)}>Iniciar</button>
       </div>
 
       {showModal && isHost && (
@@ -67,7 +124,7 @@ function ExitAndStart({ curP, minP, isHost, name }) {
             </section>
             <footer className="modal-card-foot">
               <button className="button is-danger" onClick={() => { cancelGame(); closeModal() }}>Irse</button>
-              <button className="button is-tuki" onClick={closeModal}>{"Irsen't"}</button>
+              <button className="button is-tuki" onClick={closeModal}>Irsen't</button>
             </footer>
           </div>
         </div>
