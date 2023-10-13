@@ -6,6 +6,7 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import Game from '@/components/Game';
 import { useWebSocket } from '@/services/WebSocketContext';
+import { useUserGame } from '@/services/UserGameContext';
 
 export function handleInput(event, gameName, passwords, setPasswords) {
 	const newPasswords = { ...passwords };
@@ -21,14 +22,14 @@ export function makeBodyRequest(id, password) {
 	});
 }
 
-export async function handleClick(gameName, passwords, router) {
-	let user = JSON.parse(localStorage.getItem('user'));
+export async function handleClick(gameName, passwords, router, user, setGameValues) {
 	const password = passwords[gameName] || '';
 	try {
 		const data_patch = makeBodyRequest(user.id, password);
 		const response = await axios.patch(`http://localhost:8000/games/join/${gameName}`, data_patch);
 		if (response?.status == 200) {
-			localStorage.setItem('game', `{ "name": "${gameName}"}`);
+			setGameValues(gameName, '', '');
+			// localStorage.setItem('game', `{ "name": "${gameName}"}`);
 			router.push('/lobby');
 		}
 	}
@@ -42,6 +43,7 @@ function SearchGame() {
 	const [passwords, setPasswords] = useState({});
 	const router = useRouter();
 	const { event } = useWebSocket();
+	const { user, setGameValues } = useUserGame();
 
 	async function fetchGames() {
 		try {
@@ -58,7 +60,11 @@ function SearchGame() {
 
 	useEffect(() => {
 		let eventType = JSON.parse(event)?.event;
-		if(eventType == 'game_deleted' || eventType == 'game_created'){
+		if(eventType == 'game_deleted'
+		   	|| eventType == 'game_created'
+			|| eventType == 'game_started'
+			|| eventType == 'game_updated'
+			|| eventType == 'player_joined') {
 			fetchGames();
 		}
 	}, [event]);
@@ -76,7 +82,7 @@ function SearchGame() {
 							(
 								<ul>
 									{games.map((game, index) => (
-										<Game key={index} game={game} handleClick={(gameName) => handleClick(gameName, passwords, router)} handleInput={(event, gameName) => handleInput(event, gameName, passwords, setPasswords)}></Game>
+										<Game key={index} game={game} handleClick={(gameName) => handleClick(gameName, passwords, router, user, setGameValues)} handleInput={(event, gameName) => handleInput(event, gameName, passwords, setPasswords)}></Game>
 									))}
 								</ul>
 							)}

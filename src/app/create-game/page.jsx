@@ -4,22 +4,18 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import { useUserGame } from '@/services/UserGameContext';
 
-export function verifyUser(router){
-    let user = localStorage.getItem('user');
+export function verifyUser(router, user){
     if(user == null) router.push('/');
 }
 
-export function getHost(){
-    return JSON.parse(localStorage.getItem('user')).id;
-}
+// export function saveGameStorage(gameName){
+//     localStorage.setItem('game', `{ "name": "${gameName}" }`);
+// }
 
-export function saveGameStorage(gameName){
-    localStorage.setItem('game', `{ "name": "${gameName}" }`);
-}
-
-export function makeBodyRequest(data){
-    let host = getHost();
+export function makeBodyRequest(data, user){
+    let host = user?.id;
     let password = data.password !== '' ? data.password : null
     return {
         "name": data.name,
@@ -31,12 +27,12 @@ export function makeBodyRequest(data){
 }
 
 
-export async function createGame(data, router) {
-    const newGame = makeBodyRequest(data);
+export async function createGame(data, router, user, setGameValues) {
+    const newGame = makeBodyRequest(data, user);
     try {
         const response = await axios.post('http://localhost:8000/games/', newGame);
         if (response?.status == 201) {
-            saveGameStorage(newGame.name);
+            setGameValues(data.name, '', []);
             router.push('/lobby');
         }
     }
@@ -52,6 +48,7 @@ export async function createGame(data, router) {
 
 function CreateGame() {
 
+    let { user, game, setUserValues, setGameValues } = useUserGame();
     const { register,
         handleSubmit,
         formState: { errors },
@@ -61,7 +58,7 @@ function CreateGame() {
     const router = useRouter();
 
     useEffect(() => {
-        verifyUser(router);
+        verifyUser(router, user);
     });
 
     return (
@@ -70,7 +67,7 @@ function CreateGame() {
                 <h2 className='title is-3 level-item'>Ingresa los datos de la partida</h2>
             </div>
             <div className='level section'>
-                <form onSubmit={handleSubmit(data => createGame(data, router))}>
+                <form onSubmit={handleSubmit(data => createGame(data, router, user, setGameValues))} label='form'>
                     <div className='field'>
                         <label className='label'>Nombre de la partida:</label>
                         <input id='name'
@@ -124,6 +121,7 @@ function CreateGame() {
                     <button id='sendButton'
                         className='button is-tuki'
                         type='submit'
+                        label='form'
                     >Enviar</button>
                 </form>
             </div>

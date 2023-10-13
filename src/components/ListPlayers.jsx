@@ -3,12 +3,14 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useWebSocket } from '@/services/WebSocketContext';
+import { useUserGame } from "@/services/UserGameContext";
 import axios from "axios";
 
 function ListPlayers() {
   const [dataGame, setDataGame] = useState({});
   const { event } = useWebSocket();
-  const [gameName, setGameName] = useState(JSON.parse(localStorage.getItem('game')).name);
+  const { user, game } = useUserGame();
+  const [gameName, setGameName] = useState(game?.name);
   const [hostID, setHostId] = useState(null);
 
   const monstersContext = require.context('!@svgr/webpack!../../public/monsters', false, /\.svg$/);
@@ -31,14 +33,14 @@ function ListPlayers() {
   }
 
   useEffect(() => {
-    let name = JSON.parse(localStorage.getItem('game')).name;
+    let name = game?.name;
     setGameName(name);
     fetchDataGame();
   }, []);
 
   useEffect(() => {
     let eventType = JSON.parse(event)?.event;
-    if(eventType == 'player_joined' || eventType == 'game_updated') {
+    if(eventType == 'player_joined' || eventType == 'player_left') {
       fetchDataGame();
     }
   }, [event]);

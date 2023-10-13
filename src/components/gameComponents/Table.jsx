@@ -16,6 +16,7 @@ import { useEffect, useState } from 'react';
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 import axios from 'axios';
+import { useUserGame } from '@/services/UserGameContext';
 
 const cardsPlayerMock = [
   { id: 1, name: "1" },
@@ -50,9 +51,10 @@ function Table() {
   let items = [...cardsPlayer, 'discard-deck', 'play-card'];
   const angle = [-15, -10, 10, 15, 20];
   let [players, setPlayers] = useState('Vacio');
-  
+  const { game } = useUserGame();
+
   useEffect(() => {
-    const gameName = JSON.parse(localStorage.getItem('game')).name;
+    const gameName = game.name;
     const gameData = axios.get(`http://localhost:8000/games/${gameName}`)
                 .then((data) => {
                   console.log(data);

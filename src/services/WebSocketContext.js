@@ -17,7 +17,6 @@ export function WebSocketProvider({ children }) {
             };
 
             newSocket.onmessage = (e) => {
-                console.log('Received a websocket message:', e.data);
                 setEvent(e.data);
             };
 
@@ -25,6 +24,10 @@ export function WebSocketProvider({ children }) {
                 console.log('WebSocket connection closed');
                 setSocket(new WebSocket(`ws://127.0.0.1:8000/ws/${id}`));
             };
+
+            newSocket.onerror = (e) => {
+                console.log("error", error);
+            }
         }
     };
 

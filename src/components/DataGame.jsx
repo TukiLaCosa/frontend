@@ -1,13 +1,15 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import { useUserGame } from "@/services/UserGameContext";
 
 function DataGame() {
   const [data, setData] = useState([]);
+  const { game } = useUserGame();
   let gameName = '';
 
   useEffect(() => {
-    gameName = JSON.parse(localStorage.getItem('game')).name;
+    gameName = game?.name;
     const getData = async () => {
       try {
         const response = await fetch(`http://localhost:8000/games/${gameName}`);

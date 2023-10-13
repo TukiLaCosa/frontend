@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useWebSocket } from '@/services/WebSocketContext';
+import { useUserGame } from '@/services/UserGameContext';
 
 export function Chat() {
   const [message, setMessage] = useState('');
@@ -11,13 +12,12 @@ export function Chat() {
   let gameName = "";
 
   const { event, sendMessage } = useWebSocket();
+  const { user, game } = useUserGame();
 
   if (typeof window !== 'undefined') {
-    const user = JSON.parse(localStorage.getItem('user'));
-    const game = JSON.parse(localStorage.getItem('game'));
-    if (user && game && user.name && game.name) {
+    if (user && game /*&& user.name && game.name*/) {
       userName = user.name;
-      gameName = game.name
+      gameName = game.name;
     }
   } else {
     console.log('You are on the server')

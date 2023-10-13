@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import { useWebSocket } from '@/services/WebSocketContext';
+import { useUserGame } from '@/services/UserGameContext';
 
 let userNameInput;
 let searchGameButton;
@@ -33,18 +34,18 @@ export function onUserExist(setExistUser) {
 	createGameButton.removeAttribute('disabled');
 }
 
-export async function editUser(setExistUser){
+export async function editUser(setExistUser, userID){
 	setExistUser(false);
 	userNameInput.removeAttribute('disabled');
 	createGameButton.setAttribute('disabled', '');
 	searchGameButton.setAttribute('disabled', '');
-	const userID = JSON.parse(localStorage.getItem('user')).id;
+	// const userID = JSON.parse(localStorage.getItem('user')).id;
 	const url = `http://127.0.0.1:8000/players/${userID}`;
 	const response = await axios.delete(url);
 	localStorage.clear();
 }
 
-export async function createUser(isCorrect, setClassName, setExistUser, initializeWebSocket) {
+export async function createUser(isCorrect, setClassName, setExistUser, initializeWebSocket, setUserValues) {
 	if (isCorrect) {
 		const newUser = { name: userNameInput.value };
 
@@ -54,7 +55,8 @@ export async function createUser(isCorrect, setClassName, setExistUser, initiali
 				onUserExist(setExistUser);
 				setClassName('is-success');
 				initializeWebSocket(response.data.id);
-				localStorage.setItem('user', `{ "id": ${response.data.id}, "name": "${response.data.name}"}`);
+				setUserValues(response.data.id, response.data.name);
+				// localStorage.setItem('user', `{ "id": ${response.data.id}, "name": "${response.data.name}"}`);
 			}
 		}
 		catch (error) {
@@ -73,21 +75,23 @@ function CreateUser() {
 	let [isCorrect, setIsCorrect] = useState(false);
 	let [existUser, setExistUser] = useState(false);
 	let { initializeWebSocket } = useWebSocket();
+	let { user, setUserValues } = useUserGame();
 
 	useEffect(() => {
 		userNameInput = document.getElementById('name');
 		searchGameButton = document.getElementById('search-game');
 		createGameButton = document.getElementById('create-game');
+	}, [className]);
 
-		const userPrev = localStorage.getItem('user');
-
-		if (userPrev) {
-			userNameInput.placeHolder = JSON.parse(userPrev).name;
-			userNameInput.value = JSON.parse(userPrev).name;
+	useEffect(() => {
+		console.log(user);
+		const userPrev = user?.name;
+		if (userPrev != null) {
+			userNameInput.placeHolder = userPrev;
+			userNameInput.value = userPrev;
 			onUserExist(setExistUser);
 		}
-
-	}, [className]);
+	}, [user]);
 
 	return (
 		<section className='hero is-halfheight is-flex is-flex-direction-column is-justify-content-space-evenly is-align-items-center'>
@@ -98,9 +102,9 @@ function CreateUser() {
 				<input type='text' id='name' className={`input is-large ${className}`} onInput={() => { checkUserName(userNameInput.value, setIsCorrect, setClassName) }} placeholder='Nombre' />
 				{
 					!existUser ?
-						<button id='create-user' className='button is-tuki is-large' onClick={() => { createUser(isCorrect, setClassName, setExistUser, initializeWebSocket) }}>Crear usuario</button>
+						<button id='create-user' className='button is-tuki is-large' onClick={() => { createUser(isCorrect, setClassName, setExistUser, initializeWebSocket, setUserValues) }}>Crear usuario</button>
 						:
-						<button id='edit-user' className='button is-tuki is-large' onClick={() => { editUser(setExistUser) }} disabled={false}>Editar Usuario</button>
+						<button id='edit-user' className='button is-tuki is-large' onClick={() => { editUser(setExistUser, user?.id) }} disabled={false}>Editar Usuario</button>
 				}
 			</div>
 			<div className='level buttons are-large'>

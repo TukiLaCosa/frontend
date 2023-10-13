@@ -3,15 +3,17 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import { useWebSocket } from "@/services/WebSocketContext";
 import axios from 'axios';
+import { useUserGame } from "@/services/UserGameContext";
 
 function ExitAndStart() {
-  const [gameName, setGameName] = useState(JSON.parse(localStorage.getItem('game')).name);
+  const { event } = useWebSocket();
+  const { user, game } = useUserGame();
+  const [gameName, setGameName] = useState(game?.name);
   const [isHost, setIsHost] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [hostID, setHostId] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
-  const { event } = useWebSocket();
 
   async function fetchDataGame() {
 
@@ -22,7 +24,7 @@ function ExitAndStart() {
       if (response?.status != 200) {
         throw new Error('Network response was not ok [ListPlayers]');
       } else {
-        setIsHost(response.data.host_player_id == JSON.parse(localStorage.getItem('user')).id);
+        setIsHost(response.data.host_player_id == user.id);
         setHostId(response.data.host_player_id);
         setIsReady(response.data.num_of_players >= response.data.min_players);
         setGameName(response.data.name);
@@ -39,18 +41,21 @@ function ExitAndStart() {
   }
 
   useEffect(() => {
-    let name = JSON.parse(localStorage.getItem('game')).name;
+    let name = game?.name;
     setGameName(name);
     fetchDataGame();
   }, []);
 
   useEffect(() => {
     let eventType = JSON.parse(event)?.event;
-    if (eventType == 'player_joined') {
+    if (eventType == 'player_joined' || eventType == 'player_left') {
       fetchDataGame();
     } else if (eventType == 'game_started') {
-      router.push(`/game`);
-    } else if (eventType == 'game_deleted') {
+      let gameStarted = JSON.parse(event)?.game_name;
+      if (gameStarted == gameName) {
+        router.push(`/game`);
+      }
+    } else if (eventType == 'game_canceled') {
       router.push(`/search-game`);
     }
   }, [event]);
@@ -59,12 +64,11 @@ function ExitAndStart() {
     initGame();
   }
 
-  const handleExitClick = () => {
+  const handleExitClick = (user) => {
     if (isHost) {
       setShowModal(true);
     } else {
-      alert("si t qre i ite");
-      // eliminar jugador de la partida
+      leaveGame(user);
     }
   }
 
@@ -74,7 +78,8 @@ function ExitAndStart() {
 
   async function cancelGame() {
     try {
-      const response = await axios.delete(`http://localhost:8000/games/${gameName}`);
+      const url = `http://localhost:8000/games/${gameName}`;
+      const response = await axios.delete(url);
       localStorage.removeItem('game');
     } catch (error) {
       console.error('Error deleting data:', error);
@@ -83,10 +88,22 @@ function ExitAndStart() {
     router.push('/search-game');
   }
 
+  async function leaveGame(user) {
+    try {
+      const playerID = user.id;
+      const url = `http://localhost:8000/games/leave/${gameName}?player_id=${playerID}`;
+      const response = await axios.patch(url);
+    } catch (error) {
+      console.error('Error leaving data:', error);
+    }
+
+    router.push('/search-game');
+  }
+
   return (
     <div className="colums buttons">
       <div className="column">
-        <button className="button is-danger is-large" onClick={handleExitClick}>Cancelar</button>
+        <button className="button is-danger is-large" onClick={() => { handleExitClick(user) }}>Cancelar</button>
       </div>
       <div className="column">
         <button className="button is-success is-large" onClick={handleStartClick} disabled={!(isHost && isReady)}>Iniciar</button>
