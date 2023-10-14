@@ -22,9 +22,6 @@ export function UserGameProvider({ children }) {
 
     const setUserValues = (id = 0, name = '') => {
 
-        console.log('Creando usuario');
-        console.log(id);
-        console.log(name);
         setUser({
             "id": id,
             "name": `${name}`
@@ -33,8 +30,6 @@ export function UserGameProvider({ children }) {
 
     const setGameValues = ( name, typeNext, cards) => {
 
-        console.log('Creando partida');
-        console.log(name);
         setGame({
             "name": `${name}`,
             "nextCard": `${typeNext}`,

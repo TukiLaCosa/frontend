@@ -17,6 +17,7 @@ export function WebSocketProvider({ children }) {
             };
 
             newSocket.onmessage = (e) => {
+                console.log(e.data);
                 setEvent(e.data);
             };
 

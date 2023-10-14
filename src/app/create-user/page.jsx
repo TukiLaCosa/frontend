@@ -84,7 +84,6 @@ function CreateUser() {
 	}, [className]);
 
 	useEffect(() => {
-		console.log(user);
 		const userPrev = user?.name;
 		if (userPrev != null) {
 			userNameInput.placeHolder = userPrev;

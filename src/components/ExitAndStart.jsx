@@ -47,15 +47,18 @@ function ExitAndStart() {
   }, []);
 
   useEffect(() => {
-    let eventType = JSON.parse(event)?.event;
+    let eventJSON = JSON.parse(event);
+    let eventType = eventJSON?.event;
     if (eventType == 'player_joined' || eventType == 'player_left') {
       fetchDataGame();
-    } else if (eventType == 'game_started') {
+    } else if (eventType == 'game_started' && eventJSON?.game_name == game.name) {
       let gameStarted = JSON.parse(event)?.game_name;
       if (gameStarted == gameName) {
         router.push(`/game`);
       }
     } else if (eventType == 'game_canceled') {
+      router.push(`/search-game`);
+    } else if (eventType == 'game_deleted' && eventJSON?.game_name == game.name){
       router.push(`/search-game`);
     }
   }, [event]);
