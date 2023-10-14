@@ -78,7 +78,7 @@ function Table() {
               className="room"
               style={
                 {
-                  backgroundImage: 'url("/backgrounds/floorBG.png")',
+                  backgroundImage: 'url("/backgrounds/floorBG.gif")',
                   backgroundSize: 'cover',
                   boxShadow: '0 0 5px 5px #c3c4c6'
                 }

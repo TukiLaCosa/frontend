@@ -88,6 +88,21 @@ function SearchGame() {
 							)}
 				</div>
 			</div>
+			<div
+                className="searchG"
+                style={
+                    {
+                        backgroundImage: 'url("/backgrounds/gif2.gif")',
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        backgroundSize: 'cover',
+                        width: '100%',
+                        height: '100%',
+                        "z-index": '-1'
+                    }
+                }>
+            </div>
 		</div>
 	);
 }
