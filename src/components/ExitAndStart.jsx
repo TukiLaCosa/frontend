@@ -103,10 +103,10 @@ function ExitAndStart() {
   return (
     <div className="colums buttons">
       <div className="column">
-        <button className="button is-danger is-large" onClick={() => { handleExitClick(user) }}>Cancelar</button>
+        <button className="button is-success is-tuki is-large" onClick={handleStartClick} disabled={!(isHost && isReady)}>Iniciar partida</button>
       </div>
       <div className="column">
-        <button className="button is-success is-large" onClick={handleStartClick} disabled={!(isHost && isReady)}>Iniciar</button>
+        <button className="button is-danger is-large" onClick={() => { handleExitClick(user) }}>Cancelar partida</button>
       </div>
 
       {showModal && isHost && (
