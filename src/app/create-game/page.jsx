@@ -6,15 +6,15 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { useUserGame } from '@/services/UserGameContext';
 
-export function verifyUser(router, user){
-    if(user == null) router.push('/');
+export function verifyUser(router, user) {
+    if (user == null) router.push('/');
 }
 
 // export function saveGameStorage(gameName){
 //     localStorage.setItem('game', `{ "name": "${gameName}" }`);
 // }
 
-export function makeBodyRequest(data, user){
+export function makeBodyRequest(data, user) {
     let host = user?.id;
     let password = data.password !== '' ? data.password : null
     return {
@@ -124,6 +124,21 @@ function CreateGame() {
                         label='form'
                     >Enviar</button>
                 </form>
+            </div>
+            <div
+                className="createG"
+                style={
+                    {
+                        backgroundImage: 'url("/backgrounds/gif2.gif")',
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        backgroundSize: 'cover',
+                        width: '100%',
+                        height: '100%',
+                        zIndex: '-1'
+                    }
+                }>
             </div>
         </section>
     )
