@@ -11,7 +11,6 @@ import { useUserGame } from '@/services/UserGameContext';
 export function handleInput(event, gameName, passwords, setPasswords) {
 	const newPasswords = { ...passwords };
 	newPasswords[gameName] = event.target.value;
-	console.log(gameName);
 	setPasswords(newPasswords);
 }
 

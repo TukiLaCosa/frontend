@@ -15,7 +15,7 @@ export function Chat() {
   const { user, game } = useUserGame();
 
   if (typeof window !== 'undefined') {
-    if (user && game /*&& user.name && game.name*/) {
+    if (user && game) {
       userName = user.name;
       gameName = game.name;
     }
