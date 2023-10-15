@@ -12,7 +12,6 @@ import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortabl
 import { sortCards } from '@/services/sortCards'
 import { playCard } from '@/services/playCard'
 import { discardCard } from '@/services/discardCard'
-import { selectCard } from '@/services/selectCard'
 import { newCard } from '@/services/newCard'
 import { useUserGame } from '@/services/UserGameContext'
 // import { swapCards } from '@/services/swapCards'
@@ -50,7 +49,7 @@ function Table () {
   const { game } = useUserGame()
 
   useEffect(() => {
-    const gameName = game.name
+    const gameName = game?.name
     const gameData = axios.get(`http://localhost:8000/games/${gameName}`)
       .then((data) => {
         console.log(data)
@@ -228,7 +227,7 @@ function Table () {
                 cardsPlayer.map((card, index) => {
                   if (card) {
                     return (
-                      <Card id={card.id} selectCard={selectCard} key={card.id} rotation={angle[card.id - 1]} />
+                      <Card id={card.id} key={card.id} rotation={angle[card.id - 1]} />
                     )
                   } else {
                     return <span key={index} />

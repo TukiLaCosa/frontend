@@ -2,7 +2,7 @@
 
 import CreateUser from '@/app/create-user/page'
 
-export default function Home () {
+function Home () {
   return (
     <div className='hero is-flex is-flex-direction-column is-justify-content-center is-fullheight'>
       <h1 className='title is-1 is-uppercase is-italic has-text-centered section'>
@@ -27,3 +27,5 @@ export default function Home () {
     </div>
   )
 }
+
+export default Home

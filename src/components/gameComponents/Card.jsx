@@ -5,7 +5,7 @@ import { setPath } from '@/services/setPath'
 import { CSS } from '@dnd-kit/utilities'
 import './Card.css'
 
-function Card ({ id, selectCard }) {
+function Card ({ id }) {
   const {
     attributes,
     listeners,
@@ -33,7 +33,6 @@ function Card ({ id, selectCard }) {
       src={setPath(id)}
       width={200} height={100}
       alt=''
-      onClick={(e) => { selectCard(e) }}
     />
   )
 }

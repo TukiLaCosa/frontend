@@ -5,6 +5,75 @@ import { useWebSocket } from '@/services/WebSocketContext'
 import axios from 'axios'
 import { useUserGame } from '@/services/UserGameContext'
 
+export const fetchDataGame = async (user, gameName, setIsHost, setHostId, setIsReady) => {
+  try {
+    const url = `http://127.0.0.1:8000/games/${gameName}`
+    const response = await axios.get(url)
+
+    if (response?.status !== 200) {
+      throw new Error('Network response was not ok [ListPlayers]')
+    } else {
+      setIsHost(response.data.host_player_id === user.id)
+      setHostId(response.data.host_player_id)
+      setIsReady(response.data.num_of_players >= response.data.min_players)
+    }
+  } catch (error) {
+    console.error('Error getting players of game:', error)
+  }
+}
+
+export const initGame = async (gameName, hostID, router) => {
+  const url = `http://127.0.0.1:8000/games/${gameName}/init?host_player_id=${hostID}`
+  const response = await axios.patch(url)
+  if (!response?.ok) {
+    console.log(response)
+  }
+  router.push('/game')
+}
+
+export const cancelGame = async (gameName, router) => {
+  try {
+    const url = `http://localhost:8000/games/${gameName}`
+    const response = await axios.delete(url)
+    if (!response?.ok) {
+      console.log(response)
+    }
+    localStorage.removeItem('game')
+  } catch (error) {
+    console.error('Error deleting data:', error)
+  }
+
+  router.push('/search-game')
+}
+
+export const leaveGame = async (user, game, router) => {
+  try {
+    const playerID = user?.id
+    const gameName = game?.name
+    const url = `http://localhost:8000/games/leave/${gameName}?player_id=${playerID}`
+    const response = await axios.patch(url)
+    if (!response?.ok) {
+      console.log(response)
+    }
+  } catch (error) {
+    console.error('Error leaving data:', error)
+  }
+
+  router.push('/search-game')
+}
+
+export const handleExitClick = (user, game, isHost, router, setShowModal) => {
+  if (isHost) {
+    setShowModal(true)
+  } else {
+    leaveGame(user, game, router)
+  }
+}
+
+export const closeModal = (setShowModal) => {
+  setShowModal(false)
+}
+
 function ExitAndStart () {
   const { event } = useWebSocket()
   const { user, game } = useUserGame()
@@ -15,44 +84,17 @@ function ExitAndStart () {
   const [showModal, setShowModal] = useState(false)
   const router = useRouter()
 
-  async function fetchDataGame () {
-    try {
-      const url = `http://127.0.0.1:8000/games/${gameName}`
-      const response = await axios.get(url)
-
-      if (response?.status !== 200) {
-        throw new Error('Network response was not ok [ListPlayers]')
-      } else {
-        setIsHost(response.data.host_player_id === user.id)
-        setHostId(response.data.host_player_id)
-        setIsReady(response.data.num_of_players >= response.data.min_players)
-        setGameName(response.data.name)
-      }
-    } catch (error) {
-      console.error('Error getting players of game:', error)
-    }
-  }
-
-  async function initGame () {
-    const url = `http://127.0.0.1:8000/games/${gameName}/init?host_player_id=${hostID}`
-    const response = await axios.patch(url)
-    if (!response?.ok) {
-      console.log(response)
-    }
-    router.push('/game')
-  }
-
   useEffect(() => {
     const name = game?.name
     setGameName(name)
-    fetchDataGame()
+    fetchDataGame(user, gameName, setIsHost, setHostId, setIsReady)
   }, [])
 
   useEffect(() => {
     const eventJSON = JSON.parse(event)
     const eventType = eventJSON?.event
     if (eventType === 'player_joined' || eventType === 'player_left') {
-      fetchDataGame()
+      fetchDataGame(user, gameName, setIsHost, setHostId, setIsReady)
     } else if (eventType === 'game_started' && eventJSON?.game_name === game.name) {
       const gameStarted = JSON.parse(event)?.game_name
       if (gameStarted === gameName) {
@@ -65,59 +107,20 @@ function ExitAndStart () {
     }
   }, [event])
 
-  const handleStartClick = () => {
-    initGame()
-  }
-
-  const handleExitClick = (user) => {
-    if (isHost) {
-      setShowModal(true)
-    } else {
-      leaveGame(user)
-    }
-  }
-
-  const closeModal = () => {
-    setShowModal(false)
-  }
-
-  async function cancelGame () {
-    try {
-      const url = `http://localhost:8000/games/${gameName}`
-      const response = await axios.delete(url)
-      if (!response?.ok) {
-        console.log(response)
-      }
-      localStorage.removeItem('game')
-    } catch (error) {
-      console.error('Error deleting data:', error)
-    }
-
-    router.push('/search-game')
-  }
-
-  async function leaveGame (user) {
-    try {
-      const playerID = user.id
-      const url = `http://localhost:8000/games/leave/${gameName}?player_id=${playerID}`
-      const response = await axios.patch(url)
-      if (!response?.ok) {
-        console.log(response)
-      }
-    } catch (error) {
-      console.error('Error leaving data:', error)
-    }
-
-    router.push('/search-game')
-  }
-
   return (
     <div className='colums buttons'>
       <div className='column'>
-        <button className='button is-danger is-large' onClick={() => { handleExitClick(user) }}>Cancelar</button>
+        <button
+          className='button is-danger is-large'
+          onClick={() => {
+            handleExitClick(user, game, isHost, router, setShowModal)
+          }}
+        >
+          Cancelar
+        </button>
       </div>
       <div className='column'>
-        <button className='button is-success is-large' onClick={handleStartClick} disabled={!(isHost && isReady)}>Iniciar</button>
+        <button className='button is-success is-large' onClick={() => { initGame(gameName, hostID, router) }} disabled={!(isHost && isReady)}>Iniciar</button>
       </div>
 
       {showModal && isHost && (
@@ -137,8 +140,8 @@ function ExitAndStart () {
               <button
                 className='button is-danger'
                 onClick={() => {
-                  cancelGame()
-                  closeModal()
+                  cancelGame(gameName, router)
+                  closeModal(setShowModal)
                 }}
               >
                 Irse

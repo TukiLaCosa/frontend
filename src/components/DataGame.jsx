@@ -4,33 +4,33 @@ import { useEffect, useState } from 'react'
 import { useUserGame } from '@/services/UserGameContext'
 import { useWebSocket } from '@/services/WebSocketContext'
 
+export const getData = async (game, setData) => {
+  try {
+    const response = await fetch(`http://localhost:8000/games/${game?.name}`)
+    if (!response.ok) {
+      throw new Error('Network response was not ok [DataGame]')
+    }
+    const data = await response.json()
+    setData(data)
+  } catch (error) {
+    console.error('Error getting players:', error)
+  }
+}
+
 function DataGame () {
   const [data, setData] = useState([])
   const { game } = useUserGame()
   const { event } = useWebSocket()
 
-  const getData = async () => {
-    try {
-      const response = await fetch(`http://localhost:8000/games/${game.name}`)
-      if (!response.ok) {
-        throw new Error('Network response was not ok [DataGame]')
-      }
-      const data = await response.json()
-      setData(data)
-    } catch (error) {
-      console.error('Error getting players:', error)
-    }
-  }
-
   useEffect(() => {
-    getData()
+    getData(game, setData)
   }, [])
 
   useEffect(() => {
     const eventJSON = JSON.parse(event)
     if (eventJSON?.event === 'player_joined' ||
       eventJSON?.event === 'player_left') {
-      getData()
+      getData(game, setData)
     }
   }, [event])
 

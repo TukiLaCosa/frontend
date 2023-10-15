@@ -11,7 +11,7 @@ function Chair ({ rotation, size, type, className, player }) {
         <button
           className='button is-success is-light is-outlined'
           style={{ margin: '10px', padding: '10px' }}
-        >{player.name}
+        >{player?.name}
         </button>
       </h2>
       <img
