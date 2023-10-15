@@ -1,3 +1,3 @@
-export function swapCards () {
-    
+export const swapCards = () => {
+
 }
