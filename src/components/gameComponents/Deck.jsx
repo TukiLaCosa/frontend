@@ -1,13 +1,12 @@
-function Deck({ src }) {
-    return (
-        <img
-            id='deck'
-            src={src}
-            width={180}
-            alt=''
-            onClick={(e) => { selectCard(e) }}
-        />
-    );
+function Deck ({ src }) {
+  return (
+    <img
+      id='deck'
+      src={src}
+      width={180}
+      alt=''
+    />
+  )
 }
 
-export default Deck;
+export default Deck

@@ -1,54 +1,46 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react'
 
-const UserGameContext = createContext();
+const UserGameContext = createContext()
 
-export function UserGameProvider({ children }) {
+export function UserGameProvider ({ children }) {
+  /**
+   * user = {
+   *          "id": id,
+   *          "name": "name"
+   * }
+   */
+  const [user, setUser] = useState(null)
 
-    /**
-     * user = {
-     *          "id": id,
-     *          "name": "name"
-     * }
-     */
-    const [user, setUser] = useState(null);
+  /**
+   * game = {
+   *          "name": "name",
+   *          "nextCard": "type"
+   * }
+   */
+  const [game, setGame] = useState(null)
 
-    /**
-     * game = {
-     *          "name": "name",
-     *          "nextCard": "type"
-     * }
-     */
-    const [game, setGame] = useState(null);
+  const setUserValues = (id = 0, name = '') => {
+    setUser({
+      id,
+      name: `${name}`
+    })
+  }
 
-    const setUserValues = (id = 0, name = '') => {
+  const setGameValues = (name, typeNext, cards) => {
+    setGame({
+      name: `${name}`,
+      nextCard: `${typeNext}`,
+      cards: [cards]
+    })
+  }
 
-        console.log('Creando usuario');
-        console.log(id);
-        console.log(name);
-        setUser({
-            "id": id,
-            "name": `${name}`
-        });
-    }
-
-    const setGameValues = ( name, typeNext, cards) => {
-
-        console.log('Creando partida');
-        console.log(name);
-        setGame({
-            "name": `${name}`,
-            "nextCard": `${typeNext}`,
-            "cards": [cards]
-        });
-    }
-
-    return (
-        <UserGameContext.Provider value={{ user, game, setUserValues, setGameValues }}>
-            {children}
-        </UserGameContext.Provider>
-    );
+  return (
+    <UserGameContext.Provider value={{ user, game, setUserValues, setGameValues }}>
+      {children}
+    </UserGameContext.Provider>
+  )
 }
 
-export const useUserGame = () =>  {
-    return useContext(UserGameContext);
+export const useUserGame = () => {
+  return useContext(UserGameContext)
 }
