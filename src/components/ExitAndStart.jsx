@@ -110,19 +110,20 @@ function ExitAndStart () {
   return (
     <div className='colums buttons'>
       <div className='column'>
+        <button className='button is-success is-tuki is-large' onClick={() => { initGame(gameName, hostID, router) }} disabled={!(isHost && isReady)}>
+          Iniciar Partida
+        </button>
+      </div>
+      <div className='column'>
         <button
           className='button is-danger is-large'
           onClick={() => {
             handleExitClick(user, game, isHost, router, setShowModal)
           }}
         >
-          Cancelar
+          Cancelar Partida
         </button>
       </div>
-      <div className='column'>
-        <button className='button is-success is-large' onClick={() => { initGame(gameName, hostID, router) }} disabled={!(isHost && isReady)}>Iniciar</button>
-      </div>
-
       {showModal && isHost && (
         <div className='modal is-active'>
           <div className='modal-background' onClick={closeModal} />

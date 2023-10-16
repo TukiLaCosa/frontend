@@ -35,12 +35,27 @@ function DataGame () {
   }, [event])
 
   return (
-    <div className='notification is-tuki-modified dataGame is-flex is-justify-content-space-between is-align-items-center'>
+    <div className="notification is-tuki dataGame is-flex is-justify-content-space-between is-align-items-center">
       <div>
-        <p className='title is-5'>Partida: {data.name}</p>
-        <p className='has-text-weight-bold'>Creador: {data.host_player_name}</p>
-        <p className='has-text-weight-bold'>Jugadores: {data.num_of_players}/{data.max_players}</p>
-        <p className='has-text-weight-bold'>Jugadores mínimos: {data.min_players}</p>
+        <p className="title is-4">Partida: {data.name}</p>
+        <p className="has-text-weight-bold">Creador: {data.host_player_name}</p>
+        <p className="has-text-weight-bold">Jugadores mínimos: {data.min_players}</p>
+        <p className="has-text-weight-bold">Jugadores unidos: {data.num_of_players}/{data.max_players}</p>
+      </div>
+      <div
+        className="createG"
+        style={
+          {
+            backgroundImage: 'url("/backgrounds/gif2.gif")',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            backgroundSize: 'cover',
+            width: '100%',
+            height: '100%',
+            zIndex: '-1'
+          }
+        }>
       </div>
     </div>
   )
