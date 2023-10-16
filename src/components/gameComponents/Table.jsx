@@ -14,6 +14,7 @@ import { playCard } from '@/services/playCard'
 import { discardCard } from '@/services/discardCard'
 import { newCard } from '@/services/newCard'
 import { useUserGame } from '@/services/UserGameContext'
+import { useWebSocket } from '@/services/WebSocketContext'
 // import { swapCards } from '@/services/swapCards'
 import axios from 'axios'
 
@@ -40,14 +41,17 @@ export const handleDragEnd = (event, setCardsPlayer, setPlayBG, setDiscardBG) =>
 }
 
 function Table () {
-  const [cardsPlayer, setCardsPlayer] = useState(cardsPlayerMock)
+  const [cardsPlayer, setCardsPlayer] = useState([]) // aca poner el arreglo q creamos
   const [playBG, setPlayBG] = useState('/cards/rev/109Rev.png')
   const [discardBG, setDiscardBG] = useState('/cards/rev/revPanic.png')
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const angle = [-15, -10, 10, 15, 20]
   const [players, setPlayers] = useState('Vacio')
-  const { game } = useUserGame()
-
+  //const { game } = useUserGame()
+  const { user, game } = useUserGame() // recuperamos UserId
+  const { event } = useWebSocket() // creamos una instancia de ws
+  
+  
   useEffect(() => {
     const gameName = game?.name
     const gameData = axios.get(`http://localhost:8000/games/${gameName}`)
@@ -59,6 +63,26 @@ function Table () {
       console.log(gameData)
     }
   }, [])
+
+  useEffect(() => { // REPARTIR LAS CARTAS
+    /*DUDA: lo de las siguientes 6 lineas no puede ir dentro del if(event....) ???*/ 
+    const userID = user?.id // id del usuario
+    //const userName = user?.name // nombre de usuario
+    //const gameName = game?.name // nombre de la partida
+    const eventJSON = JSON.parse(event)
+    const eventType = eventJSON?.event
+
+    if (eventType === 'player_init_hand') {
+      // asignarles las cartas q vienen a cada jugador segun el ID
+      const actual_cards = eventJSON.hand_cards // obtenemos el arreglo de cartas para un usuario q viene por ws
+      console.log(actual_cards)
+      setCardsPlayer(actual_cards)
+    }
+    else {
+      setCardsPlayer(cardsPlayerMock) // hardcodeado para ver si entra o no al if de arriba
+    }
+    
+  }, [event])
 
   return (
     <div className='table is-flex is-flex-direction-row'>
