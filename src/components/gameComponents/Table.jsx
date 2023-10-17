@@ -15,15 +15,6 @@ import { playCard } from '@/services/playCard'
 import { discardCard } from '@/services/discardCard'
 import { newCard } from '@/services/newCard'
 import { useUserGame } from '@/services/UserGameContext'
-import { useWebSocket } from '@/services/WebSocketContext'
-// import { swapCards } from '@/services/swapCards'
-
-const cardsPlayerMock = [
-  { id: 1, name: '1' },
-  { id: 99, name: '2' },
-  { id: 32, name: '3' },
-  { id: 50, name: '4' }
-]
 
 export const handleDragEnd = (event, setCardsPlayer, setPlayBG, setDiscardBG) => {
   const { active, over } = event
@@ -62,9 +53,9 @@ function Table() {
 
   useEffect(async () => {
     async function fetchCards() {
-      const player_id = user?.id
+      const playerId = user?.id
       try {
-        const response = await axios.get(`http://localhost:8000/players/${player_id}/hand`)
+        const response = await axios.get(`http://localhost:8000/players/${playerId}/hand`)
         console.log(response) //
         console.log(response.data)
         const cards = await response.data.map((card) => {
