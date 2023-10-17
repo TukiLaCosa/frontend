@@ -6,6 +6,7 @@ import Card from './Card'
 import DiscardDeck from './DiscardDeck'
 import PlayCard from './PlayCard'
 import Chair from './Chair'
+import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
@@ -16,7 +17,6 @@ import { newCard } from '@/services/newCard'
 import { useUserGame } from '@/services/UserGameContext'
 import { useWebSocket } from '@/services/WebSocketContext'
 // import { swapCards } from '@/services/swapCards'
-import axios from 'axios'
 
 const cardsPlayerMock = [
   { id: 1, name: '1' },
@@ -40,23 +40,19 @@ export const handleDragEnd = (event, setCardsPlayer, setPlayBG, setDiscardBG) =>
   }
 }
 
-function Table () {
-  const [cardsPlayer, setCardsPlayer] = useState([]) // aca poner el arreglo q creamos
+function Table() {
+  const [cardsPlayer, setCardsPlayer] = useState([])
   const [playBG, setPlayBG] = useState('/cards/rev/109Rev.png')
   const [discardBG, setDiscardBG] = useState('/cards/rev/revPanic.png')
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const angle = [-15, -10, 10, 15, 20]
   const [players, setPlayers] = useState('Vacio')
-  //const { game } = useUserGame()
-  const { user, game } = useUserGame() // recuperamos UserId
-  const { event } = useWebSocket() // creamos una instancia de ws
-  
-  
+  const { user, game } = useUserGame()
+
   useEffect(() => {
     const gameName = game?.name
     const gameData = axios.get(`http://localhost:8000/games/${gameName}`)
       .then((data) => {
-        console.log(data)
         setPlayers(data.data.list_of_players)
       })
     if (!gameData?.ok) {
@@ -64,25 +60,25 @@ function Table () {
     }
   }, [])
 
-  useEffect(() => { // REPARTIR LAS CARTAS
-    /*DUDA: lo de las siguientes 6 lineas no puede ir dentro del if(event....) ???*/ 
-    const userID = user?.id // id del usuario
-    //const userName = user?.name // nombre de usuario
-    //const gameName = game?.name // nombre de la partida
-    const eventJSON = JSON.parse(event)
-    const eventType = eventJSON?.event
-
-    if (eventType === 'player_init_hand') {
-      // asignarles las cartas q vienen a cada jugador segun el ID
-      const actual_cards = eventJSON.hand_cards // obtenemos el arreglo de cartas para un usuario q viene por ws
-      console.log(actual_cards)
-      setCardsPlayer(actual_cards)
+  useEffect(async () => {
+    async function fetchCards() {
+      const player_id = user?.id
+      try {
+        const response = await axios.get(`http://localhost:8000/players/${player_id}/hand`)
+        console.log(response) //
+        console.log(response.data)
+        const cards = await response.data.map((card) => {
+          return {
+            id: card.id, name: card.name
+          }
+        })
+        setCardsPlayer(cards)
+      } catch (error) {
+        console.error('Error getting cards:', error)
+      }
     }
-    else {
-      setCardsPlayer(cardsPlayerMock) // hardcodeado para ver si entra o no al if de arriba
-    }
-    
-  }, [event])
+    fetchCards()
+  }, [])
 
   return (
     <div className='table is-flex is-flex-direction-row'>
@@ -247,9 +243,9 @@ function Table () {
               }
             >
               {
-
                 cardsPlayer.map((card, index) => {
                   if (card) {
+                    console.log(card)
                     return (
                       <Card id={card.id} key={card.id} rotation={angle[card.id - 1]} />
                     )
@@ -257,7 +253,6 @@ function Table () {
                     return <span key={index} />
                   }
                 })
-
               }
             </div>
           </SortableContext>
