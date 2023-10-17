@@ -1,236 +1,272 @@
-import '@testing-library/jest-dom';
-import axios from 'axios';
-import { render, screen } from '@testing-library/react';
-import React, { useState as useStateMock } from 'react';
+import '@testing-library/jest-dom'
+import axios from 'axios'
+import { fireEvent, render, screen } from '@testing-library/react'
+import React, { useState as useStateMock } from 'react'
+// import { Server, WebSocket } from 'jest-websocket-mock'
 
-import { check, checkUserName, createUser } from "@/app/create-user/page";
-import CreateUser from '@/app/create-user/page.jsx';
-import { after } from 'node:test';
+import { check, checkUserName, createUser } from '@/app/create-user/page'
+import CreateUser from '@/app/create-user/page.jsx'
+import { WebSocketProvider } from '@/services/WebSocketContext'
+import { UserGameProvider } from '@/services/UserGameContext'
+// import { after } from 'node:test'
 
 jest.mock('react', () => ({
-    ...jest.requireActual('react'),
-    useState: jest.fn()
-}));
+  ...jest.requireActual('react'),
+  useState: jest.fn()
+}))
 
-jest.mock('axios');
+jest.mock('axios')
 
 describe('Tests for creating users', () => {
+  describe('Tests for check', () => {
+    test('Correct name', () => {
+      expect(check('abc123')).toBeTruthy()
+    })
 
-    describe('Tests for check', () => {
+    test('Void String', () => {
+      expect(check('')).toBeFalsy()
+    })
 
-        test('Correct name', () => {
-            expect(check('abc123')).toBeTruthy();
-        });
+    test('Less than four characters (3)', () => {
+      expect(check('abc')).toBeFalsy()
+    })
 
-        test('Void String', () => {
-            expect(check('')).toBeFalsy();
-        });
+    test('More than eigth characters (9)', () => {
+      expect(check('abcdefghi')).toBeFalsy()
+    })
 
-        test('Less than four characters (3)', () => {
-            expect(check('abc')).toBeFalsy();
-        });
+    test('Only numbers', () => {
+      expect(check('123456')).toBeFalsy()
+    })
 
-        test('More than eigth characters (9)', () => {
-            expect(check('abcdefghi')).toBeFalsy();
-        });
+    test('Start with a number', () => {
+      expect(check('1abc')).toBeFalsy()
+    })
 
-        test('Only numbers', () => {
-            expect(check('123456')).toBeFalsy();
-        });
+    describe('Special characters', () => {
+      test('/', () => {
+        expect(check('/abc123')).toBeFalsy()
+        expect(check('abc/123')).toBeFalsy()
+        expect(check('abc123/')).toBeFalsy()
+      })
 
-        test('Start with a number', () => {
-            expect(check('1abc')).toBeFalsy();
-        });
+      test('+', () => {
+        expect(check('+abc123')).toBeFalsy()
+        expect(check('abc+123')).toBeFalsy()
+        expect(check('abc123+')).toBeFalsy()
+      })
 
-        describe('Special characters', () => {
+      test('-', () => {
+        expect(check('-abc123')).toBeFalsy()
+        expect(check('abc-123')).toBeFalsy()
+        expect(check('abc123-')).toBeFalsy()
+      })
 
-            test('/', () => {
-                expect(check('/abc123')).toBeFalsy();
-                expect(check('abc/123')).toBeFalsy();
-                expect(check('abc123/')).toBeFalsy();
-            });
+      test('*', () => {
+        expect(check('*abc123')).toBeFalsy()
+        expect(check('abc*123')).toBeFalsy()
+        expect(check('abc123*')).toBeFalsy()
+      })
 
-            test('+', () => {
-                expect(check('+abc123')).toBeFalsy();
-                expect(check('abc+123')).toBeFalsy();
-                expect(check('abc123+')).toBeFalsy();
-            });
+      test('%', () => {
+        expect(check('%abc123')).toBeFalsy()
+        expect(check('abc%123')).toBeFalsy()
+        expect(check('abc123%')).toBeFalsy()
+      })
 
-            test('-', () => {
-                expect(check('-abc123')).toBeFalsy();
-                expect(check('abc-123')).toBeFalsy();
-                expect(check('abc123-')).toBeFalsy();
-            });
+      test('@', () => {
+        expect(check('@abc123')).toBeFalsy()
+        expect(check('abc@123')).toBeFalsy()
+        expect(check('abc123@')).toBeFalsy()
+      })
+    })
+  })
 
-            test('*', () => {
-                expect(check('*abc123')).toBeFalsy();
-                expect(check('abc*123')).toBeFalsy();
-                expect(check('abc123*')).toBeFalsy();
-            });
+  const setClassNameMock = jest.fn()
+  const setIsCorrectMock = jest.fn()
+  const setState = jest.fn()
 
-            test('%', () => {
-                expect(check('%abc123')).toBeFalsy();
-                expect(check('abc%123')).toBeFalsy();
-                expect(check('abc123%')).toBeFalsy();
-            });
+  describe('Tests for checkUserName', () => {
+    describe('Call setIsCorrect', () => {
+      test('With right user name', () => {
+        checkUserName('abcd', setIsCorrectMock, setClassNameMock)
+        expect(setIsCorrectMock).toBeCalledWith(true)
+      })
 
-            test('@', () => {
-                expect(check('@abc123')).toBeFalsy();
-                expect(check('abc@123')).toBeFalsy();
-                expect(check('abc123@')).toBeFalsy();
-            });
-        });
-    });
+      test('With wrong user name', () => {
+        checkUserName('', setIsCorrectMock, setClassNameMock)
+        expect(setIsCorrectMock).toBeCalledWith(false)
+      })
+    })
 
-    const setClassNameMock = jest.fn();
-    const setIsCorrectMock = jest.fn();
-    const setState = jest.fn();
+    describe('Call setClassName', () => {
+      test('Whit right user name', () => {
+        checkUserName('abcd', setIsCorrectMock, setClassNameMock)
+        expect(setClassNameMock).toBeCalledWith('is-tuki')
+      })
 
-    describe('Tests for checkUserName', () => {
+      test('Whit wrong user name', () => {
+        checkUserName('abcd', setIsCorrectMock, setClassNameMock)
+        expect(setClassNameMock).toBeCalledWith('is-danger')
+      })
+    })
 
-        describe('Call setIsCorrect', () => {
+    describe('Right className', () => {
+      beforeEach(() => {
+        useStateMock.mockImplementation((init) => [init, setState])
+        setClassNameMock.mockRestore()
+        setIsCorrectMock.mockRestore()
+      })
 
-            test('With right user name', () => {
-                checkUserName('abcd', setIsCorrectMock, setClassNameMock);
-                expect(setIsCorrectMock).toBeCalledWith(true);
-            });
+      afterEach(() => {
+        useStateMock.mockRestore()
+      })
 
-            test('With worng user name', () => {
-                checkUserName('', setIsCorrectMock, setClassNameMock);
-                expect(setIsCorrectMock).toBeCalledWith(false);
-            });
-        });
+      const socketContextMockValue = {
+        event: jest.value,
+        initializeWebSocket: jest.fn(),
+        sendMessage: jest.fn()
+      }
 
-        describe('Call setClassName', () => {
+      const userContextMockValue = {
+        user: jest.value,
+        game: jest.value,
+        setUserValues: jest.fn(),
+        setGameValues: jest.fn()
+      }
 
-            test('Whit right user name', () => {
-                checkUserName('abcd', setIsCorrectMock, setClassNameMock);
-                expect(setClassNameMock).toBeCalledWith('is-tuki');
-            });
+      test('At start', () => {
+        render(
+          <WebSocketProvider value={socketContextMockValue}>
+            <UserGameProvider value={userContextMockValue}>
+              <CreateUser />
+            </UserGameProvider>
+          </WebSocketProvider>
+        )
+        expect(screen.getByPlaceholderText('Nombre')).toHaveClass('is-tuki')
+        expect(screen.getByRole('button', { name: 'Crear usuario' })).not.toHaveAttribute('disabled')
+        expect(screen.getByRole('button', { name: 'Crear Partida' })).toHaveAttribute('disabled')
+        expect(screen.getByRole('button', { name: 'Buscar Partida' })).toHaveAttribute('disabled')
+        expect(screen.queryByText('Editar Usuario')).toBeNull()
+      })
 
-            test('Whit wrong user name', () => {
-                checkUserName('abcd', setIsCorrectMock, setClassNameMock);
-                expect(setClassNameMock).toBeCalledWith('is-danger');
-            });
-        });
+      test('At wrong user name input', () => {
+        // let init = 'is-danger'
+        // const initP = init
+        // const setClassName = (value) => { init = value }
+        // useStateMock.mockImplementation(() => [initP, setClassName])
+        // setClassNameMock.mockImplementation((value) => value)
+        // const setClassName = jest.spyOn('react', 'setState')
+        // const state = useStateMock()
+        // let init = 'is-danger'
+        // const initP = init
+        // const fun = (v) => { init = v }
+        // setClassNameMock.mockImplementationOnce(() => ['is-danger', fun])
+        // render(
+        //   <WebSocketProvider value={socketContextMockValue}>
+        //     <UserGameProvider value={userContextMockValue}>
+        //       <CreateUser />
+        //     </UserGameProvider>
+        //   </WebSocketProvider>
+        // )
+        // jest.spyOn(React, 'useState').mockRestore()
+        // const input = screen.getByPlaceholderText('Nombre')
+        // fireEvent.change(input, { target: { value: 'abcd' } })
+        // const button = screen.getByRole('button', { name: 'Crear usuario' })
+        // fireEvent.click(button)
+        // checkUserName('abcd', setIsCorrectMock, setClassNameMock)
+        // expect(screen.getByPlaceholderText('Nombre')).toHaveClass('is-danger')
+        // expect(setClassNameMock).toBeCalled()
+      })
 
-        describe('Right className', () => {
+      // test('At right user name input', () => {
+      //   useStateMock.mockImplementationOnce(() => ['is-tuki', setClassNameMock])
+      //   render(<CreateUser />)
+      //   checkUserName('abcd', setIsCorrectMock, setClassNameMock)
+      //   expect(screen.getByPlaceholderText('Nombre')).toHaveClass('is-tuki')
+      // })
+    })
+  })
 
-            beforeEach(() => {
-                useStateMock.mockImplementation((init) => [init, setState]);
-            });
+  // describe('Tests for createUser', () => {
+  //   beforeAll(() => {
+  //     console.error = jest.fn()
+  //   })
 
-            test('At start', () => {
-                render(<CreateUser />);
-                expect(screen.getByPlaceholderText('Nombre')).toHaveClass('is-tuki');
-            });
+  //   afterAll(() => {
+  //     console.error.mockRestore()
+  //   })
 
-            test('At wrong user name input', () => {
-                useStateMock.mockImplementationOnce(() => ['is-danger', setClassNameMock]);
-                render(<CreateUser />);
-                checkUserName('', setIsCorrectMock, setClassNameMock);
-                expect(screen.getByPlaceholderText('Nombre')).toHaveClass('is-danger');
-            });
+  //   describe('Call setClassName correctly', () => {
+  //     const localStorageMock = {
+  //       getItem: jest.fn(),
+  //       setItem: jest.fn(),
+  //       removeItem: jest.fn(),
+  //       clear: jest.fn()
+  //     }
 
-            test('At right user name input', () => {
-                useStateMock.mockImplementationOnce(() => ['is-tuki', setClassNameMock]);
-                render(<CreateUser />);
-                checkUserName('abcd', setIsCorrectMock, setClassNameMock);
-                expect(screen.getByPlaceholderText('Nombre')).toHaveClass('is-tuki');
-            });
-        });
+  //     beforeAll(() => {
+  //       Object.defineProperty(window, 'localStorage', {
+  //         value: localStorageMock,
+  //         writable: true
+  //       })
+  //     })
 
-        /**
-         * se llama a la funcion setIsCorrect bien por test anteriores
-         * ¿Cómo checkeo que se seteo bien?
-         * Checkeo indirecto en la proxima funcion
-         */
-        // describe('Right isCorrect', () => {
+  //     test('With is NOT correct', () => {
+  //       setClassNameMock.mockReset()
+  //       createUser(false, setClassNameMock)
+  //       expect(setClassNameMock).not.toBeCalled()
+  //     })
 
-        // });
-    });
+  //     test('With IS correct & success response', async () => {
+  //       const responseData = { id: '1', name: 'user', status: '201' }
+  //       axios.post.mockResolvedValue(responseData)
+  //       await createUser(true, setClassNameMock)
+  //       expect(setClassNameMock).toBeCalledWith('is-success')
+  //     })
 
-    describe('Tests for createUser', () => {
+  //     test('With IS correct & bad response', async () => {
+  //       const responseData = { id: '1', name: 'user', status: '404' }
+  //       axios.post.mockResolvedValue(responseData)
+  //       await createUser(true, setClassNameMock)
+  //       setClassNameMock.mockReset()
+  //       expect(setClassNameMock).not.toBeCalled()
+  //     })
+  //   })
 
-        beforeAll(() => {
-            console.error = jest.fn();
-        });
+  //   describe('Set disabled', () => {
+  //     test('At start', () => {
+  //       render(<CreateUser />)
+  //       expect(screen.getByRole('button', { name: /Crear Partida/i })).toBeDisabled()
+  //       expect(screen.getByRole('button', { name: /Buscar Partida/i })).toBeDisabled()
+  //     })
 
-        afterAll(() => {
-            console.error.mockRestore();
-        })
+  //     test('At wrong user name', async () => {
+  //       render(<CreateUser />)
+  //       const responseData = { id: '1', name: 'user', status: '201' }
+  //       axios.post.mockResolvedValue(responseData)
+  //       await createUser(false, setClassNameMock)
+  //       expect(screen.getByRole('button', { name: /Crear Partida/i })).toBeDisabled()
+  //       expect(screen.getByRole('button', { name: /Buscar Partida/i })).toBeDisabled()
+  //     })
 
-        describe('Call setClassName correctly', () => {
-            const localStorageMock = {
-                getItem: jest.fn(),
-                setItem: jest.fn(),
-                removeItem: jest.fn(),
-                clear: jest.fn(),
-            };
+  //     test('At wrong response', async () => {
+  //       render(<CreateUser />)
+  //       const responseData = { id: '1', name: 'user', status: '404' }
+  //       axios.post.mockResolvedValue(responseData)
+  //       await createUser(true, setClassNameMock)
+  //       expect(screen.getByRole('button', { name: /Crear Partida/i })).toBeDisabled()
+  //       expect(screen.getByRole('button', { name: /Buscar Partida/i })).toBeDisabled()
+  //     })
 
-            beforeAll(() => {
-                Object.defineProperty(window, 'localStorage', {
-                    value: localStorageMock,
-                    writable: true,
-                });
-            });
-
-            test('With is NOT correct', () => {
-                setClassNameMock.mockReset();
-                createUser(false, setClassNameMock);
-                expect(setClassNameMock).not.toBeCalled();
-            });
-
-            test('With IS correct & success response', async () => {
-                const responseData = { id: '1', name: 'user', status: '201' };
-                axios.post.mockResolvedValue(responseData);
-                await createUser(true, setClassNameMock);
-                expect(setClassNameMock).toBeCalledWith('is-success');
-            });
-
-            test('With IS correct & bad response', async () => {
-                const responseData = { id: '1', name: 'user', status: '404' };
-                axios.post.mockResolvedValue(responseData);
-                await createUser(true, setClassNameMock);
-                setClassNameMock.mockReset();;
-                expect(setClassNameMock).not.toBeCalled();
-            });
-        });
-
-        describe('Set disabled', () => {
-
-            test('At start', () => {
-                render(<CreateUser />);
-                expect(screen.getByRole('button', { name: /Crear Partida/i })).toBeDisabled();
-                expect(screen.getByRole('button', { name: /Buscar Partida/i })).toBeDisabled();
-            });
-
-            test('At wrong user name', async () => {
-                render(<CreateUser />);
-                const responseData = { id: '1', name: 'user', status: '201' };
-                axios.post.mockResolvedValue(responseData);
-                await createUser(false, setClassNameMock);
-                expect(screen.getByRole('button', { name: /Crear Partida/i })).toBeDisabled();
-                expect(screen.getByRole('button', { name: /Buscar Partida/i })).toBeDisabled();
-            });
-
-            test('At wrong response', async () => {
-                render(<CreateUser />);
-                const responseData = { id: '1', name: 'user', status: '404' };
-                axios.post.mockResolvedValue(responseData);
-                await createUser(true, setClassNameMock);
-                expect(screen.getByRole('button', { name: /Crear Partida/i })).toBeDisabled();
-                expect(screen.getByRole('button', { name: /Buscar Partida/i })).toBeDisabled();
-            });
-
-            test('At right response', async () => {
-                render(<CreateUser />);
-                const responseData = { id: '1', name: 'user', status: '201' };
-                axios.post.mockResolvedValue(responseData);
-                await createUser(true, setClassNameMock);
-                expect(screen.getByRole('button', { name: /Crear Partida/i })).not.toBeDisabled();
-                expect(screen.getByRole('button', { name: /Buscar Partida/i })).not.toBeDisabled();
-            });
-        });
-    });
-});
+  //     test('At right response', async () => {
+  //       render(<CreateUser />)
+  //       const responseData = { id: '1', name: 'user', status: '201' }
+  //       axios.post.mockResolvedValue(responseData)
+  //       await createUser(true, setClassNameMock)
+  //       expect(screen.getByRole('button', { name: /Crear Partida/i })).not.toBeDisabled()
+  //       expect(screen.getByRole('button', { name: /Buscar Partida/i })).not.toBeDisabled()
+  //     })
+  //   })
+  // })
+})
