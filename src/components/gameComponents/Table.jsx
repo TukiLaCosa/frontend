@@ -6,7 +6,6 @@ import Card from './Card'
 import DiscardDeck from './DiscardDeck'
 import PlayCard from './PlayCard'
 import Chair from './Chair'
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
@@ -15,6 +14,7 @@ import { playCard } from '@/services/playCard'
 import { discardCard } from '@/services/discardCard'
 import { newCard } from '@/services/newCard'
 import { useUserGame } from '@/services/UserGameContext'
+import axios from 'axios'
 
 export const handleDragEnd = (event, setCardsPlayer, setPlayBG, setDiscardBG) => {
   const { active, over } = event
@@ -31,7 +31,24 @@ export const handleDragEnd = (event, setCardsPlayer, setPlayBG, setDiscardBG) =>
   }
 }
 
-function Table() {
+export const fetchCards = async (user, setCardsPlayer) => {
+  const playerId = user?.id
+  try {
+    const response = await axios.get(`http://localhost:8000/players/${playerId}/hand`)
+    console.log(response) //
+    console.log(response.data)
+    const cards = await response.data.map((card) => {
+      return {
+        id: card.id, name: card.name
+      }
+    })
+    setCardsPlayer(cards)
+  } catch (error) {
+    console.error('Error getting cards:', error)
+  }
+}
+
+function Table () {
   const [cardsPlayer, setCardsPlayer] = useState([])
   const [playBG, setPlayBG] = useState('/cards/rev/109Rev.png')
   const [discardBG, setDiscardBG] = useState('/cards/rev/revPanic.png')
@@ -44,31 +61,14 @@ function Table() {
     const gameName = game?.name
     const gameData = axios.get(`http://localhost:8000/games/${gameName}`)
       .then((data) => {
+        console.log(data)
         setPlayers(data.data.list_of_players)
       })
     if (!gameData?.ok) {
       console.log(gameData)
     }
-  }, [])
 
-  useEffect(async () => {
-    async function fetchCards() {
-      const playerId = user?.id
-      try {
-        const response = await axios.get(`http://localhost:8000/players/${playerId}/hand`)
-        console.log(response) //
-        console.log(response.data)
-        const cards = await response.data.map((card) => {
-          return {
-            id: card.id, name: card.name
-          }
-        })
-        setCardsPlayer(cards)
-      } catch (error) {
-        console.error('Error getting cards:', error)
-      }
-    }
-    fetchCards()
+    fetchCards(user, setCardsPlayer)
   }, [])
 
   return (
@@ -234,9 +234,9 @@ function Table() {
               }
             >
               {
+
                 cardsPlayer.map((card, index) => {
                   if (card) {
-                    console.log(card)
                     return (
                       <Card id={card.id} key={card.id} rotation={angle[card.id - 1]} />
                     )
@@ -244,6 +244,7 @@ function Table() {
                     return <span key={index} />
                   }
                 })
+
               }
             </div>
           </SortableContext>
