@@ -1,0 +1,12 @@
+{
+  "extends": "./node_modules/standard/eslintrc.json",
+  "globals": {
+    "localStorage": true,
+    "alert": true,
+    "confirm": true
+  },
+  "env": {
+    "browser": true
+  },
+  "rules": {}
+}
