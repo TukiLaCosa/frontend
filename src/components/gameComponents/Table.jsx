@@ -14,6 +14,7 @@ import { playCard } from '@/services/playCard'
 import { discardCard } from '@/services/discardCard'
 import { newCard } from '@/services/newCard'
 import { useUserGame } from '@/services/UserGameContext'
+import { useWebSocket } from '@/services/WebSocketContext'
 // import { swapCards } from '@/services/swapCards'
 import axios from 'axios'
 
@@ -23,19 +24,32 @@ const cardsPlayerMock = [
   { id: 32, name: '3' },
   { id: 50, name: '4' }
 ]
+export const turnStates = {
+  NOTURN: 'NOTURN',
+  DRAW: 'DRAW',
+  PLAY: 'PLAY',
+  DISCARD: 'DISCARD',
+  EXCHANGE: 'EXCHANGE'
+}
+const { wsEvent } = useWebSocket()
 
-export const handleDragEnd = (event, setCardsPlayer, setPlayBG, setDiscardBG) => {
+export const handleDragEnd = (event, turnState, { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }) => {
   const { active, over } = event
 
-  if (over.id === 'discard-deck') {
+  if (over.id === 'discard-deck' &&
+    (turnState === turnStates.DISCARD ||
+    turnState === turnStates.PLAY)) {
     // Discarding
     discardCard(setCardsPlayer, setDiscardBG, active.id)
-  } else if (over.id === 'play-card') {
+    setTurnState(turnStates.EXCHANGE)
+  } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
     playCard(setCardsPlayer, setPlayBG, active.id)
+    setTurnState(turnStates.EXCHANGE)
   } else {
     // Just sorting
     sortCards(setCardsPlayer, over.id, active.id)
+    // se puede dar un over.id a arrastrar las cartas para que sea posible aunque no sea el turno
   }
 }
 
@@ -43,10 +57,18 @@ function Table () {
   const [cardsPlayer, setCardsPlayer] = useState(cardsPlayerMock)
   const [playBG, setPlayBG] = useState('/cards/rev/109Rev.png')
   const [discardBG, setDiscardBG] = useState('/cards/rev/revPanic.png')
+  const [turnState, setTurnState] = useState(turnStates.DRAW)
+  // Recordar cambiar a cero
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const angle = [-15, -10, 10, 15, 20]
   const [players, setPlayers] = useState('Vacio')
   const { game } = useUserGame()
+  const dragEndSeters = { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }
+
+  useEffect(() => {
+    const eventJSON = JSON.parse(wsEvent)
+    if (eventJSON?.event === 'message') return
+  }, [wsEvent])
 
   useEffect(() => {
     const gameName = game?.name
@@ -65,7 +87,7 @@ function Table () {
       <div className='table-cards is-flex is-flex-direction-column'>
         <DndContext
           collisionDetection={closestCenter}
-          onDragEnd={(event) => { handleDragEnd(event, setCardsPlayer, setPlayBG, setDiscardBG) }} // as onChange
+          onDragEnd={(event) => { handleDragEnd(event, turnState, dragEndSeters) }} // as onChange
         >
           <SortableContext
             items={items}
@@ -135,11 +157,12 @@ function Table () {
               >
                 <img
                   id='deck'
+                  // src={deckCard} y pasamos setDeckCard a newCard?
                   src='/cards/rev/revTakeAway.png'
                   width={180}
                   alt=''
                   style={{ borderRadius: '5%' }}
-                  onClick={() => { newCard(setCardsPlayer) }}
+                  onClick={() => { newCard(setCardsPlayer, setTurnState, turnState, turnStates) }}
                 />
                 <PlayCard
                   id='play-card'

@@ -4,7 +4,7 @@ export const WebSocketContext = createContext()
 
 export function WebSocketProvider ({ children }) {
   const [socket, setSocket] = useState(null)
-  const [event, setEvent] = useState(null)
+  const [wsEvent, setWsEvent] = useState(null)
 
   const initializeWebSocket = (id) => {
     if (id) {
@@ -17,7 +17,7 @@ export function WebSocketProvider ({ children }) {
 
       newSocket.onmessage = (e) => {
         console.log(e.data)
-        setEvent(e.data)
+        setWsEvent(e.data)
       }
 
       newSocket.onclose = () => {
@@ -42,7 +42,7 @@ export function WebSocketProvider ({ children }) {
   }
 
   return (
-    <WebSocketContext.Provider value={{ event, initializeWebSocket, sendMessage }}>
+    <WebSocketContext.Provider value={{ wsEvent, initializeWebSocket, sendMessage }}>
       {children}
     </WebSocketContext.Provider>
   )
