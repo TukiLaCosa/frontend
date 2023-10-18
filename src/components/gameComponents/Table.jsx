@@ -14,15 +14,7 @@ import { playCard } from '@/services/playCard'
 import { discardCard } from '@/services/discardCard'
 import { newCard } from '@/services/newCard'
 import { useUserGame } from '@/services/UserGameContext'
-// import { swapCards } from '@/services/swapCards'
 import axios from 'axios'
-
-const cardsPlayerMock = [
-  { id: 1, name: '1' },
-  { id: 99, name: '2' },
-  { id: 32, name: '3' },
-  { id: 50, name: '4' }
-]
 
 export const handleDragEnd = (event, setCardsPlayer, setPlayBG, setDiscardBG) => {
   const { active, over } = event
@@ -39,14 +31,31 @@ export const handleDragEnd = (event, setCardsPlayer, setPlayBG, setDiscardBG) =>
   }
 }
 
+export const fetchCards = async (user, setCardsPlayer) => {
+  const playerId = user?.id
+  try {
+    const response = await axios.get(`http://localhost:8000/players/${playerId}/hand`)
+    console.log(response) //
+    console.log(response.data)
+    const cards = await response.data.map((card) => {
+      return {
+        id: card.id, name: card.name
+      }
+    })
+    setCardsPlayer(cards)
+  } catch (error) {
+    console.error('Error getting cards:', error)
+  }
+}
+
 function Table () {
-  const [cardsPlayer, setCardsPlayer] = useState(cardsPlayerMock)
+  const [cardsPlayer, setCardsPlayer] = useState([])
   const [playBG, setPlayBG] = useState('/cards/rev/109Rev.png')
   const [discardBG, setDiscardBG] = useState('/cards/rev/revPanic.png')
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const angle = [-15, -10, 10, 15, 20]
   const [players, setPlayers] = useState('Vacio')
-  const { game } = useUserGame()
+  const { user, game } = useUserGame()
 
   useEffect(() => {
     const gameName = game?.name
@@ -58,6 +67,8 @@ function Table () {
     if (!gameData?.ok) {
       console.log(gameData)
     }
+
+    fetchCards(user, setCardsPlayer)
   }, [])
 
   return (
