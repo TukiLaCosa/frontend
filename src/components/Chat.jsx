@@ -17,7 +17,7 @@ export function Chat () {
   const [chatLog, setChatLog] = useState([])
   const messagesEndRef = useRef(null)
   const { user, game } = useUserGame()
-  const { wsEvent, sendMessage } = useWebSocket()
+  const { event, sendMessage } = useWebSocket()
 
   const userName = user?.name
   const gameName = game?.name
@@ -29,14 +29,14 @@ export function Chat () {
   }, [chatLog])
 
   useEffect(() => {
-    const eventJSON = JSON.parse(wsEvent)
+    const eventJSON = JSON.parse(event)
     if (eventJSON?.event === 'message') {
       setChatLog((chatLog) => [
         ...chatLog,
         { content: `${eventJSON.message}`, type: 'received', name: `${eventJSON.from}` }
       ])
     }
-  }, [wsEvent])
+  }, [event])
 
   return (
     <div className='box is-shadowless is-flex is-flex-direction-column is-justify-content-end chat full-grid-area' style={{ minHeight: '100%' }}>
