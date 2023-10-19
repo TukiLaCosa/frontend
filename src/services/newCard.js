@@ -1,14 +1,25 @@
 import axios from 'axios'
 import { addToHand } from './addToHand'
 
-export const newCard = (setCardsPlayer, setTurnState, turnState, turnStates, user, game) => {
-  const userId = user?.id
-  const gameName = game?.id
-  const body = { player_id: userId }
-  const url = `http://127.0.0.1/games/${gameName}/draw-card`
-  const response = axios.patch(url, body)
-  if (response?.ok && turnState === turnStates.DRAW) {
-    addToHand(setCardsPlayer, response?.card.id)
+export const newCard = async (setCardsPlayer, setTurnState, turnState, turnStates, user, game) => {
+  if (turnState === turnStates.DRAW) {
+    const userId = user?.id
+    const gameName = game?.name
+    const body = { player_id: userId }
+    const url = `http://localhost:8000/games/${gameName}/draw-card`
+    const response = await axios.patch(url, body)
+    if (response?.status === 200) {
+      addToHand(setCardsPlayer, response.data.card.id)
+    } else {
+      console.log('Error response: ', response)
+    }
+  } else {
+    alert('No es tu turno')
   }
   setTurnState(turnStates.PLAY)
 }
+
+/**
+ * Llamada desde Table.jsx
+ * async () => { await newCard(setCardsPlayer, setTurnState, turnState, turnStates, user, game) }
+ */
