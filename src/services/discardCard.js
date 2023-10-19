@@ -6,8 +6,6 @@ export const discardCard = (setCardsPlayer, setDiscardBG, activeId) => {
     alert('¡No puedes descartar esta carta!')
   } else if (confirm('¿Quieres descartar esta carta?') === true) {
     const path = setPath(activeId)
-    console.log(activeId)
-    console.log(path)
     setDiscardBG(path)
     removeFromHand(setCardsPlayer, activeId)
   } else {

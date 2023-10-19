@@ -28,7 +28,11 @@ export const initGame = async (gameName, hostID, router, setGameValues) => {
   if (!response?.ok) {
     console.log(response)
   }
-  setGameValues(gameName, response.data.top_card_face, [])
+  const gameParams = {
+    name: gameName,
+    nextCard: response.data.top_card_face
+  }
+  setGameValues(gameParams)
   router.push('/game')
 }
 
@@ -39,7 +43,6 @@ export const cancelGame = async (gameName, router) => {
     if (!response?.ok) {
       console.log(response)
     }
-    localStorage.removeItem('game')
   } catch (error) {
     console.error('Error deleting data:', error)
   }

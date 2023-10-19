@@ -21,25 +21,25 @@ import axios from 'axios'
 export const turnStates = {
   NOTURN: 'NOTURN',
   DRAW: 'DRAW',
-  PLAY: 'PLAY',
-  DISCARD: 'DISCARD',
-  EXCHANGE: 'EXCHANGE'
+  PLAY: 'PLAY'
+  // EXCHANGE: 'EXCHANGE'
 }
 
 export const handleDragEnd = (event, turnState, { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }) => {
   const { active, over } = event
 
   if (over.id === 'discard-deck' &&
-    (turnState === turnStates.DISCARD ||
-      turnState === turnStates.PLAY)) {
+    (turnState === turnStates.PLAY)) {
     // Discarding
     discardCard(setCardsPlayer, setDiscardBG, active.id)
-    setTurnState(turnStates.EXCHANGE)
+    // para que no pueda descartar más de una vez
+    // tener ojo con cartas que obliguen a alguien a descartar.
+    setTurnState(turnState.NOTURN)
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
     const played = playCard(setCardsPlayer, setPlayBG, active.id)
     if (played) {
-      setTurnState(turnStates.EXCHANGE)
+      // setTurnState(turnStates.EXCHANGE)
     }
   } else {
     // Just sorting
@@ -52,8 +52,6 @@ export const fetchCards = async (user, setCardsPlayer) => {
   const playerId = user?.id
   try {
     const response = await axios.get(`http://localhost:8000/players/${playerId}/hand`)
-    console.log(response) //
-    console.log(response.data)
     const cards = await response.data.map((card) => {
       return {
         id: card.id, name: card.name
@@ -67,58 +65,68 @@ export const fetchCards = async (user, setCardsPlayer) => {
 
 function Table () {
   const { user, game } = useUserGame()
+  const wsObject = useWebSocket()
   const [cardsPlayer, setCardsPlayer] = useState([])
   const [playBG, setPlayBG] = useState('/cards/rev/109Rev.png')
   const [discardBG, setDiscardBG] = useState('/cards/rev/revPanic.png')
   const [drawBG, setDrawBG] = useState('/cards/rev/revTakeAway.png')
-  const [turnState, setTurnState] = useState(turnStates.DRAW)
+  const [turnState, setTurnState] = useState(turnStates.NOTURN)
   // Recordar cambiar a cero
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const angle = [-15, -10, 10, 15, 20]
   const [players, setPlayers] = useState('Vacio')
-<<<<<<< Updated upstream
-=======
-  const { user, game } = useUserGame()
->>>>>>> Stashed changes
-  const wsObject = useWebSocket()
   const wsEvent = wsObject.event
   const dragEndSeters = { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }
 
   useEffect(() => {
     const eventJSON = JSON.parse(wsEvent)
-    if (eventJSON?.event === 'message') return
-    if (eventJSON?.event === 'new_turn' &&
-      eventJSON?.player_id !== user?.id) {
-      setTurnState(turnStates.NOTURN)
-    } else if (eventJSON?.event === 'new_turn' &&
-      eventJSON?.player_id === user?.id) {
-      setTurnState(turnStates.DRAW)
-    } else if (eventJSON?.event === 'played_card') {
-      if (eventJSON?.player_id === user?.id) {
-        setTurnState(turnStates.EXCHANGE)
-      }
-    } else if (eventJSON?.event === 'player_draw_card') {
-      if (eventJSON?.player_id === user?.id) {
-        setTurnState(turnStates.PLAY)
-      }
-      if (eventJSON?.next_card === 'STAY_AWAY') {
-        setDrawBG('/cards/rev/revTakeAway.png')
-      } else if (eventJSON?.next_card === 'PANIC') {
-        setDrawBG('/cards/rev/revPanic.png')
-      }
+    switch (eventJSON?.event) {
+      case 'message':
+        break
+      case 'new_turn':
+        if (eventJSON?.player_id !== user?.id) {
+          setTurnState(turnStates.NOTURN)
+        } else if (eventJSON?.player_id === user?.id) {
+          setTurnState(turnStates.DRAW)
+        }
+        break
+      case 'played_card':
+        if (eventJSON?.player_id === user?.id) {
+          setTurnState(turnStates.EXCHANGE)
+        }
+        break
+      case 'player_draw_card':
+        if (eventJSON?.player_id === user?.id) {
+          setTurnState(turnStates.PLAY)
+        }
+        if (eventJSON?.next_card === 'STAY_AWAY') {
+          setDrawBG('/cards/rev/revTakeAway.png')
+        } else if (eventJSON?.next_card === 'PANIC') {
+          setDrawBG('/cards/rev/revPanic.png')
+        }
+        break
+      default:
+        break
     }
   }, [wsEvent])
 
   useEffect(() => {
     const gameName = game?.name
-    const gameData = axios.get(`http://localhost:8000/games/${gameName}`)
-      .then((data) => {
-        console.log(data)
-        setPlayers(data.data.list_of_players)
-      })
-    if (!gameData?.ok) {
-      console.log(gameData)
+    const fetchGameData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/games/${gameName}`)
+        const sortedPlayers = response.data.list_of_players.sort((a, b) => a.position - b.position)
+        setPlayers(sortedPlayers)
+        if (user?.id === sortedPlayers[0].id) {
+          setTurnState(turnStates.DRAW)
+        } else {
+          setTurnState(turnStates.NOTURN)
+        }
+      } catch (error) {
+        console.error('Error al obtener los datos del juego:', error)
+      }
     }
+    fetchGameData()
 
     if (game?.nextCard === 'STAY_AWAY') {
       setDrawBG('/cards/rev/revTakeAway.png')
@@ -204,12 +212,11 @@ function Table () {
               >
                 <img
                   id='deck'
-                  // src={deckCard} y pasamos setDeckCard a newCard?
                   src={drawBG}
                   width={180}
                   alt=''
                   style={{ borderRadius: '5%' }}
-                  onClick={() => { newCard(setCardsPlayer, setTurnState, turnState, turnStates, user, game) }}
+                  onClick={() => { newCard(setCardsPlayer, turnState, turnStates, user, game) }}
                 />
                 <PlayCard
                   id='play-card'

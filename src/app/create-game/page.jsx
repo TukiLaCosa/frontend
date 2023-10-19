@@ -29,7 +29,10 @@ export const createGame = async (data, router, user, setGameValues) => {
   try {
     const response = await axios.post('http://localhost:8000/games/', newGame)
     if (response?.status === 201) {
-      setGameValues(data.name, '', [])
+      const gameParams = {
+        name: data.name
+      }
+      setGameValues(gameParams)
       router.push('/lobby')
     }
   } catch (error) {
