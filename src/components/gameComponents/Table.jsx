@@ -25,22 +25,22 @@ export const turnStates = {
   DISCARD: 'DISCARD',
   EXCHANGE: 'EXCHANGE'
 }
-const wsObject = useWebSocket()
-const wsEvent = wsObject.event
 
 export const handleDragEnd = (event, turnState, { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }) => {
   const { active, over } = event
 
   if (over.id === 'discard-deck' &&
     (turnState === turnStates.DISCARD ||
-    turnState === turnStates.PLAY)) {
+      turnState === turnStates.PLAY)) {
     // Discarding
     discardCard(setCardsPlayer, setDiscardBG, active.id)
     setTurnState(turnStates.EXCHANGE)
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
-    playCard(setCardsPlayer, setPlayBG, active.id)
-    setTurnState(turnStates.EXCHANGE)
+    const played = playCard(setCardsPlayer, setPlayBG, active.id)
+    if (played) {
+      setTurnState(turnStates.EXCHANGE)
+    }
   } else {
     // Just sorting
     sortCards(setCardsPlayer, over.id, active.id)
@@ -66,20 +66,30 @@ export const fetchCards = async (user, setCardsPlayer) => {
 }
 
 function Table () {
+  const { user, game } = useUserGame()
   const [cardsPlayer, setCardsPlayer] = useState([])
   const [playBG, setPlayBG] = useState('/cards/rev/109Rev.png')
   const [discardBG, setDiscardBG] = useState('/cards/rev/revPanic.png')
+  const [drawBG, setDrawBG] = useState('/cards/rev/revTakeAway.png')
   const [turnState, setTurnState] = useState(turnStates.DRAW)
   // Recordar cambiar a cero
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const angle = [-15, -10, 10, 15, 20]
   const [players, setPlayers] = useState('Vacio')
-  const { user, game } = useUserGame()
+  const wsObject = useWebSocket()
+  const wsEvent = wsObject.event
   const dragEndSeters = { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }
 
   useEffect(() => {
     const eventJSON = JSON.parse(wsEvent)
-    if (eventJSON?.event === 'message') return
+    if (eventJSON?.event === 'player_draw_card') {
+      console.log('Dentro del if', eventJSON?.next_card)
+      if (eventJSON?.next_card === 'STAY_AWAY') {
+        setDrawBG('/cards/rev/revTakeAway.png')
+      } else if (eventJSON?.next_card === 'PANIC') {
+        setDrawBG('/cards/rev/revPanic.png')
+      }
+    }
   }, [wsEvent])
 
   useEffect(() => {
@@ -91,6 +101,12 @@ function Table () {
       })
     if (!gameData?.ok) {
       console.log(gameData)
+    }
+
+    if (game?.nextCard === 'STAY_AWAY') {
+      setDrawBG('/cards/rev/revTakeAway.png')
+    } else if (game?.nextCard === 'PANIC') {
+      setDrawBG('/cards/rev/revPanic.png')
     }
 
     fetchCards(user, setCardsPlayer)
@@ -172,11 +188,11 @@ function Table () {
                 <img
                   id='deck'
                   // src={deckCard} y pasamos setDeckCard a newCard?
-                  src='/cards/rev/revTakeAway.png'
+                  src={drawBG}
                   width={180}
                   alt=''
                   style={{ borderRadius: '5%' }}
-                  onClick={() => { newCard(setCardsPlayer, setTurnState, turnState, turnStates) }}
+                  onClick={() => { newCard(setCardsPlayer, setTurnState, turnState, turnStates, user, game) }}
                 />
                 <PlayCard
                   id='play-card'
