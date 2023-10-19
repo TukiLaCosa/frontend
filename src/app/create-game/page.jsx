@@ -63,10 +63,10 @@ function CreateGame () {
       <div className='level section'>
         <form onSubmit={handleSubmit(data => createGame(data, router, user, setGameValues))} label='form'>
           <div className='field'>
-            <label className='label'>Nombre de la partida:</label>
+            <label className='label is-large'>Nombre de la partida:</label>
             <input
               id='name'
-              className={`input ${errors.name ? 'is-danger' : 'is-tuki'}`}
+              className={`input ${errors.name ? 'is-danger' : 'is-tuki'} is-large`}
               type='text'
               placeholder='Nombre de la partida'
               {...register('name', {
@@ -82,11 +82,11 @@ function CreateGame () {
             />
           </div>
           <div className='field'>
-            <label className='label'>Cantidad mínima de jugadores:</label>
+            <label className='label is-large'>Cantidad mínima de jugadores:</label>
             <input
               id='minPlayers'
               type='number'
-              className={`input ${errors.minPlayers ? 'is-danger' : 'is-tuki'}`}
+              className={`input ${errors.minPlayers ? 'is-danger' : 'is-tuki'} is-large`}
               {...register('minPlayers', {
                 required: true,
                 min: 4,
@@ -95,11 +95,11 @@ function CreateGame () {
             />
           </div>
           <div className='field'>
-            <label className='label'>Cantidad máxima de jugadores:</label>
+            <label className='label is-large'>Cantidad máxima de jugadores:</label>
             <input
               id='maxPlayers'
               type='number'
-              className={`input ${errors.maxPlayers ? 'is-danger' : 'is-tuki'}`}
+              className={`input ${errors.maxPlayers ? 'is-danger' : 'is-tuki'} is-large`}
               {...register('maxPlayers', {
                 required: true,
                 min: watch('minPlayers'),
@@ -108,10 +108,10 @@ function CreateGame () {
             />
           </div>
           <div className='field'>
-            <label className='label'>Contraseña (opcional):</label>
+            <label className='label is-large'>Contraseña (opcional):</label>
             <input
               id='pass'
-              className={`input ${errors.password ? 'is-danger' : 'is-tuki'}`}
+              className={`input ${errors.password ? 'is-danger' : 'is-tuki'} is-large`}
               {...register('password', {
                 pattern: {
                   value: /^[a-zA-Z0-9]{1,16}$/,
@@ -122,7 +122,7 @@ function CreateGame () {
           </div>
           <button
             id='sendButton'
-            className='button is-tuki'
+            className='button is-tuki is-large'
             type='submit'
             label='form'
           >

@@ -8,7 +8,7 @@ export const playCard = (setCardsPlayer, setPlayBG, activeId) => {
   if (activeCard === 'The Thing' ||
     activeCard === 'Infected!') {
     alert('¡No se puede jugar esta carta!')
-    return
+    return false
   }
 
   if (confirm('¿Quieres jugar esta carta?')) {
@@ -111,5 +111,6 @@ export const playCard = (setCardsPlayer, setPlayBG, activeId) => {
         console.log('No lo se rick')
         break
     }
+    return true
   }
 }
