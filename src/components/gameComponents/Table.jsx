@@ -76,14 +76,31 @@ function Table () {
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const angle = [-15, -10, 10, 15, 20]
   const [players, setPlayers] = useState('Vacio')
+<<<<<<< Updated upstream
+=======
+  const { user, game } = useUserGame()
+>>>>>>> Stashed changes
   const wsObject = useWebSocket()
   const wsEvent = wsObject.event
   const dragEndSeters = { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }
 
   useEffect(() => {
     const eventJSON = JSON.parse(wsEvent)
-    if (eventJSON?.event === 'player_draw_card') {
-      console.log('Dentro del if', eventJSON?.next_card)
+    if (eventJSON?.event === 'message') return
+    if (eventJSON?.event === 'new_turn' &&
+      eventJSON?.player_id !== user?.id) {
+      setTurnState(turnStates.NOTURN)
+    } else if (eventJSON?.event === 'new_turn' &&
+      eventJSON?.player_id === user?.id) {
+      setTurnState(turnStates.DRAW)
+    } else if (eventJSON?.event === 'played_card') {
+      if (eventJSON?.player_id === user?.id) {
+        setTurnState(turnStates.EXCHANGE)
+      }
+    } else if (eventJSON?.event === 'player_draw_card') {
+      if (eventJSON?.player_id === user?.id) {
+        setTurnState(turnStates.PLAY)
+      }
       if (eventJSON?.next_card === 'STAY_AWAY') {
         setDrawBG('/cards/rev/revTakeAway.png')
       } else if (eventJSON?.next_card === 'PANIC') {
