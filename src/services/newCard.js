@@ -9,7 +9,7 @@ export const newCard = async (setCardsPlayer, setTurnState, turnState, turnState
     const url = `http://localhost:8000/games/${gameName}/draw-card`
     const response = await axios.patch(url, body)
     if (response?.status === 200) {
-      addToHand(setCardsPlayer, response.data.card.id)
+      addToHand(setCardsPlayer, response.data.id)
     } else {
       console.log('Error response: ', response)
     }
