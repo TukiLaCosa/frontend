@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { addToHand } from './addToHand'
 
-export const newCard = async (setCardsPlayer, setTurnState, turnState, turnStates, user, game) => {
+export const newCard = async (setCardsPlayer, turnState, turnStates, user, game) => {
   if (turnState === turnStates.DRAW) {
     const userId = user?.id
     const gameName = game?.name
@@ -16,7 +16,6 @@ export const newCard = async (setCardsPlayer, setTurnState, turnState, turnState
   } else {
     alert('No es tu turno')
   }
-  setTurnState(turnStates.PLAY)
 }
 
 /**
