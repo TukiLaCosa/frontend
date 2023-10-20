@@ -216,7 +216,7 @@ function Table () {
                   width={180}
                   alt=''
                   style={{ borderRadius: '5%' }}
-                  onClick={() => { newCard(setCardsPlayer, turnState, turnStates, user, game) }}
+                  onClick={() => { newCard(setCardsPlayer, setTurnState, turnState, turnStates) }}
                 />
                 <PlayCard
                   id='play-card'
