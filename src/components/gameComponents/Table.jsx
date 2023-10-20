@@ -71,6 +71,7 @@ function Table () {
   const [discardBG, setDiscardBG] = useState('/cards/rev/revPanic.png')
   const [drawBG, setDrawBG] = useState('/cards/rev/revTakeAway.png')
   const [turnState, setTurnState] = useState(turnStates.NOTURN)
+  const [turn, setTurn] = useState(0)
   // Recordar cambiar a cero
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const angle = [-15, -10, 10, 15, 20]
@@ -89,10 +90,11 @@ function Table () {
         } else if (eventJSON?.player_id === user?.id) {
           setTurnState(turnStates.DRAW)
         }
+        setTurn(eventJSON?.player_id)
         break
       case 'played_card':
         if (eventJSON?.player_id === user?.id) {
-          setTurnState(turnStates.EXCHANGE)
+          // setTurnState(turnStates.EXCHANGE)
         }
         break
       case 'player_draw_card':
@@ -117,6 +119,7 @@ function Table () {
         const response = await axios.get(`http://localhost:8000/games/${gameName}`)
         const sortedPlayers = response.data.list_of_players.sort((a, b) => a.position - b.position)
         setPlayers(sortedPlayers)
+        setTurn(sortedPlayers[0].id)
         if (user?.id === sortedPlayers[0].id) {
           setTurnState(turnStates.DRAW)
         } else {
@@ -166,6 +169,7 @@ function Table () {
                   type='Whole'
                   className='is-flex is-flex-direction-column has-text-centered'
                   player={players[0]}
+                  turn={turn}
                 />
                 <Chair
                   rotation={0}
@@ -173,6 +177,7 @@ function Table () {
                   type='Whole'
                   className='is-flex is-flex-direction-column has-text-centered'
                   player={players[1]}
+                  turn={turn}
                 />
               </div>
               <div className='is-flex is-align-items-end is-justify-content-space-around item'>
@@ -182,6 +187,7 @@ function Table () {
                   type='Whole'
                   className='is-flex is-flex-direction-column has-text-centered'
                   player={players[2]}
+                  turn={turn}
                 />
                 <Chair
                   rotation={0}
@@ -189,6 +195,7 @@ function Table () {
                   type='Whole'
                   className='is-flex is-flex-direction-column has-text-centered'
                   player={players[3]}
+                  turn={turn}
                 />
               </div>
               <div className='is-flex is-align-items-end is-justify-content-start item' />
@@ -199,6 +206,7 @@ function Table () {
                   type='Right'
                   className='is-flex is-flex-direction-row has-text-centered'
                   player={players[4]}
+                  turn={turn}
                 />
               </div>
               <div
@@ -234,6 +242,7 @@ function Table () {
                   type='Left'
                   className='is-flex is-flex-direction-row-reverse has-text-centered'
                   player={players[5]}
+                  turn={turn}
                 />
               </div>
               <div className='is-flex is-align-items-center is-justify-content-end item'>
@@ -243,6 +252,7 @@ function Table () {
                   type='Left'
                   className='is-flex is-flex-direction-row has-text-centered'
                   player={players[6]}
+                  turn={turn}
                 />
               </div>
               <div className='is-flex is-align-items-center is-justify-content-start item'>
@@ -252,6 +262,7 @@ function Table () {
                   type='Right'
                   className='is-flex is-flex-direction-row-reverse has-text-centered'
                   player={players[7]}
+                  turn={turn}
                 />
               </div>
               <div className='is-flex is-align-items-start is-justify-content-end item' />
@@ -262,6 +273,7 @@ function Table () {
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
                   player={players[8]}
+                  turn={turn}
                 />
                 <Chair
                   rotation={180}
@@ -269,6 +281,7 @@ function Table () {
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
                   player={players[9]}
+                  turn={turn}
                 />
               </div>
               <div className='is-flex is-align-items-start is-justify-content-space-around item'>
@@ -278,6 +291,7 @@ function Table () {
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
                   player={players[10]}
+                  turn={turn}
                 />
                 <Chair
                   rotation={180}
@@ -285,6 +299,7 @@ function Table () {
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
                   player={players[11]}
+                  turn={turn}
                 />
               </div>
               <div className='is-flex is-align-items-start is-justify-content-start item item' />
