@@ -25,13 +25,13 @@ export const turnStates = {
   // EXCHANGE: 'EXCHANGE'
 }
 
-export const handleDragEnd = (event, turnState, { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }) => {
+export const handleDragEnd = (event, turnState, user, game, { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }) => {
   const { active, over } = event
 
   if (over.id === 'discard-deck' &&
     (turnState === turnStates.PLAY)) {
     // Discarding
-    discardCard(setCardsPlayer, setDiscardBG, active.id)
+    discardCard(setCardsPlayer, setDiscardBG, active.id, user?.id, game?.name)
     // para que no pueda descartar más de una vez
     // tener ojo con cartas que obliguen a alguien a descartar.
     setTurnState(turnState.NOTURN)
@@ -145,7 +145,7 @@ function Table () {
       <div className='table-cards is-flex is-flex-direction-column'>
         <DndContext
           collisionDetection={closestCenter}
-          onDragEnd={(event) => { handleDragEnd(event, turnState, dragEndSeters) }} // as onChange
+          onDragEnd={(event) => { handleDragEnd(event, turnState, user, game, dragEndSeters) }} // as onChange
         >
           <SortableContext
             items={items}
