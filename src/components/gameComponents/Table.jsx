@@ -1,61 +1,56 @@
 "use client";
 
-import "@/styles/Table.css";
-import Chat from "../Chat";
-import Card from "./Card";
-import DiscardDeck from "./DiscardDeck";
-import PlayCard from "./PlayCard";
-import Chair from "./Chair";
-import { useEffect, useInsertionEffect, useState } from "react";
-import { DndContext, closestCenter } from "@dnd-kit/core";
-import {
-  SortableContext,
-  horizontalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { sortCards } from "@/services/sortCards";
-import { playCard, playFlamethrower, getAdjacents } from "@/services/playCard";
-import { discardCard } from "@/services/discardCard";
-import { newCard } from "@/services/newCard";
-import { useUserGame } from "@/services/UserGameContext";
-import { useWebSocket } from "@/services/WebSocketContext";
-import axios from "axios";
+import '@/styles/Table.css'
+import Chat from '../Chat'
+import Card from './Card'
+import DiscardDeck from './DiscardDeck'
+import PlayCard from './PlayCard'
+import Chair from './Chair'
+import Modals from './Modals'
+import { useEffect, useState } from 'react'
+import { DndContext, closestCenter } from '@dnd-kit/core'
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
+import { sortCards } from '@/services/sortCards'
+import { playCard, playFlamethrower } from "@/services/playCard"
+import { newCard } from '@/services/newCard'
+import { useUserGame } from '@/services/UserGameContext'
+import { useWebSocket } from '@/services/WebSocketContext'
+import { handlerTurn, turnStates } from '@/services/handlerTurn'
+// import { swapCards } from '@/services/swapCards'
+import axios from 'axios'
 
-export const handleDragEnd = (
-  event,
-  setCardsPlayer,
-  setPlayBG,
-  setDiscardBG,
-  setShowFlamethrowerConfirmation,
-  setPlayingCardId //estado que es necesario para la renderizacion de la "pantalla emergente"
-) => {
-  const { active, over } = event;
+export const handleDragEnd = (event, { turnState, user, game }, 
+  { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowMsg, setShowFlamethrowerConfirmation, setPlayingCardId }) => {
+  const { active, over } = event
 
-  if (over.id === "discard-deck") {
+  if (over.id === 'discard-deck' &&
+    (turnState === turnStates.PLAY)) {
     // Discarding
-    discardCard(setCardsPlayer, setDiscardBG, active.id);
-  } else if (over.id === "play-card") {
+    if (active.id === 1) {
+      alert('¡No puedes descartar esta carta!')
+    } else {
+      setShowMsg('discard')
+      console.log('activeid + ' + active.id)
+      setCardId(active.id)
+    }
+  } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
-    setPlayingCardId(active.id);
-    playCard(
-      setCardsPlayer,
-      setPlayBG,
-      active.id,
-      setShowFlamethrowerConfirmation
-    );
+    setPlayingCardId(active.id)
+    const played = playCard(setCardsPlayer, setPlayBG, active.id, setShowFlamethrowerConfirmation)
+    if (played) {
+      // setTurnState(turnStates.EXCHANGE)
+    }
   } else {
     // Just sorting
-    sortCards(setCardsPlayer, over.id, active.id);
+    sortCards(setCardsPlayer, over.id, active.id)
+    // se puede dar un over.id a arrastrar las cartas para que sea posible aunque no sea el turno
   }
 };
 
 export const fetchCards = async (user, setCardsPlayer) => {
   const playerId = user?.id;
   try {
-    const response = await axios.get(
-      `http://localhost:8000/players/${playerId}/hand`
-    );
-    console.log("CAAAARTAAAAAAS", response); //
-    console.log(response.data);
+    const response = await axios.get(`http://localhost:8000/players/${playerId}/hand`)
     const cards = await response.data.map((card) => {
       return {
         id: card.id,
@@ -70,49 +65,72 @@ export const fetchCards = async (user, setCardsPlayer) => {
 };
 
 function Table() {
+  const { user, game, setUserValues } = useUserGame()
+  // const {event} = useWebSocket()
+  const wsObject = useWebSocket()
+  const wsEvent = wsObject.event
   const [cardsPlayer, setCardsPlayer] = useState([]);
   const [playBG, setPlayBG] = useState("/cards/rev/109Rev.png");
   const [discardBG, setDiscardBG] = useState("/cards/rev/revPanic.png");
+  const [drawBG, setDrawBG] = useState("/cards/rev/revTakeAway.png");
+  const [turnState, setTurnState] = useState(turnStates.NOTURN)
+  const [turn, setTurn] = useState(0)
+  const [cardId, setCardId] = useState(0)
+  const [showMsg, setShowMsg] = useState('')
   const items = [...cardsPlayer, "discard-deck", "play-card"];
   const angle = [-15, -10, 10, 15, 20];
   const [players, setPlayers] = useState("vacio");
-  const [leftAdjacent, setLeftAdjacent] = useState(0)
-  const [rightAdjacent, setRightAdjacent] = useState(0)
-  const [listPlayers, setListPlayers] = useState([]);
-  const { user, game } = useUserGame();
+
   const { event } = useWebSocket();
+
   const [showFlamethrowerConfirmation, setShowFlamethrowerConfirmation] =
     useState(false);
-  const userId = user?.id;
   const [playingCardId, setPlayingCardId] = useState(0);
-  const gameName = game?.name;
+  const dragEndSeters = { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowMsg, setShowFlamethrowerConfirmation, setPlayingCardId }
+  const dragEndData = { turnState, user, game }
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG }
+  const discardParams = { setCardsPlayer, setDiscardBG, cardId }
+  const flamethrowerParams = {playingCardId, players}
+  const userId = user?.id
+  const gameName = game?.name
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const gameName = game?.name;
-        const response = await axios.get(
-          `http://localhost:8000/games/${gameName}`
-        );
+    const eventJSON = JSON.parse(wsEvent)
+    handlerTurn(eventJSON, user?.id, turnSeters)
+  }, [wsEvent])
 
-        const list_players = await response.data.list_of_players.map(
-          (player) => {
-            return {
-              player_id: player.id,
-              position: player.position,
-            };
-          }
-        );
-        setLeftAdjacent(list_players[(user.position-1)%list_players.length]?.player_id)
-        setRightAdjacent(list_players[(user.position-1)%list_players.length]?.player_id)
-        setPlayers(response.data.list_of_players);
-        setListPlayers(list_players);
-        return;
+  useEffect(() => {
+    const gameName = game?.name
+    const fetchGameData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/games/${gameName}`)
+        const listPlayers = response.data.list_of_players
+        const sortedPlayers = listPlayers.sort((a, b) => a.position - b.position)
+        const position = sortedPlayers.findIndex((player) => player.id === user.id)
+        const userParams = {
+          id: user.id,
+          name: user.name,
+          position: position
+        }
+        setUserValues(userParams)
+        setPlayers(sortedPlayers)
+        setTurn(sortedPlayers[0].id)
+        if (user?.id === sortedPlayers[0].id) {
+          setTurnState(turnStates.DRAW)
+        } else {
+          setTurnState(turnStates.NOTURN)
+        }
       } catch (error) {
-        console.error("Error getting players info", error);
+        console.error('Error al obtener los datos del juego:', error)
       }
-    };
-    fetchData();
+    }
+    fetchGameData()
+
+    if (game?.nextCard === 'STAY_AWAY') {
+      setDrawBG('/cards/rev/revTakeAway.png')
+    } else if (game?.nextCard === 'PANIC') {
+      setDrawBG('/cards/rev/revPanic.png')
+    }
     fetchCards(user,setCardsPlayer)
   }, []);
 
@@ -132,11 +150,8 @@ function Table() {
           onDragEnd={(event) => {
             handleDragEnd(
               event,
-              setCardsPlayer,
-              setPlayBG,
-              setDiscardBG,
-              setShowFlamethrowerConfirmation,
-              setPlayingCardId
+              dragEndData,
+              dragEndSeters
             );
           }} // as onChange
         >
@@ -148,20 +163,21 @@ function Table() {
               </button>
               <button
                 onClick={() =>
-                  playFlamethrower(playingCardId, userId, listPlayers[(user.position-1)%listPlayers.length]?.player_id, gameName)
+                  playFlamethrower(playingCardId, userId, players[(user.position-1)%players.length]?.id, gameName)
                 }
               >
-                Jugador :{listPlayers[(user.position-1)%listPlayers.length]?.position}
+                Jugador :{players[(user.position-1)%players.length]?.name}
               </button>
               <button
                 onClick={() =>
-                  playFlamethrower(playingCardId, userId, listPlayers[(user.position+1)%listPlayers.length]?.player_id, gameName)
+                  playFlamethrower(playingCardId, userId, players[(user.position+1)%players.length]?.id, gameName)
                 }
               >
-                Jugador :{listPlayers[(user.position+1)%listPlayers.length]?.position}
+                Jugador :{players[(user.position+1)%players.length]?.name}
               </button>
             </div>
           )}
+          <Modals show={showMsg} setShow={setShowMsg} discardParams={discardParams} playingCardId={playingCardId}  players={players} />
 
           <SortableContext
             items={items}
@@ -183,6 +199,7 @@ function Table() {
                   type="Whole"
                   className="is-flex is-flex-direction-column has-text-centered"
                   player={players[0]}
+                  turn={turn}
                 />
                 <Chair
                   rotation={0}
@@ -190,6 +207,7 @@ function Table() {
                   type="Whole"
                   className="is-flex is-flex-direction-column has-text-centered"
                   player={players[1]}
+                  turn={turn}
                 />
               </div>
               <div className="is-flex is-align-items-end is-justify-content-space-around item">
@@ -199,6 +217,7 @@ function Table() {
                   type="Whole"
                   className="is-flex is-flex-direction-column has-text-centered"
                   player={players[2]}
+                  turn={turn}
                 />
                 <Chair
                   rotation={0}
@@ -206,6 +225,7 @@ function Table() {
                   type="Whole"
                   className="is-flex is-flex-direction-column has-text-centered"
                   player={players[3]}
+                  turn={turn}
                 />
               </div>
               <div className="is-flex is-align-items-end is-justify-content-start item" />
@@ -216,6 +236,7 @@ function Table() {
                   type="Right"
                   className="is-flex is-flex-direction-row has-text-centered"
                   player={players[4]}
+                  turn={turn}
                 />
               </div>
               <div
@@ -226,17 +247,21 @@ function Table() {
                 }}
               >
                 <img
-                  id="deck"
-                  src="/cards/rev/revTakeAway.png"
+                  id='deck'
+                  src={drawBG}
                   width={180}
-                  alt=""
-                  style={{ borderRadius: "5%" }}
-                  onClick={() => {
-                    newCard(setCardsPlayer);
-                  }}
+                  alt=''
+                  style={{ borderRadius: '5%' }}
+                  onClick={() => { newCard(setCardsPlayer, setTurnState, turnState) }}
                 />
-                <PlayCard id="play-card" src={playBG} />
-                <DiscardDeck id="discard-deck" src={discardBG} />
+                <PlayCard
+                  id='play-card'
+                  src={playBG}
+                />
+                <DiscardDeck
+                  id='discard-deck'
+                  src={discardBG}
+                />
               </div>
               <div className="is-flex is-align-items-center is-justify-content-start item">
                 <Chair
@@ -245,6 +270,7 @@ function Table() {
                   type="Left"
                   className="is-flex is-flex-direction-row-reverse has-text-centered"
                   player={players[5]}
+                  turn={turn}
                 />
               </div>
               <div className="is-flex is-align-items-center is-justify-content-end item">
@@ -254,6 +280,7 @@ function Table() {
                   type="Left"
                   className="is-flex is-flex-direction-row has-text-centered"
                   player={players[6]}
+                  turn={turn}
                 />
               </div>
               <div className="is-flex is-align-items-center is-justify-content-start item">
@@ -263,6 +290,7 @@ function Table() {
                   type="Right"
                   className="is-flex is-flex-direction-row-reverse has-text-centered"
                   player={players[7]}
+                  turn={turn}
                 />
               </div>
               <div className="is-flex is-align-items-start is-justify-content-end item" />
@@ -273,6 +301,7 @@ function Table() {
                   type="Whole"
                   className="is-flex is-flex-direction-column-reverse has-text-centered"
                   player={players[8]}
+                  turn={turn}
                 />
                 <Chair
                   rotation={180}
@@ -280,6 +309,7 @@ function Table() {
                   type="Whole"
                   className="is-flex is-flex-direction-column-reverse has-text-centered"
                   player={players[9]}
+                  turn={turn}
                 />
               </div>
               <div className="is-flex is-align-items-start is-justify-content-space-around item">
@@ -289,6 +319,7 @@ function Table() {
                   type="Whole"
                   className="is-flex is-flex-direction-column-reverse has-text-centered"
                   player={players[10]}
+                  turn={turn}
                 />
                 <Chair
                   rotation={180}
@@ -296,6 +327,7 @@ function Table() {
                   type="Whole"
                   className="is-flex is-flex-direction-column-reverse has-text-centered"
                   player={players[11]}
+                  turn={turn}
                 />
               </div>
               <div className="is-flex is-align-items-start is-justify-content-start item item" />
@@ -313,7 +345,7 @@ function Table() {
                   return (
                     <Card
                       id={card.id}
-                      key={card.id}
+                      key={index}
                       rotation={angle[card.id - 1]}
                     />
                   );

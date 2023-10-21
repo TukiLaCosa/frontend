@@ -19,18 +19,20 @@ export function UserGameProvider ({ children }) {
    */
   const [game, setGame] = useState(null)
 
-  const setUserValues = (id = 0, name = '') => {
+  const setUserValues = ({ id, name, position }) => {
     setUser({
       id,
-      name: `${name}`
+      name,
+      position
     })
   }
 
-  const setGameValues = (name, typeNext, cards) => {
+  const setGameValues = ({ name, nextCard, turn, cards }) => {
     setGame({
-      name: `${name}`,
-      nextCard: `${typeNext}`,
-      cards: [cards]
+      name,
+      nextCard,
+      turn,
+      cards
     })
   }
 

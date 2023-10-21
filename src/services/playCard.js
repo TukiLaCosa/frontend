@@ -59,15 +59,6 @@ export const getAdjacents = (players, userId) => {
   return idVictim1,idVictim2;
 }
 
-
-
-
-
-// export const handleFlamethrower = (setShowPlayCardConfirmation,activeId,setGenActiveId) => {
-//   setGenActiveId()
-//   setShowFlamethrowerConfirmation(true)
-// }
-
 export const playCard = (
   setCardsPlayer,
   setPlayBG,
@@ -183,5 +174,6 @@ export const playCard = (
         console.log("No lo se rick");
         break;
     }
+    return true
   }
 };
