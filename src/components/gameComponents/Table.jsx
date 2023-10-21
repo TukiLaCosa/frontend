@@ -15,15 +15,9 @@ import { discardCard } from '@/services/discardCard'
 import { newCard } from '@/services/newCard'
 import { useUserGame } from '@/services/UserGameContext'
 import { useWebSocket } from '@/services/WebSocketContext'
+import { handlerTurn, turnStates } from '@/services/handlerTurn'
 // import { swapCards } from '@/services/swapCards'
 import axios from 'axios'
-
-export const turnStates = {
-  NOTURN: 'NOTURN',
-  DRAW: 'DRAW',
-  PLAY: 'PLAY'
-  // EXCHANGE: 'EXCHANGE'
-}
 
 export const handleDragEnd = (event, turnState, user, game, { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }) => {
   const { active, over } = event
@@ -78,38 +72,11 @@ function Table () {
   const [players, setPlayers] = useState('Vacio')
   const wsEvent = wsObject.event
   const dragEndSeters = { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }
+  const turnSeters = { setTurnState, setTurn, setDrawBG }
 
   useEffect(() => {
     const eventJSON = JSON.parse(wsEvent)
-    switch (eventJSON?.event) {
-      case 'message':
-        break
-      case 'new_turn':
-        if (eventJSON?.player_id !== user?.id) {
-          setTurnState(turnStates.NOTURN)
-        } else if (eventJSON?.player_id === user?.id) {
-          setTurnState(turnStates.DRAW)
-        }
-        setTurn(eventJSON?.player_id)
-        break
-      case 'played_card':
-        if (eventJSON?.player_id === user?.id) {
-          // setTurnState(turnStates.EXCHANGE)
-        }
-        break
-      case 'player_draw_card':
-        if (eventJSON?.player_id === user?.id) {
-          setTurnState(turnStates.PLAY)
-        }
-        if (eventJSON?.next_card === 'STAY_AWAY') {
-          setDrawBG('/cards/rev/revTakeAway.png')
-        } else if (eventJSON?.next_card === 'PANIC') {
-          setDrawBG('/cards/rev/revPanic.png')
-        }
-        break
-      default:
-        break
-    }
+    handlerTurn(eventJSON, user?.id, turnSeters)
   }, [wsEvent])
 
   useEffect(() => {
@@ -319,7 +286,7 @@ function Table () {
                 cardsPlayer.map((card, index) => {
                   if (card) {
                     return (
-                      <Card id={card.id} key={card.id} rotation={angle[card.id - 1]} />
+                      <Card id={card.id} key={index} rotation={angle[card.id - 1]} />
                     )
                   } else {
                     return <span key={index} />
