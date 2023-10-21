@@ -5,7 +5,7 @@ export const turnStates = {
   // EXCHANGE: 'EXCHANGE'
 }
 
-export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawBG }) => {
+export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawBG, setDiscardBG }) => {
   switch (eventTurn?.event) {
     case 'message':
       break
@@ -33,6 +33,19 @@ export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawB
       } else if (eventTurn?.next_card === 'PANIC') {
         setDrawBG('/cards/rev/revPanic.png')
       }
+      break
+    case 'discard_card':
+      setDiscardBG(eventTurn?.card_id)
+      break
+    case 'exchange_intention':
+      break
+    case 'exchange_card_start':
+      break
+    case 'exchange_card_accept':
+      break
+    case 'exchange_card_finish':
+      break
+    case 'exchange_done':
       break
     default:
       break

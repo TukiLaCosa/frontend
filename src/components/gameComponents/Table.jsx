@@ -72,7 +72,7 @@ function Table () {
   const [players, setPlayers] = useState('Vacio')
   const wsEvent = wsObject.event
   const dragEndSeters = { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }
-  const turnSeters = { setTurnState, setTurn, setDrawBG }
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG }
 
   useEffect(() => {
     const eventJSON = JSON.parse(wsEvent)
@@ -84,7 +84,8 @@ function Table () {
     const fetchGameData = async () => {
       try {
         const response = await axios.get(`http://localhost:8000/games/${gameName}`)
-        const sortedPlayers = response.data.list_of_players.sort((a, b) => a.position - b.position)
+        const listPlayers = response.data.list_of_players
+        const sortedPlayers = listPlayers.sort((a, b) => a.position - b.position)
         setPlayers(sortedPlayers)
         setTurn(sortedPlayers[0].id)
         if (user?.id === sortedPlayers[0].id) {
@@ -191,7 +192,7 @@ function Table () {
                   width={180}
                   alt=''
                   style={{ borderRadius: '5%' }}
-                  onClick={() => { newCard(setCardsPlayer, setTurnState, turnState, turnStates) }}
+                  onClick={() => { newCard(setCardsPlayer, setTurnState, turnState) }}
                 />
                 <PlayCard
                   id='play-card'
