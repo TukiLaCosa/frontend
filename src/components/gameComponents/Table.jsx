@@ -6,6 +6,7 @@ import Card from './Card'
 import DiscardDeck from './DiscardDeck'
 import PlayCard from './PlayCard'
 import Chair from './Chair'
+import Messages from './Messages'
 import { useEffect, useState } from 'react'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
@@ -66,13 +67,16 @@ function Table () {
   const [drawBG, setDrawBG] = useState('/cards/rev/revTakeAway.png')
   const [turnState, setTurnState] = useState(turnStates.NOTURN)
   const [turn, setTurn] = useState(0)
+  const [showMsg, setShowMsg] = useState(false)
   // Recordar cambiar a cero
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const angle = [-15, -10, 10, 15, 20]
   const [players, setPlayers] = useState('Vacio')
   const wsEvent = wsObject.event
   const dragEndSeters = { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }
+  const dragEndData = { turnState, user, game }
   const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG }
+  
 
   useEffect(() => {
     const eventJSON = JSON.parse(wsEvent)
@@ -113,8 +117,9 @@ function Table () {
       <div className='table-cards is-flex is-flex-direction-column'>
         <DndContext
           collisionDetection={closestCenter}
-          onDragEnd={(event) => { handleDragEnd(event, turnState, user, game, dragEndSeters) }} // as onChange
+          onDragEnd={(event) => { handleDragEnd(event, dragEndData, dragEndSeters) }} // as onChange
         >
+          <Messages show={showMsg} setShow={setShowMsg} />
           <SortableContext
             items={items}
             strategy={horizontalListSortingStrategy}
