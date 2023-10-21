@@ -166,10 +166,8 @@ function Table() {
     if (eventType == "played_card") {
       handlePlayedCardEvent();
     } else if (eventType === "game_ended") { // evento de finalizar partida
-      console.log("HOALAAAAa")
-      fetchResultsGame(gameName, setWinners, setLosers, setWasTheThing) // le pega al endpoint para obtener los resultados
-    } else if (eventType === "game_deleted") { // una vez q se hace el delete de la partida en la q estan todos, se manda este evento y es para que todos los usuarios salgas de ahi
-      console.log("HOLAAAA")
+      fetchResultsGame(gameName, setWinners, setLosers, setWasTheThing, setShowModal) // le pega al endpoint para obtener los resultados
+    } else if (eventType === "game_deleted") { // una vez q se hace el delete de la partida en la q estan todos, se manda este evento y es para que todos los usuarios salgan de ahi
       router.push('/search-game')
     }
   }, [event]);
@@ -388,11 +386,7 @@ function Table() {
             </div>
           </SortableContext>
         </DndContext>
-
-
       </div>
-
-
       <div
         className="chat has-text-centered column is-flex is-flex-direction-column is-justify-content-space-evenly"
         style={{
