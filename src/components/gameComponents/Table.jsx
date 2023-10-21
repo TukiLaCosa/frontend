@@ -6,13 +6,12 @@ import Card from './Card'
 import DiscardDeck from './DiscardDeck'
 import PlayCard from './PlayCard'
 import Chair from './Chair'
-import Messages from './Messages'
+import Modals from './Modals'
 import { useEffect, useState } from 'react'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { sortCards } from '@/services/sortCards'
 import { playCard } from '@/services/playCard'
-import { discardCard } from '@/services/discardCard'
 import { newCard } from '@/services/newCard'
 import { useUserGame } from '@/services/UserGameContext'
 import { useWebSocket } from '@/services/WebSocketContext'
@@ -20,16 +19,19 @@ import { handlerTurn, turnStates } from '@/services/handlerTurn'
 // import { swapCards } from '@/services/swapCards'
 import axios from 'axios'
 
-export const handleDragEnd = (event, turnState, user, game, { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }) => {
+export const handleDragEnd = (event, { turnState, user, game }, { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowMsg }) => {
   const { active, over } = event
 
   if (over.id === 'discard-deck' &&
     (turnState === turnStates.PLAY)) {
     // Discarding
-    discardCard(setCardsPlayer, setDiscardBG, active.id, user?.id, game?.name)
-    // para que no pueda descartar más de una vez
-    // tener ojo con cartas que obliguen a alguien a descartar.
-    setTurnState(turnState.NOTURN)
+    if (active.id === 1) {
+      alert('¡No puedes descartar esta carta!')
+    } else {
+      setShowMsg(true)
+      console.log('activeid + ' + active.id)
+      setCardId(active.id)
+    }
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
     const played = playCard(setCardsPlayer, setPlayBG, active.id)
@@ -67,16 +69,17 @@ function Table () {
   const [drawBG, setDrawBG] = useState('/cards/rev/revTakeAway.png')
   const [turnState, setTurnState] = useState(turnStates.NOTURN)
   const [turn, setTurn] = useState(0)
+  const [cardId, setCardId] = useState(0)
   const [showMsg, setShowMsg] = useState(false)
   // Recordar cambiar a cero
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const angle = [-15, -10, 10, 15, 20]
   const [players, setPlayers] = useState('Vacio')
   const wsEvent = wsObject.event
-  const dragEndSeters = { setCardsPlayer, setPlayBG, setDiscardBG, setTurnState }
+  const dragEndSeters = { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowMsg }
   const dragEndData = { turnState, user, game }
   const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG }
-  
+  const discardParams = { setCardsPlayer, setDiscardBG, cardId }
 
   useEffect(() => {
     const eventJSON = JSON.parse(wsEvent)
@@ -119,7 +122,7 @@ function Table () {
           collisionDetection={closestCenter}
           onDragEnd={(event) => { handleDragEnd(event, dragEndData, dragEndSeters) }} // as onChange
         >
-          <Messages show={showMsg} setShow={setShowMsg} />
+          <Modals show={showMsg} setShow={setShowMsg} discardParams={discardParams} />
           <SortableContext
             items={items}
             strategy={horizontalListSortingStrategy}
