@@ -72,7 +72,7 @@ function Table() {
   const [players, setPlayers] = useState("Vacio");
   const { user, game } = useUserGame();
   const { event } = useWebSocket();
-  const [showFlamethrowerConfirmation, setShowPlayCardConfirmation] = useState(false);
+  const [showFlamethrowerConfirmation, setShowFlamethrowerConfirmation] = useState(false);
   const userId = user?.id
   const [playingCardId,setPlayingCardId] = useState(0)
   const gameName = game?.name;
@@ -110,13 +110,13 @@ function Table() {
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={(event) => {
-            handleDragEnd(event, setCardsPlayer, setPlayBG, setDiscardBG, setShowPlayCardConfirmation, setPlayingCardId);
+            handleDragEnd(event, setCardsPlayer, setPlayBG, setDiscardBG, setShowFlamethrowerConfirmation, setPlayingCardId);
           }} // as onChange
         >
           {showFlamethrowerConfirmation && (
             <div className="confirmation-dialog">
               <p>Pregunta: ¿A quien quieres quemar?</p>
-              <button onClick={() => setShowPlayCardConfirmation(false)}>Cancelar</button>
+              <button onClick={() => setShowFlamethrowerConfirmation(false)}>Cancelar</button>
               <button onClick={() => playFlamethrower(playingCardId, userId, 1, gameName)}>Jugador : </button> 
               <button onClick={() => playFlamethrower(playingCardId, userId, 2, gameName)}>Jugador :</button>
             </div>

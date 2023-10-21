@@ -60,7 +60,7 @@ export const playFlamethrower = async (activeId, id_player, id_victim, gameName)
 // }
 export const handleFlamethrower = (setShowPlayCardConfirmation,activeId,setGenActiveId) => {
   setGenActiveId()
-  setShowPlayCardConfirmation(true)
+  setShowFlamethrowerConfirmation(true)
 }
 
 export const playCard = (
@@ -87,7 +87,7 @@ export const playCard = (
         break;
       case "Flamethrower":
         console.log("Flamethrower");
-        setShowPlayCardConfirmation(true)
+        setShowFlamethrowerConfirmation(true)
         
         break;
       case "Analysis":
