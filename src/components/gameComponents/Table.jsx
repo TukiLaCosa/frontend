@@ -13,7 +13,7 @@ import {
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { sortCards } from "@/services/sortCards";
-import { playCard,playFlamethrower,getAdjacents} from "@/services/playCard";
+import { playCard, playFlamethrower, getAdjacents } from "@/services/playCard";
 import { discardCard } from "@/services/discardCard";
 import { newCard } from "@/services/newCard";
 import { useUserGame } from "@/services/UserGameContext";
@@ -35,8 +35,13 @@ export const handleDragEnd = (
     discardCard(setCardsPlayer, setDiscardBG, active.id);
   } else if (over.id === "play-card") {
     // Playing
-    setPlayingCardId(active.id)
-    playCard(setCardsPlayer, setPlayBG, active.id, setShowFlamethrowerConfirmation);
+    setPlayingCardId(active.id);
+    playCard(
+      setCardsPlayer,
+      setPlayBG,
+      active.id,
+      setShowFlamethrowerConfirmation
+    );
   } else {
     // Just sorting
     sortCards(setCardsPlayer, over.id, active.id);
@@ -49,7 +54,7 @@ export const fetchCards = async (user, setCardsPlayer) => {
     const response = await axios.get(
       `http://localhost:8000/players/${playerId}/hand`
     );
-    console.log(response); //
+    console.log("CAAAARTAAAAAAS", response); //
     console.log(response.data);
     const cards = await response.data.map((card) => {
       return {
@@ -58,6 +63,7 @@ export const fetchCards = async (user, setCardsPlayer) => {
       };
     });
     setCardsPlayer(cards);
+    console.log(cards);
   } catch (error) {
     console.error("Error getting cards:", error);
   }
@@ -69,28 +75,45 @@ function Table() {
   const [discardBG, setDiscardBG] = useState("/cards/rev/revPanic.png");
   const items = [...cardsPlayer, "discard-deck", "play-card"];
   const angle = [-15, -10, 10, 15, 20];
-  const [players, setPlayers] = useState("Vacio");
+  const [players, setPlayers] = useState("vacio");
+  const [leftAdjacent, setLeftAdjacent] = useState(0)
+  const [rightAdjacent, setRightAdjacent] = useState(0)
+  const [listPlayers, setListPlayers] = useState([]);
   const { user, game } = useUserGame();
   const { event } = useWebSocket();
-  const [showFlamethrowerConfirmation, setShowFlamethrowerConfirmation] = useState(false);
-  const userId = user?.id
-  const [playingCardId,setPlayingCardId] = useState(0)
+  const [showFlamethrowerConfirmation, setShowFlamethrowerConfirmation] =
+    useState(false);
+  const userId = user?.id;
+  const [playingCardId, setPlayingCardId] = useState(0);
   const gameName = game?.name;
-  
 
   useEffect(() => {
-    const gameName = game?.name;
-    const gameData = axios
-      .get(`http://localhost:8000/games/${gameName}`)
-      .then((data) => {
-        console.log(data);
-        setPlayers(data.data.list_of_players);
-      });
-    if (!gameData?.ok) {
-      console.log(gameData);
-    }
+    const fetchData = async () => {
+      try {
+        const gameName = game?.name;
+        const response = await axios.get(
+          `http://localhost:8000/games/${gameName}`
+        );
 
-    fetchCards(user, setCardsPlayer);
+        const list_players = await response.data.list_of_players.map(
+          (player) => {
+            return {
+              player_id: player.id,
+              position: player.position,
+            };
+          }
+        );
+        setLeftAdjacent(list_players[(user.position-1)%list_players.length]?.player_id)
+        setRightAdjacent(list_players[(user.position-1)%list_players.length]?.player_id)
+        setPlayers(response.data.list_of_players);
+        setListPlayers(list_players);
+        return;
+      } catch (error) {
+        console.error("Error getting players info", error);
+      }
+    };
+    fetchData();
+    fetchCards(user,setCardsPlayer)
   }, []);
 
   useEffect(() => {
@@ -101,24 +124,42 @@ function Table() {
     }
   }, [event]);
 
-  //let id_victim1, id_victim2 = getAdjacents(players,userId)
-  
-
   return (
     <div className="table is-flex is-flex-direction-row">
       <div className="table-cards is-flex is-flex-direction-column">
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={(event) => {
-            handleDragEnd(event, setCardsPlayer, setPlayBG, setDiscardBG, setShowFlamethrowerConfirmation, setPlayingCardId);
+            handleDragEnd(
+              event,
+              setCardsPlayer,
+              setPlayBG,
+              setDiscardBG,
+              setShowFlamethrowerConfirmation,
+              setPlayingCardId
+            );
           }} // as onChange
         >
           {showFlamethrowerConfirmation && (
             <div className="confirmation-dialog">
               <p>Pregunta: ¿A quien quieres quemar?</p>
-              <button onClick={() => setShowFlamethrowerConfirmation(false)}>Cancelar</button>
-              <button onClick={() => playFlamethrower(playingCardId, userId, 1, gameName)}>Jugador : </button> 
-              <button onClick={() => playFlamethrower(playingCardId, userId, 2, gameName)}>Jugador :</button>
+              <button onClick={() => setShowFlamethrowerConfirmation(false)}>
+                Cancelar
+              </button>
+              <button
+                onClick={() =>
+                  playFlamethrower(playingCardId, userId, listPlayers[(user.position-1)%listPlayers.length]?.player_id, gameName)
+                }
+              >
+                Jugador :{listPlayers[(user.position-1)%listPlayers.length]?.position}
+              </button>
+              <button
+                onClick={() =>
+                  playFlamethrower(playingCardId, userId, listPlayers[(user.position+1)%listPlayers.length]?.player_id, gameName)
+                }
+              >
+                Jugador :{listPlayers[(user.position+1)%listPlayers.length]?.position}
+              </button>
             </div>
           )}
 
@@ -283,10 +324,7 @@ function Table() {
             </div>
           </SortableContext>
         </DndContext>
-
-
       </div>
-      
 
       <div
         className="chat has-text-centered column is-flex is-flex-direction-column is-justify-content-space-evenly"
