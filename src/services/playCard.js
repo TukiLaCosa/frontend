@@ -58,16 +58,16 @@ export const playFlamethrower = async (activeId, id_player, id_victim, gameName)
 
 //   return idVictim1,idVictim2;
 // }
-export const handleFlamethrower = (setShowPlayCardConfirmation,activeId,setGenActiveId) => {
-  setGenActiveId()
-  setShowFlamethrowerConfirmation(true)
-}
+// export const handleFlamethrower = (setShowPlayCardConfirmation,activeId,setGenActiveId) => {
+//   setGenActiveId()
+//   setShowFlamethrowerConfirmation(true)
+// }
 
 export const playCard = (
   setCardsPlayer,
   setPlayBG,
   activeId,
-  setShowPlayCardConfirmation
+  setShowFlamethrowerConfirmation
 ) => {
   const activeCard = cards.cards[activeId - 1].name;
 

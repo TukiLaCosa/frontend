@@ -25,7 +25,7 @@ export const handleDragEnd = (
   setCardsPlayer,
   setPlayBG,
   setDiscardBG,
-  setShowPlayCardConfirmation,
+  setShowFlamethrowerConfirmation,
   setPlayingCardId //estado que es necesario para la renderizacion de la "pantalla emergente"
 ) => {
   const { active, over } = event;
@@ -36,7 +36,7 @@ export const handleDragEnd = (
   } else if (over.id === "play-card") {
     // Playing
     setPlayingCardId(active.id)
-    playCard(setCardsPlayer, setPlayBG, active.id, setShowPlayCardConfirmation);
+    playCard(setCardsPlayer, setPlayBG, active.id, setShowFlamethrowerConfirmation);
   } else {
     // Just sorting
     sortCards(setCardsPlayer, over.id, active.id);
