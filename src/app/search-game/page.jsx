@@ -26,7 +26,10 @@ export const handleClick = async (gameName, passwords, router, user, setGameValu
     const dataPatch = makeBodyRequest(user.id, password)
     const response = await axios.patch(`http://localhost:8000/games/join/${gameName}`, dataPatch)
     if (response?.status === 200) {
-      setGameValues(gameName, '', '')
+      const gameParams = {
+        name: gameName
+      }
+      setGameValues(gameParams)
       router.push('/lobby')
     }
   } catch (error) {
