@@ -22,12 +22,17 @@ export const fetchDataGame = async (user, gameName, setIsHost, setHostId, setIsR
   }
 }
 
-export const initGame = async (gameName, hostID, router) => {
+export const initGame = async (gameName, hostID, router, setGameValues) => {
   const url = `http://127.0.0.1:8000/games/${gameName}/init?host_player_id=${hostID}`
   const response = await axios.patch(url)
   if (!response?.ok) {
     console.log(response)
   }
+  const gameParams = {
+    name: gameName,
+    nextCard: response.data.top_card_face
+  }
+  setGameValues(gameParams)
   router.push('/game')
 }
 
@@ -38,7 +43,6 @@ export const cancelGame = async (gameName, router) => {
     if (!response?.ok) {
       console.log(response)
     }
-    localStorage.removeItem('game')
   } catch (error) {
     console.error('Error deleting data:', error)
   }
@@ -76,7 +80,7 @@ export const closeModal = (setShowModal) => {
 
 function ExitAndStart () {
   const { event } = useWebSocket()
-  const { user, game } = useUserGame()
+  const { user, game, setGameValues } = useUserGame()
   const [gameName, setGameName] = useState(game?.name)
   const [isHost, setIsHost] = useState(false)
   const [isReady, setIsReady] = useState(false)
@@ -110,7 +114,7 @@ function ExitAndStart () {
   return (
     <div className='colums buttons'>
       <div className='column'>
-        <button className='button is-success is-tuki is-large' onClick={() => { initGame(gameName, hostID, router) }} disabled={!(isHost && isReady)}>
+        <button className='button is-success is-tuki is-large' onClick={() => { initGame(gameName, hostID, router, setGameValues) }} disabled={!(isHost && isReady)}>
           Iniciar Partida
         </button>
       </div>
