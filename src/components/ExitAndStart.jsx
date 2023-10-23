@@ -36,9 +36,10 @@ export const initGame = async (gameName, hostID, router, setGameValues) => {
   router.push('/game')
 }
 
-export const cancelGame = async (gameName, router) => {
+export const cancelGame = async (user, gameName, router) => {
   try {
-    const url = `http://localhost:8000/games/${gameName}`
+    const playerID = user?.id
+    const url = `http://localhost:8000/games/cancel/${gameName}?player_id=${playerID}`
     const response = await axios.delete(url)
     if (!response?.ok) {
       console.log(response)
@@ -145,7 +146,7 @@ function ExitAndStart () {
               <button
                 className='button is-danger'
                 onClick={() => {
-                  cancelGame(gameName, router)
+                  cancelGame(user, gameName, router)
                   closeModal(setShowModal)
                 }}
               >

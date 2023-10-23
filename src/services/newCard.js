@@ -1,9 +1,18 @@
+import axios from 'axios'
 import { addToHand } from './addToHand'
 import { turnStates } from './handlerTurn'
 
-export const newCard = (setCardsPlayer, setTurnState, turnState) => {
-  if (turnState !== turnStates.DRAW) return
-  const random = Math.floor(Math.random() * (108 - 2 + 1) + 2)
-  addToHand(setCardsPlayer, random)
-  setTurnState(turnStates.PLAY)
+export const newCard = async (setCardsPlayer, turnState, userId, gameName) => {
+  if (turnState === turnStates.DRAW) {
+    const body = { player_id: userId }
+    const url = `http://localhost:8000/games/${gameName}/draw-card`
+    const response = await axios.patch(url, body)
+    if (response?.status === 200) {
+      addToHand(setCardsPlayer, response.data.id)
+    } else {
+      console.log('Error response: ', response)
+    }
+  } else {
+    alert('No es tu turno')
+  }
 }
