@@ -17,8 +17,3 @@ export const newCard = async (setCardsPlayer, turnState, turnStates, user, game)
     alert('No es tu turno')
   }
 }
-
-/**
- * Llamada desde Table.jsx
- * async () => { await newCard(setCardsPlayer, setTurnState, turnState, turnStates, user, game) }
- */
