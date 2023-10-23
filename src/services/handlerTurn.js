@@ -20,6 +20,7 @@ export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawB
     case 'played_card':
       if (eventTurn?.player_id === userID) {
         // setTurnState(turnStates.EXCHANGE)
+        handlePlayedCardEvent()
         setTurnState(turnStates.NOTURN)
       }
       // que todos visualicen que se jugo.

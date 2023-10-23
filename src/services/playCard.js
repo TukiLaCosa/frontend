@@ -5,7 +5,6 @@ import axios from "axios";
 
 export const playFlamethrower = async (activeId, id_player, id_victim, gameName) => {
   const makePostRequest = (activeId, id_player, id_victim) => {
-    console.log('request:'+ activeId +"  " + id_player +"   "+ id_victim)
     return {
       "card_id": activeId,
       "player_id": id_player,
@@ -25,46 +24,11 @@ export const playFlamethrower = async (activeId, id_player, id_victim, gameName)
   }
 };
 
-export const getAdjacents = (players, userId) => {
-  /*En idVictim1 queda la posicion del jugador adyacente cuya posicion es menor */
-  const findMaxPosition = (players) => {
-    let maxPosition = null;
-    for (let i = 0; i < players.length; i++) {
-      const currentPosition = players[i].position;
-      
-      if (maxPosition === null || currentPosition > maxPosition) {
-        maxPosition = currentPosition;
-      }
-    }
-    return maxPosition;
-  }
-  const userPosition = players[players.findIndex(player => player.id === userId)].position
-  const maxPosition = findMaxPosition(players)
-  let idVictim1 = 0
-  let idVictim2 = 0
-  if (userPosition == 0) {
-     idVictim1 = maxPosition;
-  }
-  else {
-      idVictim1 = players.findIndex(player => player.position === userPosition - 1);
-  }
-  
-  if (userPosition == maxPosition) {
-    idVictim2 = 0
-  }
-  else {
-    idVictim2 = players.findIndex(player => player.position === userPosition + 1);
-  }
-
-  return idVictim1,idVictim2;
-}
-
 export const playCard = (
   setCardsPlayer,
   setPlayBG,
   activeId,
-  setShowFlamethrowerConfirmation,
-  setShowMsg
+  setShow
 ) => {
   const activeCard = cards.cards[activeId - 1].name;
 
@@ -84,7 +48,7 @@ export const playCard = (
         break;
       case "Flamethrower":
         console.log("Flamethrower");
-        setShowMsg("Flamethrower");
+        setShow("Flamethrower");
         break;
       case "Analysis":
         console.log("Analysis");
