@@ -133,7 +133,7 @@ function Table() {
   const router = useRouter()
   const dragEndSeters = { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }
   const dragEndData = { turnState, user, game }
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId}
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers}
   const discardParams = { setCardsPlayer, setDiscardBG, cardId }
   const flamethrowerParams = { playingCardId, players }
   const endedGameParams = { winners, losers, wasTheThing }
@@ -143,7 +143,7 @@ function Table() {
 
   useEffect(() => {
     const eventJSON = JSON.parse(wsEvent);
-    handlerTurn(eventJSON, user?.id, turnSeters);
+    handlerTurn(eventJSON, user?.id,players, turnSeters);
   }, [wsEvent]);
 
   useEffect(() => {
