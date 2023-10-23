@@ -42,7 +42,6 @@ export const editUser = async (setExistUser, userID) => {
   if (!response?.ok) {
     console.log(response)
   }
-  localStorage.clear()
 }
 
 export const createUser = async (isCorrect, setClassName, setExistUser, initializeWebSocket, setUserValues) => {
@@ -55,7 +54,11 @@ export const createUser = async (isCorrect, setClassName, setExistUser, initiali
         onUserExist(setExistUser)
         setClassName('is-success')
         initializeWebSocket(response.data.id)
-        setUserValues(response.data.id, response.data.name)
+        const userParams = {
+          id: response.data.id,
+          name: response.data.name
+        }
+        setUserValues(userParams)
       }
     } catch (error) {
       if (error.code === 'ERR_BAD_REQUEST') {

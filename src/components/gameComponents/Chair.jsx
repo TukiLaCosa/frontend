@@ -1,5 +1,9 @@
-function Chair ({ rotation, size, type, className, player }) {
+function Chair ({ rotation, size, type, className, player, turn }) {
   let source
+  const buttonInTurn = turn === player?.id
+    ? 'button is-success is-light is-outlined'
+    : 'button is-info is-light is-outlined'
+
   if (type === 'Whole') {
     source = '/backgrounds/sofa.png'
   } else {
@@ -9,7 +13,7 @@ function Chair ({ rotation, size, type, className, player }) {
     <div className={className}>
       <h2>
         <button
-          className='button is-success is-light is-outlined'
+          className={buttonInTurn}
           style={{ margin: '10px', padding: '10px' }}
         >{player?.name}
         </button>
