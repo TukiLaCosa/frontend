@@ -1,7 +1,11 @@
 import axios from 'axios'
 import { addToHand } from './addToHand'
+import { useUserGame } from './UserGameContext'
+import { turnStates } from './handlerTurn'
 
-export const newCard = async (setCardsPlayer, turnState, turnStates, user, game) => {
+export const newCard = async (setCardsPlayer, turnState) => {
+  const { user, game } = useUserGame()
+
   if (turnState === turnStates.DRAW) {
     const userId = user?.id
     const gameName = game?.name
