@@ -128,14 +128,17 @@ function Table() {
   const [winners, setWinners] = useState([])
   const [losers, setLosers] = useState([])
   const [wasTheThing, setWasTheThing] = useState(false)
+  const [eliminatedPlayerName, setEliminatedPlayerName] = useState("")
+  const [eliminatedPlayerId, setEliminatedPlayerId] = useState("")
   const router = useRouter()
   const dragEndSeters = { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }
   const dragEndData = { turnState, user, game }
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG }
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId}
   const discardParams = { setCardsPlayer, setDiscardBG, cardId }
   const flamethrowerParams = { playingCardId, players }
   const endedGameParams = { winners, losers, wasTheThing }
-  const userId = user?.id
+  const eliminatedPlayerParams = {eliminatedPlayerName}
+  //const userId = user?.id
   const gameName = game?.name
 
   useEffect(() => {
@@ -219,6 +222,7 @@ function Table() {
             discardParams={discardParams} 
             flamethrowerParams={flamethrowerParams} 
             endedGameParams={endedGameParams}
+            eliminatedPlayerParams={eliminatedPlayerParams}
           />
 
           <SortableContext

@@ -42,9 +42,11 @@ function Modals({
   discardParams,
   flamethrowerParams,
   endedGameParams,
+  eliminatedPlayerParams
 }) {
   const { playingCardId, players } = flamethrowerParams;
   const { winners, losers, wasTheThing } = endedGameParams;
+  const {eliminatedPlayerName} = eliminatedPlayerParams
   const { user, game } = useUserGame();
 
   if (show === "") {
@@ -175,6 +177,38 @@ function Modals({
       </div>
     );
   }
+  else if (show === "playerEliminated") {
+    return (
+      <div className="modal is-active">
+        <div
+          className="modal-background"
+          onClick={() => {
+            setShow("");
+          }}
+        />
+        <div className="modal-card">
+          <header className="modal-card-head">
+            <p className="modal-card-title">
+              UN JUGADOR FUE ELIMNADO :0
+            </p>
+          </header>
+          <section className="modal-card-body">
+            <div>
+              <span className="title">EL nombre del jugador eliminado: {eliminatedPlayerName}</span>
+            </div>
+          </section>
+          <button
+            className="button is-success is-tuki"
+            onClick={() => {
+              setShow('');
+            }}
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    )
+      }
 }
 
 export default Modals;

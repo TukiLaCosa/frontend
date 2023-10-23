@@ -4,8 +4,23 @@ export const turnStates = {
   PLAY: 'PLAY'
   // EXCHANGE: 'EXCHANGE'
 }
+ 
+export const handlePlayedCardEvent = () => {
 
-export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawBG, setDiscardBG }) => {
+}
+
+
+export const handlePlayerEliminated = (eventTurn, setShowModal,setEliminatedPlayerName,setEliminatedPlayerId) => {
+  setEliminatedPlayerId(eventTurn?.player_id)
+  setEliminatedPlayerName(eventTurn?.player_name)
+  console.log("estoy a punto de setear el MODAL")
+  setShowModal("playerEliminated")
+  /**
+   * Aqui tengo que llamar a una funcion que haga el poppeo de los players, tiene que tomar el arreglo players modificarlo y setear nuevamente el estado "players":
+  popPlayer(eliminatedId)
+  */
+}
+export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawBG, setDiscardBG , setShowModal, setEliminatedPlayerName,setEliminatedPlayerId}) => {
   switch (eventTurn?.event) {
     case 'message':
       break
@@ -20,7 +35,7 @@ export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawB
     case 'played_card':
       if (eventTurn?.player_id === userID) {
         // setTurnState(turnStates.EXCHANGE)
-        handlePlayedCardEvent()
+        //handlePlayedCardEvent()
         setTurnState(turnStates.NOTURN)
       }
       // que todos visualicen que se jugo.
@@ -39,6 +54,9 @@ export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawB
       setDiscardBG(eventTurn?.card_id)
       break
     case 'player_eliminated':
+      console.log("el jugador quemado es",eventTurn?.player_name)
+      handlePlayerEliminated(eventTurn, setShowModal,setEliminatedPlayerName,setEliminatedPlayerId)
+      setTurnState(turnStates.NOTURN)
       break
     case 'exchange_intention':
       break
