@@ -5,7 +5,6 @@ import axios from "axios";
 
 export const playFlamethrower = async (activeId, id_player, id_victim, gameName) => {
   const makePostRequest = (activeId, id_player, id_victim) => {
-    console.log('request:'+ activeId +"  " + id_player +"   "+ id_victim)
     return {
       "card_id": activeId,
       "player_id": id_player,
@@ -83,7 +82,7 @@ export const playCard = (
         break;
       case "Flamethrower":
         console.log("Flamethrower");
-        setShowFlamethrowerConfirmation(true)
+        setShowFlamethrowerConfirmation('Flamethrower')
         
         break;
       case "Analysis":
