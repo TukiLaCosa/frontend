@@ -1,14 +1,9 @@
 import axios from 'axios'
 import { addToHand } from './addToHand'
-import { useUserGame } from './UserGameContext'
 import { turnStates } from './handlerTurn'
 
-export const newCard = async (setCardsPlayer, turnState) => {
-  const { user, game } = useUserGame()
-
+export const newCard = async (setCardsPlayer, turnState, userId, gameName) => {
   if (turnState === turnStates.DRAW) {
-    const userId = user?.id
-    const gameName = game?.name
     const body = { player_id: userId }
     const url = `http://localhost:8000/games/${gameName}/draw-card`
     const response = await axios.patch(url, body)
