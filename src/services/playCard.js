@@ -63,7 +63,8 @@ export const playCard = (
   setCardsPlayer,
   setPlayBG,
   activeId,
-  setShowFlamethrowerConfirmation
+  setShowFlamethrowerConfirmation,
+  setShowMsg
 ) => {
   const activeCard = cards.cards[activeId - 1].name;
 
@@ -83,8 +84,7 @@ export const playCard = (
         break;
       case "Flamethrower":
         console.log("Flamethrower");
-        setShowFlamethrowerConfirmation(true)
-        
+        setShowMsg("Flamethrower");
         break;
       case "Analysis":
         console.log("Analysis");

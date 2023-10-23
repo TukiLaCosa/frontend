@@ -37,6 +37,8 @@ export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawB
     case 'discard_card':
       setDiscardBG(eventTurn?.card_id)
       break
+    case 'player_eliminated':
+      break
     case 'exchange_intention':
       break
     case 'exchange_card_start':
