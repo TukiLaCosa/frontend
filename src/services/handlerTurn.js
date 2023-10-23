@@ -5,7 +5,18 @@ export const turnStates = {
   // EXCHANGE: 'EXCHANGE'
 }
 
-export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawBG, setDiscardBG }) => {
+export const handlePlayedCardEvent = () => {
+
+}
+
+export const handlePlayerEliminated = (eventTurn, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, players) => {
+  setEliminatedPlayerId(eventTurn?.player_id)
+  setEliminatedPlayerName(eventTurn?.player_name)
+  const updatedListPlayers = players.filter(player => player.id !== eventTurn?.player_id)
+  setPlayers(updatedListPlayers)
+  setShowModal('playerEliminated')
+}
+export const handlerTurn = (eventTurn, userID, players, { setTurnState, setTurn, setDrawBG, setDiscardBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers }) => {
   switch (eventTurn?.event) {
     case 'message':
       break
@@ -20,6 +31,7 @@ export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawB
     case 'played_card':
       if (eventTurn?.player_id === userID) {
         // setTurnState(turnStates.EXCHANGE)
+        // handlePlayedCardEvent()
         setTurnState(turnStates.NOTURN)
       }
       // que todos visualicen que se jugo.
@@ -36,6 +48,10 @@ export const handlerTurn = (eventTurn, userID, { setTurnState, setTurn, setDrawB
       break
     case 'discard_card':
       setDiscardBG(eventTurn?.card_id)
+      break
+    case 'player_eliminated':
+      console.log('el jugador quemado es', eventTurn?.player_name)
+      handlePlayerEliminated(eventTurn, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, players)
       break
     case 'exchange_intention':
       break
