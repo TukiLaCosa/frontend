@@ -1,3 +1,5 @@
+import { setPath } from './setPath'
+
 export const turnStates = {
   NOTURN: 'NOTURN',
   DRAW: 'DRAW',
@@ -16,7 +18,12 @@ export const handlePlayerEliminated = (eventTurn, setShowModal, setEliminatedPla
   setPlayers(updatedListPlayers)
   setShowModal('playerEliminated')
 }
-export const handlerTurn = (eventTurn, userID, players, { setTurnState, setTurn, setDrawBG, setDiscardBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers }) => {
+export const handlerTurn = (eventTurn, user, setUserValues, players,
+  {
+    setTurnState, setTurn, setDrawBG, setDiscardBG, setShowModal,
+    setEliminatedPlayerName, setEliminatedPlayerId, setPlayers
+  }) => {
+  const userID = user.id
   switch (eventTurn?.event) {
     case 'message':
       break
@@ -32,7 +39,7 @@ export const handlerTurn = (eventTurn, userID, players, { setTurnState, setTurn,
       if (eventTurn?.player_id === userID) {
         // setTurnState(turnStates.EXCHANGE)
         // handlePlayedCardEvent()
-        setTurnState(turnStates.NOTURN)
+        setDrawBG(setPath(userID))
       }
       // que todos visualicen que se jugo.
       break
@@ -47,11 +54,19 @@ export const handlerTurn = (eventTurn, userID, players, { setTurnState, setTurn,
       }
       break
     case 'discard_card':
-      setDiscardBG(eventTurn?.card_id)
+      if (eventTurn?.card_type === 'STAY_AWAY') {
+        setDiscardBG('/cards/rev/revTakeAway.png')
+      } else if (eventTurn?.card_type === 'PANIC') {
+        setDiscardBG('/cards/rev/revPanic.png')
+      }
       break
     case 'player_eliminated':
-      console.log('el jugador quemado es', eventTurn?.player_name)
       handlePlayerEliminated(eventTurn, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, players)
+      // setUserValues({
+      //   id: user.id,
+      //   name: user.name,
+      //   position: eventTurn?.players_positions.userID
+      // })
       break
     case 'exchange_intention':
       break

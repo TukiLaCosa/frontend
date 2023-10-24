@@ -132,7 +132,7 @@ function Table () {
   const dragEndSeters = { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }
   const dragEndData = { turnState, user, game }
   const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers}
-  const discardParams = { setCardsPlayer, setDiscardBG, cardId }
+  const discardParams = { setCardsPlayer, cardId }
   const flamethrowerParams = { playingCardId, players }
   const endedGameParams = { winners, losers, wasTheThing }
   const eliminatedPlayerParams = { eliminatedPlayerName }
@@ -141,7 +141,7 @@ function Table () {
 
   useEffect(() => {
     const eventJSON = JSON.parse(wsEvent)
-    handlerTurn(eventJSON, user?.id, players, turnSeters)
+    handlerTurn(eventJSON, user, setUserValues, players, turnSeters)
   }, [wsEvent])
 
   useEffect(() => {
@@ -155,6 +155,8 @@ function Table () {
         const sortedPlayers = listPlayers.sort(
           (a, b) => a.position - b.position
         )
+        // const lastElement = sortedPlayers.pop()
+        // sortedPlayers.unshift(lastElement)
         const position = sortedPlayers.findIndex(
           (player) => player.id === user.id
         )

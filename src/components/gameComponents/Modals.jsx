@@ -5,11 +5,11 @@ import { playFlamethrower } from '@/services/playCard'
 
 const confirmDiscard = (
   setShow,
-  { setCardsPlayer, setDiscardBG, cardId },
+  { setCardsPlayer, cardId },
   userId,
   gameName
 ) => {
-  discardCard(setCardsPlayer, setDiscardBG, cardId, userId, gameName)
+  discardCard(setCardsPlayer, cardId, userId, gameName)
   setShow('')
 }
 
@@ -28,15 +28,16 @@ const getAdjacent = (players, index) => {
     ? players[players.length - 1]
     : players[(index - 1) % players.length]
   const right = players[(index + 1) % players.length]
-  console.log(left)
-  console.log(right)
+  console.log('posicion:' + index)
+  console.log('left' + left)
+  console.log('right' + right)
   return {
     left,
     right
   }
 }
 
-function Modals({
+function Modals ({
   show,
   setShow,
   discardParams,
@@ -86,15 +87,15 @@ function Modals({
   } else if (show === 'Flamethrower') {
     return (
       <div className='modal is-active'>
-        <div className='modal-background '></div>
+        <div className='modal-background'></div>
         <div className='modal-card'>
           <header className='modal-card-head'>
             <p className='modal-card-head'>¿A quien quieres quemar?</p>
           </header>
           <section>
-            <button className='button is-danger' onClick={() => setShow('')}>
+            {/* <button className='button is-danger' onClick={() => setShow('')}>
               Cancelar
-            </button>
+            </button> */}
             <button
               className='button is-success'
               onClick={() =>
@@ -106,8 +107,7 @@ function Modals({
                   setShow
                 )}
             >
-              {/* Jugador :{players[(user.position - 1) % players.length]?.name} */}
-              Jugador :{getAdjacent(players, user.position).left.name}
+              Jugador: {getAdjacent(players, user.position).left.name}
             </button>
             <button
               className='button is-success'
@@ -120,7 +120,7 @@ function Modals({
                   setShow
                 )}
             >
-              Jugador :{getAdjacent(players, user.position).right.name}
+              Jugador: {getAdjacent(players, user.position).right.name}
             </button>
           </section>
         </div>
