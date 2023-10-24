@@ -26,7 +26,6 @@ export const playFlamethrower = async (activeId, id_player, id_victim, gameName)
 
 export const playCard = (
   setCardsPlayer,
-  setPlayBG,
   activeId,
   setShow
 ) => {
@@ -38,8 +37,6 @@ export const playCard = (
   }
 
   if (confirm('¿Quieres jugar esta carta?')) {
-    const path = setPath(activeId)
-    setPlayBG(path)
     removeFromHand(setCardsPlayer, activeId)
 
     switch (activeCard) {

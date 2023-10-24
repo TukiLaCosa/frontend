@@ -20,7 +20,7 @@ export const handlePlayerEliminated = (eventTurn, setShowModal, setEliminatedPla
 }
 export const handlerTurn = (eventTurn, user, setUserValues, players,
   {
-    setTurnState, setTurn, setDrawBG, setDiscardBG, setShowModal,
+    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal,
     setEliminatedPlayerName, setEliminatedPlayerId, setPlayers
   }) => {
   const userID = user.id
@@ -39,8 +39,8 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       if (eventTurn?.player_id === userID) {
         // setTurnState(turnStates.EXCHANGE)
         // handlePlayedCardEvent()
-        setDrawBG(setPath(userID))
       }
+      setPlayBG(setPath(eventTurn?.card_id))
       // que todos visualicen que se jugo.
       break
     case 'player_draw_card':
