@@ -62,11 +62,11 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       break
     case 'player_eliminated':
       handlePlayerEliminated(eventTurn, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, players)
-      // setUserValues({
-      //   id: user.id,
-      //   name: user.name,
-      //   position: eventTurn?.players_positions.userID
-      // })
+      setUserValues({
+        id: user.id,
+        name: user.name,
+        position: eventTurn?.players_positions[userID]
+      })
       break
     case 'exchange_intention':
       break
