@@ -1,37 +1,17 @@
-import { setPath } from './setPath'
 import { removeFromHand } from './removeFromHand'
+import { playFlamethrower } from './plays/playFlamethrower'
 import cards from './cards.JSON'
-import axios from 'axios'
-
-export const playFlamethrower = async (activeId, id_player, id_victim, gameName) => {
-  const makePostRequest = (activeId, id_player, id_victim) => {
-    return {
-      'card_id': activeId,
-      'player_id': id_player,
-      'objective_player_id': id_victim,
-    }
-  }
-
-  const request = makePostRequest(activeId, id_player, id_victim)
-
-  try {
-    const response = await axios.post(
-      `http://localhost:8000/games/${gameName}/play-action-card`,
-      request
-    )
-  } catch (error) {
-    console.error('play-actcion-card-error', error)
-  }
-}
 
 export const playCard = (
   setCardsPlayer,
   activeId,
-  setShow
+  user,
+  game,
+  players
 ) => {
   const activeCard = cards.cards[activeId - 1].name
 
-  if (activeCard === 'The Thing' || activeCard === 'Infected!') {
+  if (activeCard === 'La Cosa' || activeCard === '¡Infectado!') {
     alert('¡No se puede jugar esta carta!')
     return
   }
@@ -40,95 +20,96 @@ export const playCard = (
     removeFromHand(setCardsPlayer, activeId)
 
     switch (activeCard) {
-      case 'Infected!':
+      case '¡Infectado!':
         console.log('Infected!')
         break
-      case 'Flamethrower':
+      case 'Lanzallamas':
         console.log('Flamethrower')
-        setShow('Flamethrower')
+        // setShow('Flamethrower')
+        playFlamethrower(activeId, user, game, players)
         break
-      case 'Analysis':
+      case 'Análisis':
         console.log('Analysis')
         break
-      case 'Axe':
+      case 'Hacha':
         console.log('Axe')
         break
-      case 'Suspicion':
+      case 'Sospecha':
         console.log('Suspicion')
         break
       case 'Whisky':
         console.log('Whisky')
         break
-      case 'Determination':
+      case 'Determinación':
         console.log('Determination')
         break
-      case 'Watch Your Back':
+      case 'Vigila tus espaldas':
         console.log('Watch Your Back')
         break
-      case 'Switch':
+      case '¡Cambio de lugar!':
         console.log('Switch')
         break
-      case 'You Better Run':
+      case '¡Más vale que corras!':
         console.log('You Better Run')
         break
-      case 'Seduction':
+      case 'Seducción':
         console.log('Seduction')
         break
-      case 'Frightening':
+      case 'Aterrador':
         console.log('Frightening')
         break
-      case 'Im Fine Here':
+      case 'Aquí estoy bien':
         console.log('Im Fine Here')
         break
-      case 'No, Thanks!':
+      case '¡No, gracias!':
         console.log('No, Thanks!')
         break
-      case 'You Missed!':
+      case '¡Fallaste!':
         console.log('You Missed!')
         break
-      case 'No Barbacue':
+      case '¡Nada de barbacoas!':
         console.log('No Barbacue')
         break
-      case 'Quarantine':
+      case 'Cuarentena':
         console.log('Quarantine')
         break
-      case 'Locked Door':
+      case 'Puerta atrancada':
         console.log('Locked Door')
         break
-      case 'Rotten Ropes':
+      case 'Cuerdas podridas':
         console.log('Rotten Ropes')
         break
-      case 'One, Two...':
+      case 'Uno, dos…':
         console.log('One, Two...')
         break
-      case 'Three, Four...':
+      case 'Tres, cuatro…':
         console.log('Three, Four...')
         break
-      case 'Is The Party Here?':
+      case '¿Es aquí la fiesta?':
         console.log('Is The Party Here?')
         break
-      case 'Get Out Of Here!':
+      case '¡Sal de aquí!':
         console.log('Get Out Of Here!')
         break
-      case 'Forgetful':
+      case 'Olvidadizo':
         console.log('Forgetful')
         break
-      case 'Round And Round':
+      case 'Vuelta y vuelta':
         console.log('Round And Round')
         break
-      case 'We Can Not Be Friends?':
+      case '¿No podemos ser amigos?':
         console.log('We Can Not Be Friends?')
         break
-      case 'Blind Date':
+      case 'Cita a ciegas':
         console.log('Blind Date')
         break
-      case 'Ups!':
+      case '¡Ups!':
         console.log('Ups!')
         break
-      case 'Let Stay It Between Us':
+      case 'Que quede entre nosotros…':
         console.log('Let Stay It Between Us')
         break
-      case 'Revelations':
+      case 'Revelaciones':
         console.log('Revelations')
         break
       default:
