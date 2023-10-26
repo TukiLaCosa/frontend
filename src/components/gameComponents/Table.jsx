@@ -32,15 +32,12 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
     if (active.id === 1) {
       alert('¡No puedes descartar esta carta!')
     } else {
-      // setShowModal('discard')
       if (confirm('¿Seguro que quieres descartar esta carta?')) {
         discardCard(setCardsPlayer, active.id, user?.id, game?.name)
       }
-      // setCardId(active.id)
     }
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
-    // setPlayingCardId(active.id)
     const played = playCard(setCardsPlayer, active.id, user, game, players)
     if (played) {
       // setTurnState(turnStates.EXCHANGE)
