@@ -3,12 +3,21 @@ import { setPath } from './setPath'
 export const turnStates = {
   NOTURN: 'NOTURN',
   DRAW: 'DRAW',
-  PLAY: 'PLAY'
-  // EXCHANGE: 'EXCHANGE'
+  PLAY: 'PLAY',
+  EXCHANGE: 'EXCHANGE'
 }
 
 export const handlePlayedCardEvent = () => {
 
+}
+
+export const handleExchangeIntention = (eventTurn, setShowModal) => {
+    /**
+     * Esta funcion deberia mostrar el modal para que el jugador elija que carta quiere intercambiar
+     */
+
+    setShowModal('exchange-response')
+    
 }
 
 export const handlePlayerEliminated = (eventTurn, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, players) => {
@@ -37,8 +46,8 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       break
     case 'played_card':
       if (eventTurn?.player_id === userID) {
-        // setTurnState(turnStates.EXCHANGE)
-        // handlePlayedCardEvent()
+        //setTurnState(turnStates.EXCHANGE)
+        //handlePlayedCardEvent()
       }
       setPlayBG(setPath(eventTurn?.card_id))
       // que todos visualicen que se jugo.
@@ -69,6 +78,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       })
       break
     case 'exchange_intention':
+      handleExchangeIntention(eventTurn, setShowModal)
       break
     case 'exchange_card_start':
       break

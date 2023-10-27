@@ -2,6 +2,7 @@ import { useUserGame } from '@/services/UserGameContext'
 import { discardCard } from '@/services/discardCard'
 import { deleteGame } from '@/services/deleteGame'
 import { playFlamethrower } from '@/services/playCard'
+import { exchangeIntention } from '@/services/exchange'
 
 const confirmDiscard = (
   setShow,
@@ -23,6 +24,12 @@ const flamethrower = (cardId, userId, victimId, gameName, setShow) => {
   setShow('')
 }
 
+// exchangeInt(card.id, user.id, setShow)
+// const exchangeInt = (cardId, userId, setShow) => {
+//   exchangeIntention(cardId,userId,setShow)
+//   setShow('')
+// }
+
 const getAdjacent = (players, index) => {
   const left = ((index - 1) % players.length === -1)
     ? players[players.length - 1]
@@ -43,12 +50,14 @@ function Modals ({
   discardParams,
   flamethrowerParams,
   endedGameParams,
-  eliminatedPlayerParams
+  eliminatedPlayerParams,
+  exchangeParams
 }) {
   const { playingCardId, players } = flamethrowerParams
   const { winners, losers, wasTheThing } = endedGameParams
   const { eliminatedPlayerName } = eliminatedPlayerParams
   const { user, game } = useUserGame()
+  const {cardsPlayer, setTurnState} = exchangeParams
 
   if (show === '') {
     return null
@@ -73,6 +82,8 @@ function Modals ({
               className='button is-success'
               onClick={() => {
                 confirmDiscard(setShow, discardParams, user?.id, game?.name)
+                setTurnState('EXCHANGE')
+                setShow('exchange-intention')
               }}
             >
               Sí
@@ -205,6 +216,80 @@ function Modals ({
         </div>
       </div>
     )
+  } else if (show == "exchange-intention") {
+    return (
+      <div className='modal is-active'>
+        <div
+          className='modal-background'
+          onClick={() => {
+            //setShow('') Queremos que si o si seleccione una carta
+          }}
+        />
+        <div className='modal-card'>
+          <header className='modal-card-head'>
+            <p className='modal-card-title'>
+              ¡ES MOMENTO DE INTERCAMBIAR UNA CARTA!
+            </p>
+          </header>
+          <section className='modal-card-body'>
+            <div>
+              <span className='title'>DEBES ELEGIR UNA CARTA PARA INTERCAMBIAR:</span>
+            </div>
+          </section>
+          {cardsPlayer.map((card, index) => (
+          <button
+            key={index} 
+            className='button is-success is-tuki'
+            onClick={() => {
+            exchangeIntention(card.id, user.id, game?.name, setShow)
+          }}
+          > 
+            {`${index + 1}º CARTA`}
+          </button> 
+          ))
+          }
+
+        </div>
+      </div>
+    )
+
+  } else if (show == "exchange-response") {
+    return (
+      <div className='modal is-active'>
+        <div
+          className='modal-background'
+          onClick={() => {
+            //setShow('') Queremos que si o si seleccione una carta
+          }}
+        />
+        <div className='modal-card'>
+          <header className='modal-card-head'>
+            <p className='modal-card-title'>
+              ¡ES MOMENTO DE RESPONDER A UN INTERCAMBIO!
+            </p>
+          </header>
+          <section className='modal-card-body'>
+            <div>
+              <span className='title'>DEBES ELEGIR UNA CARTA PARA INTERCAMBIAR:</span>
+            </div>
+          </section>
+          {cardsPlayer.map((card, index) => (
+          <button
+            key={index} 
+            className='button is-success is-tuki'
+            onClick={() => {
+            exchangeResponse(card.id, user.id, game?.name, setShow)
+          }}
+          > 
+            {`${index + 1}º CARTA`}
+          </button> 
+          ))
+          }
+
+        </div>
+      </div>
+    )
+
   }
 }
 

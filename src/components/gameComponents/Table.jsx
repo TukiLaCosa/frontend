@@ -34,13 +34,15 @@ export const handleDragEnd = (event, { turnState, user, game },
     } else {
       setShowModal('discard')
       setCardId(active.id)
+      //Aqui no podria ir el setShowModal('exchange') ?
     }
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
     setPlayingCardId(active.id)
     const played = playCard(setCardsPlayer, active.id, setShowModal)
     if (played) {
-      // setTurnState(turnStates.EXCHANGE)
+      setTurnState(turnStates.EXCHANGE)
+      setShowModal('exchange-intention')
     }
   } else {
     // Just sorting
@@ -136,6 +138,7 @@ function Table () {
   const flamethrowerParams = { playingCardId, players }
   const endedGameParams = { winners, losers, wasTheThing }
   const eliminatedPlayerParams = { eliminatedPlayerName }
+  const exchangeParams = {cardsPlayer, setTurnState}
   const userId = user?.id
   const gameName = game?.name
 
@@ -222,6 +225,7 @@ function Table () {
             flamethrowerParams={flamethrowerParams}
             endedGameParams={endedGameParams}
             eliminatedPlayerParams={eliminatedPlayerParams}
+            exchangeParams = {exchangeParams}
           />
 
           <SortableContext
