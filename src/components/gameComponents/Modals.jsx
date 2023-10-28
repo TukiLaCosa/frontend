@@ -2,7 +2,7 @@ import { useUserGame } from '@/services/UserGameContext'
 import { discardCard } from '@/services/discardCard'
 import { deleteGame } from '@/services/deleteGame'
 import { playFlamethrower } from '@/services/playCard'
-import { exchangeIntention } from '@/services/exchange'
+import { exchangeIntention,exchangeResponse } from '@/services/exchange'
 
 const confirmDiscard = (
   setShow,
@@ -57,7 +57,8 @@ function Modals ({
   const { winners, losers, wasTheThing } = endedGameParams
   const { eliminatedPlayerName } = eliminatedPlayerParams
   const { user, game } = useUserGame()
-  const {cardsPlayer, setTurnState} = exchangeParams
+  const {cardsPlayer, wsObject, setTurnState} = exchangeParams
+
 
   if (show === '') {
     return null
@@ -216,7 +217,7 @@ function Modals ({
         </div>
       </div>
     )
-  } else if (show == "exchange-intention") {
+  } else if (show === "exchange-intention") {
     return (
       <div className='modal is-active'>
         <div
@@ -278,7 +279,7 @@ function Modals ({
             key={index} 
             className='button is-success is-tuki'
             onClick={() => {
-            exchangeResponse(card.id, user.id, game?.name, setShow)
+            exchangeResponse(card.id,user.id, game?.name,wsObject, setShow)
           }}
           > 
             {`${index + 1}º CARTA`}

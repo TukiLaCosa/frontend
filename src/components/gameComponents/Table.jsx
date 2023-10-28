@@ -20,6 +20,7 @@ import { newCard } from '@/services/newCard'
 import { useUserGame } from '@/services/UserGameContext'
 import { useWebSocket } from '@/services/WebSocketContext'
 import { handlerTurn, turnStates } from '@/services/handlerTurn'
+import { fetchCards } from '@/services/fetchCards'
 import axios from 'axios'
 import '@/styles/game_ended.scss'
 
@@ -51,24 +52,24 @@ export const handleDragEnd = (event, { turnState, user, game },
   }
 }
 
-export const fetchCards = async (user, setCardsPlayer) => {
-  const playerId = user?.id
-  try {
-    const response = await axios.get(
-      `http://localhost:8000/players/${playerId}/hand`
-    )
-    const cards = await response.data.map((card) => {
-      return {
-        id: card.id,
-        name: card.name
-      }
-    })
-    setCardsPlayer(cards)
-    console.log(cards)
-  } catch (error) {
-    console.error('Error getting cards:', error)
-  }
-}
+// export const fetchCards = async (user, setCardsPlayer) => {
+//   const playerId = user?.id
+//   try {
+//     const response = await axios.get(
+//       `http://localhost:8000/players/${playerId}/hand`
+//     )
+//     const cards = await response.data.map((card) => {
+//       return {
+//         id: card.id,
+//         name: card.name
+//       }
+//     })
+//     setCardsPlayer(cards)
+//     console.log(cards)
+//   } catch (error) {
+//     console.error('Error getting cards:', error)
+//   }
+// } FUNCION MODULARIZADA AHORA ES UN SERVICIO
 
 export const fetchResultsGame = async (gameName, setWinners, setLosers, setWasTheThing, setShowModal) => {
   try {
@@ -133,12 +134,12 @@ function Table () {
   const router = useRouter()
   const dragEndSeters = { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }
   const dragEndData = { turnState, user, game }
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers}
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setCardsPlayer}
   const discardParams = { setCardsPlayer, cardId }
   const flamethrowerParams = { playingCardId, players }
   const endedGameParams = { winners, losers, wasTheThing }
   const eliminatedPlayerParams = { eliminatedPlayerName }
-  const exchangeParams = {cardsPlayer, setTurnState}
+  const exchangeParams = {cardsPlayer,wsObject, setTurnState}
   const userId = user?.id
   const gameName = game?.name
 
