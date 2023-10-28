@@ -194,6 +194,10 @@ function Table () {
       fetchResultsGame(gameName, setWinners, setLosers, setWasTheThing, setShowModal)
     } else if (eventType === 'game_deleted') {
       router.push('/search-game')
+    } else if (eventType === 'cheat_used') {
+      fetchCards(user, setCardsPlayer)
+    } else {
+      handlerTurn(eventJSON, user, setUserValues, players, turnSeters)
     }
   }, [wsEvent])
 
@@ -280,7 +284,7 @@ function Table () {
                   size={120}
                   type='Right'
                   className='is-flex is-flex-direction-row has-text-centered'
-                  player={players[4]}
+                  player={players[11]}
                   turn={turn}
                 />
               </div>
@@ -310,7 +314,7 @@ function Table () {
                   size={120}
                   type='Left'
                   className='is-flex is-flex-direction-row-reverse has-text-centered'
-                  player={players[5]}
+                  player={players[4]}
                   turn={turn}
                 />
               </div>
@@ -320,7 +324,7 @@ function Table () {
                   size={120}
                   type='Left'
                   className='is-flex is-flex-direction-row has-text-centered'
-                  player={players[6]}
+                  player={players[10]}
                   turn={turn}
                 />
               </div>
@@ -330,7 +334,7 @@ function Table () {
                   size={120}
                   type='Right'
                   className='is-flex is-flex-direction-row-reverse has-text-centered'
-                  player={players[7]}
+                  player={players[5]}
                   turn={turn}
                 />
               </div>
@@ -341,7 +345,7 @@ function Table () {
                   size={200}
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
-                  player={players[8]}
+                  player={players[9]}
                   turn={turn}
                 />
                 <Chair
@@ -349,7 +353,7 @@ function Table () {
                   size={200}
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
-                  player={players[9]}
+                  player={players[8]}
                   turn={turn}
                 />
               </div>
@@ -359,7 +363,7 @@ function Table () {
                   size={200}
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
-                  player={players[10]}
+                  player={players[7]}
                   turn={turn}
                 />
                 <Chair
@@ -367,7 +371,7 @@ function Table () {
                   size={200}
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
-                  player={players[11]}
+                  player={players[6]}
                   turn={turn}
                 />
               </div>
