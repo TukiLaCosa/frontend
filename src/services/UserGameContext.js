@@ -18,6 +18,15 @@ export function UserGameProvider ({ children }) {
    * }
    */
   const [game, setGame] = useState(null)
+  const [record, setRecord] = useState([])
+
+  const setNewRecord = (msg) => {
+    let newRecord = msg
+    if (typeof newRecord !== 'string') {
+      newRecord = newRecord?.toString()
+    }
+    setRecord(oldRecord => [...oldRecord, newRecord])
+  }
 
   const setUserValues = ({ id, name, position }) => {
     setUser({
@@ -37,7 +46,7 @@ export function UserGameProvider ({ children }) {
   }
 
   return (
-    <UserGameContext.Provider value={{ user, game, setUserValues, setGameValues }}>
+    <UserGameContext.Provider value={{ user, game, record, setUserValues, setGameValues, setNewRecord }}>
       {children}
     </UserGameContext.Provider>
   )

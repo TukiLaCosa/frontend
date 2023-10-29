@@ -22,6 +22,7 @@ import { useWebSocket } from '@/services/WebSocketContext'
 import { handlerTurn, turnStates } from '@/services/handlerTurn'
 import axios from 'axios'
 import '@/styles/game_ended.scss'
+import Record from './Record'
 
 export const handleDragEnd = (event, { turnState, user, game },
   { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }) => {
@@ -403,11 +404,9 @@ function Table () {
         </DndContext>
       </div>
       <div
-        className='chat has-text-centered column is-flex is-flex-direction-column is-justify-content-space-evenly'
-        style={{
-          backgroundColor: 'grey'
-        }}
+        className='record-chat'
       >
+        <Record />
         <Chat />
       </div>
     </div>
