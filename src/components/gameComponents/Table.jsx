@@ -41,10 +41,10 @@ export const handleDragEnd = (event, { turnState, user, game },
     // Playing
     setPlayingCardId(active.id)
     const played = playCard(setCardsPlayer, active.id, setShowModal)
-    if (played) {
-      setTurnState(turnStates.EXCHANGE)
-      setShowModal('exchange-intention')
-    }
+      if (played) {
+        //setTurnState(turnStates.EXCHANGE)
+        //setShowModal('exchange-intention')
+      }
   } else {
     // Just sorting
     sortCards(setCardsPlayer, over.id, active.id)

@@ -24,6 +24,18 @@ const flamethrower = (cardId, userId, victimId, gameName, setShow) => {
   setShow('')
 }
 
+const exchangeAfterEliminated = (wsObject, user, setShow, setTurnState) => {
+  const wsEvent = wsObject.event
+  const eventJSON = JSON.parse(wsEvent)
+  if (eventJSON.eliminated_by === user.id) {
+    setTurnState('EXCHANGE')
+    setShow('exchange-intention')
+  }
+  else {
+    setShow('')
+  }
+}
+
 // exchangeInt(card.id, user.id, setShow)
 // const exchangeInt = (cardId, userId, setShow) => {
 //   exchangeIntention(cardId,userId,setShow)
@@ -123,7 +135,7 @@ function Modals ({
             </button>
             <button
               className='button is-success'
-              onClick={() =>
+              onClick={() => 
                 flamethrower(
                   playingCardId,
                   user.id,
@@ -192,7 +204,7 @@ function Modals ({
         <div
           className='modal-background'
           onClick={() => {
-            setShow('')
+            //setShow('') queremos que si o si toque el OK
           }}
         />
         <div className='modal-card'>
@@ -209,7 +221,7 @@ function Modals ({
           <button
             className='button is-success is-tuki'
             onClick={() => {
-              setShow('')
+              exchangeAfterEliminated(wsObject, user, setShow,setTurnState)
             }}
           >
             OK
