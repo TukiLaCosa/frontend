@@ -24,6 +24,23 @@ export const playFlamethrower = async (activeId, id_player, id_victim, gameName)
   }
 }
 
+export const playSeduction = async (activeId, idPlayer, idVictim, gameName, cardToExchange) => {
+  const request = {
+    'card_id': activeId,
+    'player_id': idPlayer,
+    'objective_player_id': idVictim,
+    'card_to_exchange': cardToExchange
+  }
+  try {
+    await axios.post(
+      `http://localhost:8000/games/${gameName}/play-action-card`,
+      request
+    )
+  } catch (error) {
+    console.error('play-actcion-card-error', error)
+  }
+}
+
 export const playCard = (
   setCardsPlayer,
   activeId,
