@@ -205,6 +205,37 @@ function Modals ({
         </div>
       </div>
     )
+  } else if (show === 'seduction') {
+    return (
+      <div className='modal is-active'>
+        <div
+          className='modal-background'
+          onClick={() => {
+            setShow('')
+          }}
+        />
+        <div className='modal-card'>
+          <header className='modal-card-head'>
+            <p className='modal-card-title'>
+              Elige una carta para intercambiar
+            </p>
+          </header>
+          <section className='modal-card-body'>
+            <div>
+              <span className='title'>  </span>
+            </div>
+          </section>
+          <button
+            className='button is-success is-tuki'
+            onClick={() => {
+              setShow('')
+            }}
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    )
   }
 }
 

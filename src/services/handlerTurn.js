@@ -1,4 +1,5 @@
 import { setPath } from './setPath'
+import { fetchCards } from '@/components/gameComponents/Table'
 
 export const turnStates = {
   NOTURN: 'NOTURN',
@@ -21,7 +22,7 @@ export const handlePlayerEliminated = (eventTurn, setShowModal, setEliminatedPla
 export const handlerTurn = (eventTurn, user, setUserValues, players,
   {
     setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal,
-    setEliminatedPlayerName, setEliminatedPlayerId, setPlayers
+    setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setCardsPlayer
   }) => {
   const userID = user.id
   switch (eventTurn?.event) {
@@ -77,6 +78,9 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
     case 'exchange_card_finish':
       break
     case 'exchange_done':
+      break
+    case 'seduction_done':
+      fetchCards(userID, setCardsPlayer)
       break
     default:
       break

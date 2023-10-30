@@ -49,8 +49,7 @@ export const handleDragEnd = (event, { turnState, user, game },
   }
 }
 
-export const fetchCards = async (user, setCardsPlayer) => {
-  const playerId = user?.id
+export const fetchCards = async (playerId, setCardsPlayer) => {
   try {
     const response = await axios.get(
       `http://localhost:8000/players/${playerId}/hand`
@@ -131,7 +130,7 @@ function Table () {
   const router = useRouter()
   const dragEndSeters = { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }
   const dragEndData = { turnState, user, game }
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers}
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setCardsPlayer }
   const discardParams = { setCardsPlayer, cardId }
   const flamethrowerParams = { playingCardId, players }
   const endedGameParams = { winners, losers, wasTheThing }
@@ -184,7 +183,7 @@ function Table () {
     } else if (game?.nextCard === 'PANIC') {
       setDrawBG('/cards/rev/revPanic.png')
     }
-    fetchCards(user, setCardsPlayer)
+    fetchCards(user?.id, setCardsPlayer)
   }, [])
 
   useEffect(() => {
@@ -195,7 +194,7 @@ function Table () {
     } else if (eventType === 'game_deleted') {
       router.push('/search-game')
     } else if (eventType === 'cheat_used') {
-      fetchCards(user, setCardsPlayer)
+      fetchCards(user?.id, setCardsPlayer)
     } else {
       handlerTurn(eventJSON, user, setUserValues, players, turnSeters)
     }
