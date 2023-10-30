@@ -3,17 +3,32 @@ import { removeFromHand } from './removeFromHand'
 import cards from './cards.JSON'
 import axios from 'axios'
 
-export const playFlamethrower = async (activeId, id_player, id_victim, gameName) => {
-  const makePostRequest = (activeId, id_player, id_victim) => {
-    return {
-      'card_id': activeId,
-      'player_id': id_player,
-      'objective_player_id': id_victim,
-    }
+// para armar el body
+export const makePostRequest = (activeId, playerId, victimId) => {
+  return {
+    'card_id': activeId,
+    'player_id': playerId,
+    'objective_player_id': victimId
   }
+}
 
+
+export const playFlamethrower = async (activeId, id_player, id_victim, gameName) => {
   const request = makePostRequest(activeId, id_player, id_victim)
 
+  try {
+    const response = await axios.post(
+      `http://localhost:8000/games/${gameName}/play-action-card`,
+      request
+    )
+  } catch (error) {
+    console.error('play-actcion-card-error', error)
+  }
+}
+
+// función q se llamará al jugar la carta de whisky
+export const playWhisky = async (activeId, playerId, gameName) => {
+  const request = makePostRequest(activeId, playerId)
   try {
     const response = await axios.post(
       `http://localhost:8000/games/${gameName}/play-action-card`,
@@ -27,7 +42,9 @@ export const playFlamethrower = async (activeId, id_player, id_victim, gameName)
 export const playCard = (
   setCardsPlayer,
   activeId,
-  setShow
+  setShow,
+  playerId,
+  gameName
 ) => {
   const activeCard = cards.cards[activeId - 1].name
 
@@ -56,8 +73,9 @@ export const playCard = (
       case 'Suspicion':
         console.log('Suspicion')
         break
-      case 'Whisky':
+      case 'Whisky': // whisky
         console.log('Whisky')
+        playWhisky(activeId, playerId, gameName)
         break
       case 'Determination':
         console.log('Determination')

@@ -38,7 +38,7 @@ export const handleDragEnd = (event, { turnState, user, game },
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
     setPlayingCardId(active.id)
-    const played = playCard(setCardsPlayer, active.id, setShowModal)
+    const played = playCard(setCardsPlayer, active.id, setShowModal, user.id, game.name)
     if (played) {
       // setTurnState(turnStates.EXCHANGE)
     }
@@ -131,7 +131,7 @@ function Table () {
   const router = useRouter()
   const dragEndSeters = { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }
   const dragEndData = { turnState, user, game }
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers}
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setCardsPlayer}
   const discardParams = { setCardsPlayer, cardId }
   const flamethrowerParams = { playingCardId, players }
   const endedGameParams = { winners, losers, wasTheThing }

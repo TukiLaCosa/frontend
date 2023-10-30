@@ -1,4 +1,5 @@
 import { setPath } from './setPath'
+import axios from 'axios'
 
 export const turnStates = {
   NOTURN: 'NOTURN',
@@ -18,10 +19,29 @@ export const handlePlayerEliminated = (eventTurn, setShowModal, setEliminatedPla
   setPlayers(updatedListPlayers)
   setShowModal('playerEliminated')
 }
+
+export const handlerWhisky = async (playerId, setCardsPlayer) => {
+  try { // esto es un fetchCards (o sea, el servicio), pero todavia no lo tengo mergeado
+    const response = await axios.get(
+      `http://localhost:8000/players/${playerId}/hand`
+    )
+    const cards = await response.data.map((card) => { // mapea los datos q trae
+      return {
+        id: card.id,
+        name: card.name
+      }
+    })
+    setCardsPlayer(cards)
+    console.log(cards)
+  } catch (error) {
+    console.error('Error getting cards:', error)
+  }
+}
+
 export const handlerTurn = (eventTurn, user, setUserValues, players,
   {
     setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal,
-    setEliminatedPlayerName, setEliminatedPlayerId, setPlayers
+    setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setCardsPlayer
   }) => {
   const userID = user.id
   switch (eventTurn?.event) {
@@ -78,6 +98,9 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       break
     case 'exchange_done':
       break
+    case 'whiskey_card_played':
+      // una vez que se le pega a este endpoint, se hace un fetch de las cartas del jugador
+      handlerWhisky(eventTurn?.player_id, setCardsPlayer)
     default:
       break
   }
