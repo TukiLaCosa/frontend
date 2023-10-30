@@ -6,6 +6,7 @@ import Card from './Card'
 import DiscardDeck from './DiscardDeck'
 import PlayCard from './PlayCard'
 import Chair from './Chair'
+import Modal from '../Modal'
 import { useEffect, useState } from 'react'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import {
@@ -24,17 +25,33 @@ import { handlerTurn, turnStates } from '@/services/handlerTurn'
 import axios from 'axios'
 import '@/styles/game_ended.scss'
 
-export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, players) => {
+export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction) => {
   const { active, over } = event
 
   if (over.id === 'discard-deck' && turnState === turnStates.PLAY) {
     // Discarding
     if (active.id === 1) {
-      alert('¡No puedes descartar esta carta!')
+      setContentModal('No puedes descartar esta carta', setContentModal, (a) => { })
     } else {
-      if (confirm('¿Seguro que quieres descartar esta carta?')) {
-        discardCard(setCardsPlayer, active.id, user?.id, game?.name)
+      const handleFunction = (value) => {
+        console.log('Decision: ', value)
+        if (value) {
+          discardCard(setCardsPlayer, active.id, user?.id, game?.name)
+        }
       }
+      setHandleFunction(handleFunction)
+      const buttons = [
+        {
+          text: 'Aceptar',
+          value: true
+        },
+        {
+          text: 'Cancelar',
+          value: false
+        }
+      ]
+      setButtons(buttons)
+      setContentModal('¿Seguro que quieres descartar esta carta?')
     }
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
@@ -92,10 +109,6 @@ export const fetchResultsGame = async (gameName) => {
   }
 }
 
-export const openModal = (setShowModal) => {
-  setShowModal('gameEnded')
-}
-
 function Table () {
   const router = useRouter()
   const { user, game, setUserValues } = useUserGame()
@@ -109,6 +122,9 @@ function Table () {
   const [turn, setTurn] = useState(0)
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const [players, setPlayers] = useState('vacio')
+  const [contentModal, setContentModal] = useState('')
+  const [buttons, setButtons] = useState('')
+  const [handleFunction, setHandleFunction] = useState((_) => { })
   const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers }
   const userId = user?.id
   const gameName = game?.name
@@ -179,9 +195,15 @@ function Table () {
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={(event) => {
-            handleDragEnd(event, turnState, user, game, setCardsPlayer, players)
+            handleDragEnd(event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction)
           }} // as onChange
         >
+          <Modal
+            contentModal={contentModal}
+            setContentModal={setContentModal}
+            buttons={buttons}
+            handleButtons={handleFunction}
+          />
 
           <SortableContext
             items={items}
