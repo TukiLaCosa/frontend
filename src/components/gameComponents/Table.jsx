@@ -22,6 +22,7 @@ import { useWebSocket } from '@/services/WebSocketContext'
 import { handlerTurn, turnStates } from '@/services/handlerTurn'
 import axios from 'axios'
 import '@/styles/game_ended.scss'
+import Record from './Record'
 
 export const handleDragEnd = (event, { turnState, user, game },
   { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }) => {
@@ -107,7 +108,7 @@ export const openModal = (setShowModal) => {
 // }
 
 function Table () {
-  const { user, game, setUserValues } = useUserGame()
+  const { user, game, setUserValues, setNewRecord } = useUserGame()
   const wsObject = useWebSocket()
   const wsEvent = wsObject.event
   const [cardsPlayer, setCardsPlayer] = useState([])
@@ -131,7 +132,7 @@ function Table () {
   const router = useRouter()
   const dragEndSeters = { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }
   const dragEndData = { turnState, user, game }
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers}
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setNewRecord }
   const discardParams = { setCardsPlayer, cardId }
   const flamethrowerParams = { playingCardId, players }
   const endedGameParams = { winners, losers, wasTheThing }
@@ -403,11 +404,9 @@ function Table () {
         </DndContext>
       </div>
       <div
-        className='chat has-text-centered column is-flex is-flex-direction-column is-justify-content-space-evenly'
-        style={{
-          backgroundColor: 'grey'
-        }}
+        className='record-chat'
       >
+        <Record />
         <Chat />
       </div>
     </div>

@@ -31,3 +31,17 @@
 .cards > * {
     margin-left: 20px;
 }
+
+.record-chat {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.record-chat > * {
+  height: 50vh;
+  width: 100%;
+  overflow-y: auto;
+  padding: 0;
+  margin: 0;
+}
