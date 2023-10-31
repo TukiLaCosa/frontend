@@ -14,12 +14,14 @@ export const handlePlayedCardEvent = () => {
 export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
   console.log(players)
   const newPlayers = [...players]
-  const index = newPlayers.findIndex((player) => player.id === eventTurn?.player_id)
-  newPlayers[index].position = -1
+  const index = newPlayers.findIndex((player) => player.id === eventTurn?.eliminated_player_id)
+  if (newPlayers[index] !== undefined) {
+    newPlayers[index].position = -1
+  }
   setPlayers(newPlayers)
-  const elem = document.getElementById(eventTurn?.player_id)
-  elem.removeAttribute('is-success')
-  elem.setAttribute('class', 'button is-danger')
+  const elem = document.getElementById(eventTurn?.eliminated_player_id)
+  elem?.removeAttribute('is-success')
+  elem?.setAttribute('class', 'button is-danger')
 }
 
 export const handlerTurn = (eventTurn, user, setUserValues, players,

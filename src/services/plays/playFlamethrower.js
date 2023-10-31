@@ -1,6 +1,8 @@
 import axios from 'axios'
 
-export const getAdjacent = (players, index) => {
+export const getAdjacent = (players, id) => {
+  console.log(players)
+  const index = players.map((e) => e.id).indexOf(id)
   const alives = players.filter((player) => player.position !== -1)
   console.log('indice: ' + index)
   const left = ((index - 1) % alives.length === -1)
@@ -16,10 +18,10 @@ export const getAdjacent = (players, index) => {
   }
 }
 
-export const playFlamethrower = async (activeId, user, game, players) => {
-  const adyc = getAdjacent(players, user?.position)
+export const playFlamethrower = async (activeId, user, game, players, setContentModal) => {
+  const adyc = getAdjacent(players, user?.id)
 
-  alert('Seleccion un jugador vecino para eliminar')
+  setContentModal('Seleccion un jugador vecino para eliminar')
 
   const left = document.getElementById(adyc?.left.id)
   const right = document.getElementById(adyc?.right.id)

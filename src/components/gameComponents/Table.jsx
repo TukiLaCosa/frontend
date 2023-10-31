@@ -31,7 +31,7 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
   if (over.id === 'discard-deck' && turnState === turnStates.PLAY) {
     // Discarding
     if (active.id === 1) {
-      setContentModal('No puedes descartar esta carta', setContentModal, (a) => { })
+      setContentModal('No puedes descartar esta carta')
     } else {
       const handleFunction = (value) => {
         console.log('Decision: ', value)
@@ -39,7 +39,7 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
           discardCard(setCardsPlayer, active.id, user?.id, game?.name)
         }
       }
-      setHandleFunction(handleFunction)
+      setHandleFunction(() => handleFunction)
       const buttons = [
         {
           text: 'Aceptar',
@@ -55,7 +55,7 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
     }
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
-    const played = playCard(setCardsPlayer, active.id, user, game, players)
+    const played = playCard(setCardsPlayer, active.id, user, game, players, setContentModal, setButtons, setHandleFunction)
     if (played) {
       // setTurnState(turnStates.EXCHANGE)
     }
@@ -85,7 +85,7 @@ export const fetchCards = async (user, setCardsPlayer) => {
   }
 }
 
-export const fetchResultsGame = async (gameName) => {
+export const fetchResultsGame = async (gameName, setContentModal, setButtons, setHandleFunction) => {
   try {
     const response = await axios.get(
       `http://localhost:8000/games/${gameName}/result`
@@ -97,13 +97,22 @@ export const fetchResultsGame = async (gameName) => {
     const message = `
       Los ganadores son :
       ${data.winners.map(winner => `${winner.name}`)}
-      Los perdedores son:
+      \nLos perdedores son:
       ${data.losers.map(loser => `${loser.name}`)}
-      La Cosa: ${theThingPlayer?.name}
+      \nLa Cosa: ${theThingPlayer?.name}
     `
-
-    alert(message)
-    deleteGame(gameName)
+    const buttons = [
+      {
+        text: 'Aceptar',
+        value: true
+      }
+    ]
+    setButtons(buttons)
+    const handleAccept = (value) => {
+      deleteGame(gameName)
+    }
+    setHandleFunction(() => handleAccept)
+    setContentModal(message)
   } catch (error) {
     console.error('Error getting results:', error)
   }
@@ -124,7 +133,7 @@ function Table () {
   const [players, setPlayers] = useState('vacio')
   const [contentModal, setContentModal] = useState('')
   const [buttons, setButtons] = useState('')
-  const [handleFunction, setHandleFunction] = useState((_) => { })
+  const [handleFunction, setHandleFunction] = useState(null)
   const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers }
   const userId = user?.id
   const gameName = game?.name
@@ -181,7 +190,7 @@ function Table () {
     const eventJSON = JSON.parse(wsEvent)
     const eventType = eventJSON?.event
     if (eventType === 'game_ended') {
-      fetchResultsGame(gameName)
+      fetchResultsGame(gameName, setContentModal, setButtons, setHandleFunction)
     } else if (eventType === 'game_deleted') {
       router.push('/search-game')
     } else {
@@ -202,7 +211,9 @@ function Table () {
             contentModal={contentModal}
             setContentModal={setContentModal}
             buttons={buttons}
+            setButtons={setButtons}
             handleButtons={handleFunction}
+            setHandleButtons={setHandleFunction}
           />
 
           <SortableContext

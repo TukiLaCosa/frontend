@@ -1,6 +1,8 @@
-export const handleButton = (handleClick, value, setContentModal) => {
+export const handleButton = (handleClick, value, setContentModal, setButtons, setHandleButtons) => {
   handleClick(value)
   setContentModal('')
+  setButtons([])
+  setHandleButtons(null)
 }
 
 /**
@@ -21,10 +23,7 @@ export const handleButton = (handleClick, value, setContentModal) => {
  *  TODO
  * }
  */
-const Modal = ({ contentModal, setContentModal, buttons, handleButtons }) => {
-  console.log('El modal es: ', contentModal)
-  console.log('Los botones son: ', buttons)
-  console.log('La funcion es: ', handleButtons)
+const Modal = ({ contentModal, setContentModal, buttons, setButtons, handleButtons, setHandleButtons }) => {
   if (contentModal !== '' && contentModal !== undefined) {
     return (
       <div class='modal is-active'>
@@ -39,9 +38,9 @@ const Modal = ({ contentModal, setContentModal, buttons, handleButtons }) => {
           </section>
           <footer class='modal-card-foot'>
             {
-              buttons?.map((but, i) => {
+              buttons && buttons?.map((but, i) => {
                 return (
-                  <button key={i} className='button' onClick={() => { handleButton(handleButtons, but.value, setContentModal) }}>{but.text}</button>
+                  <button key={i} className='button' onClick={() => { handleButton(handleButtons, but.value, setContentModal, setButtons, setHandleButtons) }}>{but.text}</button>
                 )
               })
             }
