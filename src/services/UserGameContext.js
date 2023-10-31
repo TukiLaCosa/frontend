@@ -20,7 +20,7 @@ export function UserGameProvider ({ children }) {
   const [game, setGame] = useState(null)
   const [record, setRecord] = useState([])
 
-  const setNewRecord = (msg) => {
+  function setNewRecord (msg) {
     let newRecord = msg
     if (typeof newRecord !== 'string') {
       newRecord = newRecord?.toString()

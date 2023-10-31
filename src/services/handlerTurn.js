@@ -21,7 +21,7 @@ export const handlePlayerEliminated = (eventTurn, setShowModal, setEliminatedPla
 export const handlerTurn = (eventTurn, user, setUserValues, players,
   {
     setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal,
-    setEliminatedPlayerName, setEliminatedPlayerId, setPlayers
+    setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setNewRecord
   }) => {
   const userID = user.id
   switch (eventTurn?.event) {
@@ -61,6 +61,8 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       }
       break
     case 'player_eliminated':
+      const msg = '' + eventTurn?.killer_player_name + ' eliminado por ' + eventTurn?.player_name
+      setNewRecord(msg)
       handlePlayerEliminated(eventTurn, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, players)
       setUserValues({
         id: user.id,
