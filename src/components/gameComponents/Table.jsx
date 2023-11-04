@@ -6,7 +6,6 @@ import Card from './Card'
 import DiscardDeck from './DiscardDeck'
 import PlayCard from './PlayCard'
 import Chair from './Chair'
-import Modals from './Modals'
 import { useEffect, useState } from 'react'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import {
@@ -17,14 +16,15 @@ import { sortCards } from '@/services/sortCards'
 import { useRouter } from 'next/navigation'
 import { playCard } from '@/services/playCard'
 import { newCard } from '@/services/newCard'
+import { discardCard } from '@/services/discardCard'
+import { deleteGame } from '@/services/deleteGame'
 import { useUserGame } from '@/services/UserGameContext'
 import { useWebSocket } from '@/services/WebSocketContext'
 import { handlerTurn, turnStates } from '@/services/handlerTurn'
 import axios from 'axios'
 import '@/styles/game_ended.scss'
 
-export const handleDragEnd = (event, { turnState, user, game },
-  { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }) => {
+export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, players, cardsPlayer, cardToExchange, setCardToExchange) => {
   const { active, over } = event
 
   if (over.id === 'discard-deck' && turnState === turnStates.PLAY) {
@@ -32,13 +32,13 @@ export const handleDragEnd = (event, { turnState, user, game },
     if (active.id === 1) {
       alert('¡No puedes descartar esta carta!')
     } else {
-      setShowModal('discard')
-      setCardId(active.id)
+      if (confirm('¿Seguro que quieres descartar esta carta?')) {
+        discardCard(setCardsPlayer, active.id, user?.id, game?.name)
+      }
     }
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
-    setPlayingCardId(active.id)
-    const played = playCard(setCardsPlayer, active.id, setShowModal)
+    const played = playCard(setCardsPlayer, active.id, user, game, players, cardsPlayer, cardToExchange, setCardToExchange)
     if (played) {
       // setTurnState(turnStates.EXCHANGE)
     }
@@ -67,21 +67,25 @@ export const fetchCards = async (playerId, setCardsPlayer) => {
   }
 }
 
-export const fetchResultsGame = async (gameName, setWinners, setLosers, setWasTheThing, setShowModal) => {
+export const fetchResultsGame = async (gameName) => {
   try {
     const response = await axios.get(
       `http://localhost:8000/games/${gameName}/result`
     )
-    console.log(response)
     console.log(response.data)
     const data = response.data
-    setWinners(data.winners.map(winner => winner.name))
-    setLosers(data.losers.map(loser => loser.name))
     const theThingPlayer = data.winners.find(winner => winner.was_the_thing) ||
       data.losers.find(loser => loser.was_the_thing)
+    const message = `
+      Los ganadores son :
+      ${data.winners.map(winner => `${winner.name}`)}
+      Los perdedores son:
+      ${data.losers.map(loser => `${loser.name}`)}
+      La Cosa: ${theThingPlayer?.name}
+    `
 
-    setWasTheThing(theThingPlayer ? theThingPlayer.name : '')
-    openModal(setShowModal)
+    alert(message)
+    deleteGame(gameName)
   } catch (error) {
     console.error('Error getting results:', error)
   }
@@ -91,57 +95,23 @@ export const openModal = (setShowModal) => {
   setShowModal('gameEnded')
 }
 
-// // PEGARLE A UN ENDPOINT HARDCODEADO PARA FINALIZAR PARTIDA
-// export const finalizarPartida = async (gameName) => {
-//   console.log(gameName)
-//   try {
-//     const response = await axios.get( // hacer get para finalizar la partida. Luego de pegarle a este endpoint manda el evento de game_ended
-//       `http://localhost:8000/ws/${gameName}/send-self-event?event=game_ended` // le indico qué evento quiero q dispare por query parameters
-//     )
-//     console.log(response)
-//     console.log(response.data)
-//   } catch (error) {
-//     console.error('Error WS:', error)
-//   }
-// }
-
 function Table () {
+  const router = useRouter()
   const { user, game, setUserValues } = useUserGame()
   const wsObject = useWebSocket()
   const wsEvent = wsObject.event
   const [cardsPlayer, setCardsPlayer] = useState([])
+  const [cardToExchange, setCardToExchange] = useState(null)
   const [playBG, setPlayBG] = useState('/cards/rev/109Rev.png')
   const [discardBG, setDiscardBG] = useState('/cards/rev/revPanic.png')
   const [drawBG, setDrawBG] = useState('/cards/rev/revTakeAway.png')
   const [turnState, setTurnState] = useState(turnStates.NOTURN)
   const [turn, setTurn] = useState(0)
-  const [cardId, setCardId] = useState(0)
-  const [showModal, setShowModal] = useState('')
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
-  const angle = [-15, -10, 10, 15, 20]
   const [players, setPlayers] = useState('vacio')
-  // const { event } = useWebSocket()
-  const [playingCardId, setPlayingCardId] = useState(0)
-  const [winners, setWinners] = useState([])
-  const [losers, setLosers] = useState([])
-  const [wasTheThing, setWasTheThing] = useState(false)
-  const [eliminatedPlayerName, setEliminatedPlayerName] = useState('')
-  const [eliminatedPlayerId, setEliminatedPlayerId] = useState('')
-  const router = useRouter()
-  const dragEndSeters = { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }
-  const dragEndData = { turnState, user, game }
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setCardsPlayer }
-  const discardParams = { setCardsPlayer, cardId }
-  const flamethrowerParams = { playingCardId, players }
-  const endedGameParams = { winners, losers, wasTheThing }
-  const eliminatedPlayerParams = { eliminatedPlayerName }
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setCardsPlayer }
   const userId = user?.id
   const gameName = game?.name
-
-  useEffect(() => {
-    const eventJSON = JSON.parse(wsEvent)
-    handlerTurn(eventJSON, user, setUserValues, players, turnSeters)
-  }, [wsEvent])
 
   useEffect(() => {
     const gameName = game?.name
@@ -150,23 +120,28 @@ function Table () {
         const response = await axios.get(
           `http://localhost:8000/games/${gameName}`
         )
+
         const listPlayers = response.data.list_of_players
+
         const sortedPlayers = listPlayers.sort(
           (a, b) => a.position - b.position
         )
-        // const lastElement = sortedPlayers.pop()
-        // sortedPlayers.unshift(lastElement)
+
         const position = sortedPlayers.findIndex(
           (player) => player.id === user.id
         )
+
+        console.log(sortedPlayers)
         const userParams = {
           id: user.id,
           name: user.name,
-          position: position
+          position
         }
+
         setUserValues(userParams)
         setPlayers(sortedPlayers)
         setTurn(sortedPlayers[0].id)
+
         if (user?.id === sortedPlayers[0].id) {
           setTurnState(turnStates.DRAW)
         } else {
@@ -190,7 +165,7 @@ function Table () {
     const eventJSON = JSON.parse(wsEvent)
     const eventType = eventJSON?.event
     if (eventType === 'game_ended') {
-      fetchResultsGame(gameName, setWinners, setLosers, setWasTheThing, setShowModal)
+      fetchResultsGame(gameName)
     } else if (eventType === 'game_deleted') {
       router.push('/search-game')
     } else if (eventType === 'cheat_used') {
@@ -206,26 +181,9 @@ function Table () {
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={(event) => {
-            handleDragEnd(event, dragEndData, dragEndSeters)
+            handleDragEnd(event, turnState, user, game, setCardsPlayer, players, cardsPlayer, cardToExchange, setCardToExchange)
           }} // as onChange
         >
-          {/* <button
-            className='button is-success is-danger is-large'
-            onClick={() => {
-              finalizarPartida(gameName)
-              openModal(setShowModal)
-            }}
-          >
-            Finalizar Partidaaa
-          </button> */}
-          <Modals
-            show={showModal}
-            setShow={setShowModal}
-            discardParams={discardParams}
-            flamethrowerParams={flamethrowerParams}
-            endedGameParams={endedGameParams}
-            eliminatedPlayerParams={eliminatedPlayerParams}
-          />
 
           <SortableContext
             items={items}
@@ -390,7 +348,6 @@ function Table () {
                     <Card
                       id={card.id}
                       key={index}
-                      rotation={angle[card.id - 1]}
                     />
                   )
                 } else {

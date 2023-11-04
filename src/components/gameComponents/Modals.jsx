@@ -28,9 +28,6 @@ const getAdjacent = (players, index) => {
     ? players[players.length - 1]
     : players[(index - 1) % players.length]
   const right = players[(index + 1) % players.length]
-  console.log('posicion:' + index)
-  console.log('left' + left)
-  console.log('right' + right)
   return {
     left,
     right
