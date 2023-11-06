@@ -25,7 +25,6 @@ export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
   elem?.setAttribute('class', 'button is-danger')
 }
 
-
 export const handlerWhisky = async (playerId, setWhiskyCards) => {
   try { // esto es un fetchCards (o sea, el servicio), pero todavia no lo tengo mergeado
     const response = await axios.get(
@@ -46,7 +45,7 @@ export const handlerWhisky = async (playerId, setWhiskyCards) => {
 
 export const handlerTurn = (eventTurn, user, setUserValues, players,
   {
-    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord
+    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, whiskyCards, setWhiskyCards
   }) => {
   const userID = user?.id
   switch (eventTurn?.event) {
@@ -106,6 +105,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       break
     case 'whiskey_card_played':
       handlerWhisky(eventTurn?.player_id, setWhiskyCards)
+      break
     default:
       break
   }
