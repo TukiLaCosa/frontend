@@ -11,19 +11,24 @@ export const handlePlayedCardEvent = () => {
 
 }
 
-export const handlePlayerEliminated = (eventTurn, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, players) => {
-  setEliminatedPlayerId(eventTurn?.player_id)
-  setEliminatedPlayerName(eventTurn?.player_name)
-  const updatedListPlayers = players.filter(player => player.id !== eventTurn?.player_id)
-  setPlayers(updatedListPlayers)
-  setShowModal('playerEliminated')
+export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
+  console.log(players)
+  const newPlayers = [...players]
+  const index = newPlayers.findIndex((player) => player.id === eventTurn?.eliminated_player_id)
+  if (newPlayers[index] !== undefined) {
+    newPlayers[index].position = -1
+  }
+  setPlayers(newPlayers)
+  const elem = document.getElementById(eventTurn?.eliminated_player_id)
+  elem?.removeAttribute('is-success')
+  elem?.setAttribute('class', 'button is-danger')
 }
+
 export const handlerTurn = (eventTurn, user, setUserValues, players,
   {
-    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal,
-    setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setNewRecord
+    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord
   }) => {
-  const userID = user.id
+  const userID = user?.id
   switch (eventTurn?.event) {
     case 'message':
       break
@@ -41,7 +46,6 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
         // handlePlayedCardEvent()
       }
       setPlayBG(setPath(eventTurn?.card_id))
-      // que todos visualicen que se jugo.
       break
     case 'player_draw_card':
       if (eventTurn?.player_id === userID) {
@@ -61,9 +65,9 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       }
       break
     case 'player_eliminated':
+      handlePlayerEliminated(eventTurn, setPlayers, players)
       const msg = '' + eventTurn?.killer_player_name + ' eliminado por ' + eventTurn?.player_name
       setNewRecord(msg)
-      handlePlayerEliminated(eventTurn, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, players)
       setUserValues({
         id: user.id,
         name: user.name,
