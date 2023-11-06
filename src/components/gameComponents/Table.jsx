@@ -24,6 +24,7 @@ import { useWebSocket } from '@/services/WebSocketContext'
 import { handlerTurn, turnStates } from '@/services/handlerTurn'
 import axios from 'axios'
 import '@/styles/game_ended.scss'
+import Record from './Record'
 
 export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction) => {
   const { active, over } = event
@@ -120,7 +121,7 @@ export const fetchResultsGame = async (gameName, setContentModal, setButtons, se
 
 function Table () {
   const router = useRouter()
-  const { user, game, setUserValues } = useUserGame()
+  const { user, game, setUserValues, setNewRecord } = useUserGame()
   const wsObject = useWebSocket()
   const wsEvent = wsObject.event
   const [cardsPlayer, setCardsPlayer] = useState([])
@@ -193,6 +194,8 @@ function Table () {
       fetchResultsGame(gameName, setContentModal, setButtons, setHandleFunction)
     } else if (eventType === 'game_deleted') {
       router.push('/search-game')
+    } else if (eventType === 'cheat_used') {
+      fetchCards(user, setCardsPlayer)
     } else {
       handlerTurn(eventJSON, user, setUserValues, players, turnSeters)
     }
@@ -272,7 +275,7 @@ function Table () {
                   size={120}
                   type='Right'
                   className='is-flex is-flex-direction-row has-text-centered'
-                  player={players[4]}
+                  player={players[11]}
                   turn={turn}
                 />
               </div>
@@ -302,7 +305,7 @@ function Table () {
                   size={120}
                   type='Left'
                   className='is-flex is-flex-direction-row-reverse has-text-centered'
-                  player={players[5]}
+                  player={players[4]}
                   turn={turn}
                 />
               </div>
@@ -312,7 +315,7 @@ function Table () {
                   size={120}
                   type='Left'
                   className='is-flex is-flex-direction-row has-text-centered'
-                  player={players[6]}
+                  player={players[10]}
                   turn={turn}
                 />
               </div>
@@ -322,7 +325,7 @@ function Table () {
                   size={120}
                   type='Right'
                   className='is-flex is-flex-direction-row-reverse has-text-centered'
-                  player={players[7]}
+                  player={players[5]}
                   turn={turn}
                 />
               </div>
@@ -333,7 +336,7 @@ function Table () {
                   size={200}
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
-                  player={players[8]}
+                  player={players[9]}
                   turn={turn}
                 />
                 <Chair
@@ -341,7 +344,7 @@ function Table () {
                   size={200}
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
-                  player={players[9]}
+                  player={players[8]}
                   turn={turn}
                 />
               </div>
@@ -351,7 +354,7 @@ function Table () {
                   size={200}
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
-                  player={players[10]}
+                  player={players[7]}
                   turn={turn}
                 />
                 <Chair
@@ -359,7 +362,7 @@ function Table () {
                   size={200}
                   type='Whole'
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
-                  player={players[11]}
+                  player={players[6]}
                   turn={turn}
                 />
               </div>
@@ -390,11 +393,9 @@ function Table () {
         </DndContext>
       </div>
       <div
-        className='chat has-text-centered column is-flex is-flex-direction-column is-justify-content-space-evenly'
-        style={{
-          backgroundColor: 'grey'
-        }}
+        className='record-chat'
       >
+        <Record />
         <Chat />
       </div>
     </div>

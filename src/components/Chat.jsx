@@ -39,7 +39,7 @@ export function Chat () {
   }, [event])
 
   return (
-    <div className='box is-shadowless is-flex is-flex-direction-column is-justify-content-end chat full-grid-area' style={{ minHeight: '100%' }}>
+    <div className='box is-shadowless is-flex is-flex-direction-column is-justify-content-end chat full-grid-area'>
       <div className='messages-container' style={{ overflowY: 'auto' }}>
         {chatLog.map((msg, index) => (
           <div key={index} className={`message ${msg.type}`}>
