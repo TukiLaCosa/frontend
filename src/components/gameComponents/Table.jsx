@@ -128,14 +128,16 @@ function Table () {
   const [wasTheThing, setWasTheThing] = useState(false)
   const [eliminatedPlayerName, setEliminatedPlayerName] = useState('')
   const [eliminatedPlayerId, setEliminatedPlayerId] = useState('')
+  const [whiskyCards, setWhiskyCards] = useState('') // para renderizar las cartas de un jugador a todos los otros
   const router = useRouter()
   const dragEndSeters = { setCardId, setCardsPlayer, setPlayBG, setDiscardBG, setTurnState, setShowModal, setPlayingCardId }
   const dragEndData = { turnState, user, game }
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setCardsPlayer}
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal, setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setWhiskyCards}
   const discardParams = { setCardsPlayer, cardId }
   const flamethrowerParams = { playingCardId, players }
   const endedGameParams = { winners, losers, wasTheThing }
   const eliminatedPlayerParams = { eliminatedPlayerName }
+  const whiskyParams = { whiskyCards, setWhiskyCards }
   const userId = user?.id
   const gameName = game?.name
 
@@ -226,6 +228,7 @@ function Table () {
             flamethrowerParams={flamethrowerParams}
             endedGameParams={endedGameParams}
             eliminatedPlayerParams={eliminatedPlayerParams}
+            whiskyParams={whiskyParams}
           />
 
           <SortableContext

@@ -1,7 +1,7 @@
 import { useUserGame } from '@/services/UserGameContext'
 import { discardCard } from '@/services/discardCard'
 import { deleteGame } from '@/services/deleteGame'
-import { playFlamethrower } from '@/services/playCard'
+import { playFlamethrower, playWhisky } from '@/services/playCard'
 
 const confirmDiscard = (
   setShow,
@@ -23,6 +23,12 @@ const flamethrower = (cardId, userId, victimId, gameName, setShow) => {
   setShow('')
 }
 
+const whisky = (cardId, userId, gameName, setShow) => {
+  // logica
+  playWhisky(cardId, userId, gameName)
+  setShow('')
+}
+
 const getAdjacent = (players, index) => {
   const left = ((index - 1) % players.length === -1)
     ? players[players.length - 1]
@@ -37,13 +43,14 @@ const getAdjacent = (players, index) => {
   }
 }
 
-function Modals ({
+function Modals({
   show,
   setShow,
   discardParams,
   flamethrowerParams,
   endedGameParams,
-  eliminatedPlayerParams
+  eliminatedPlayerParams,
+  whiskyParams
 }) {
   const { playingCardId, players } = flamethrowerParams
   const { winners, losers, wasTheThing } = endedGameParams
@@ -205,6 +212,9 @@ function Modals ({
         </div>
       </div>
     )
+  } else if (show === 'whisky') {
+    // cuando se juega la carta whisky se debe renderizar para todos un modal segun las especificaciones
+    // hacer un flex box q dentro tenga un map y que los elementos del flexbox se creen con el map (capaz no es necesario)
   }
 }
 

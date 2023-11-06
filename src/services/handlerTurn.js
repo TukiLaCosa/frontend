@@ -20,7 +20,8 @@ export const handlePlayerEliminated = (eventTurn, setShowModal, setEliminatedPla
   setShowModal('playerEliminated')
 }
 
-export const handlerWhisky = async (playerId, setCardsPlayer) => {
+
+export const handlerWhisky = async (playerId, setWhiskyCards) => {
   try { // esto es un fetchCards (o sea, el servicio), pero todavia no lo tengo mergeado
     const response = await axios.get(
       `http://localhost:8000/players/${playerId}/hand`
@@ -31,17 +32,18 @@ export const handlerWhisky = async (playerId, setCardsPlayer) => {
         name: card.name
       }
     })
-    setCardsPlayer(cards)
+    setWhiskyCards(cards)
     console.log(cards)
   } catch (error) {
     console.error('Error getting cards:', error)
   }
 }
 
+
 export const handlerTurn = (eventTurn, user, setUserValues, players,
   {
     setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setShowModal,
-    setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setCardsPlayer
+    setEliminatedPlayerName, setEliminatedPlayerId, setPlayers, setWhiskyCards
   }) => {
   const userID = user.id
   switch (eventTurn?.event) {
@@ -99,8 +101,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
     case 'exchange_done':
       break
     case 'whiskey_card_played':
-      // una vez que se le pega a este endpoint, se hace un fetch de las cartas del jugador
-      handlerWhisky(eventTurn?.player_id, setCardsPlayer)
+      handlerWhisky(eventTurn?.player_id, setWhiskyCards)
     default:
       break
   }
