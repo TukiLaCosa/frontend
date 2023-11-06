@@ -40,7 +40,7 @@ const Modal = ({ contentModal, setContentModal, buttons, setButtons, handleButto
             {
               buttons && buttons?.map((but, i) => {
                 return (
-                  <button key={i} classNameName='button' onClick={() => { handleButton(handleButtons, but.value, setContentModal, setButtons, setHandleButtons) }}>{but.text}</button>
+                  <button key={i} className='button' onClick={() => { handleButton(handleButtons, but.value, setContentModal, setButtons, setHandleButtons) }}>{but.text}</button>
                 )
               })
             }
