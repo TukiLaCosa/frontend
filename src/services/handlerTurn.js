@@ -3,8 +3,8 @@ import { setPath } from './setPath'
 export const turnStates = {
   NOTURN: 'NOTURN',
   DRAW: 'DRAW',
-  PLAY: 'PLAY'
-  // EXCHANGE: 'EXCHANGE'
+  PLAY: 'PLAY',
+  EXCHANGE: 'EXCHANGE'
 }
 
 export const handlePlayedCardEvent = () => {
@@ -42,8 +42,8 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       break
     case 'played_card':
       if (eventTurn?.player_id === userID) {
-        // setTurnState(turnStates.EXCHANGE)
-        // handlePlayedCardEvent()
+        setTurnState(turnStates.EXCHANGE)
+        handlePlayedCardEvent()
       }
       setPlayBG(setPath(eventTurn?.card_id))
       break
