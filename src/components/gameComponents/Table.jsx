@@ -56,7 +56,7 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
     }
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
-    const played = playCard(setCardsPlayer, active.id, user, game, players, setContentModal, setButtons, setHandleFunction)
+    const played = playCard(setCardsPlayer, active.id, user.id, game.name, user, game, players, setContentModal, setButtons, setHandleFunction)
     if (played) {
       // setTurnState(turnStates.EXCHANGE)
     }
@@ -217,6 +217,7 @@ function Table () {
             setButtons={setButtons}
             handleButtons={handleFunction}
             setHandleButtons={setHandleFunction}
+
           />
 
           <SortableContext
