@@ -66,7 +66,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       break
     case 'player_eliminated':
       handlePlayerEliminated(eventTurn, setPlayers, players)
-      const msg = '' + eventTurn?.killer_player_name + ' eliminado por ' + eventTurn?.player_name
+      const msg = '' + eventTurn?.player_name + ' eliminado por ' + eventTurn?.killer_player_name
       setNewRecord(msg)
       setUserValues({
         id: user.id,
