@@ -13,19 +13,20 @@ export const handlePlayedCardEvent = () => {
 }
 
 export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
-  console.log(players)
   const newPlayers = [...players]
-  const index = newPlayers.findIndex((player) => player.id === eventTurn?.player_id)
-  newPlayers[index].position = -1
+  const index = newPlayers.findIndex((player) => player.id === eventTurn?.eliminated_player_id)
+  if (newPlayers[index] !== undefined) {
+    newPlayers[index].position = -1
+  }
   setPlayers(newPlayers)
-  const elem = document.getElementById(eventTurn?.player_id)
-  elem.removeAttribute('is-success')
-  elem.setAttribute('class', 'button is-danger')
+  const elem = document.getElementById(eventTurn?.eliminated_player_id)
+  elem?.removeAttribute('is-success')
+  elem?.setAttribute('class', 'button is-danger')
 }
 
 export const handlerTurn = (eventTurn, user, setUserValues, players,
   {
-    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setCardsPlayer
+    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, setCardsPlayer
   }) => {
   const userID = user?.id
   switch (eventTurn?.event) {
@@ -65,6 +66,8 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       break
     case 'player_eliminated':
       handlePlayerEliminated(eventTurn, setPlayers, players)
+      const msg = '' + eventTurn?.killer_player_name + ' eliminado por ' + eventTurn?.player_name
+      setNewRecord(msg)
       setUserValues({
         id: user.id,
         name: user.name,

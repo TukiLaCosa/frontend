@@ -28,7 +28,7 @@ function Card ({ id }) {
       {...listeners}
       style={style}
       ref={setNodeRef}
-      id={'card' + id}
+      id={`card_${id}`}
       className='card-img'
       src={setPath(id)}
       width={200} height={100}

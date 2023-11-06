@@ -6,6 +6,7 @@ import Card from './Card'
 import DiscardDeck from './DiscardDeck'
 import PlayCard from './PlayCard'
 import Chair from './Chair'
+import Modal from '../Modal'
 import { useEffect, useState } from 'react'
 import { DndContext, closestCenter } from '@dnd-kit/core'
 import {
@@ -23,22 +24,38 @@ import { useWebSocket } from '@/services/WebSocketContext'
 import { handlerTurn, turnStates } from '@/services/handlerTurn'
 import axios from 'axios'
 import '@/styles/game_ended.scss'
+import Record from './Record'
 
-export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, players, cardsPlayer, cardToExchange, setCardToExchange) => {
+export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction, cardsPlayer) => {
   const { active, over } = event
 
   if (over.id === 'discard-deck' && turnState === turnStates.PLAY) {
     // Discarding
     if (active.id === 1) {
-      alert('¡No puedes descartar esta carta!')
+      setContentModal('No puedes descartar esta carta')
     } else {
-      if (confirm('¿Seguro que quieres descartar esta carta?')) {
-        discardCard(setCardsPlayer, active.id, user?.id, game?.name)
+      const handleFunction = (value) => {
+        if (value) {
+          discardCard(setCardsPlayer, active.id, user?.id, game?.name)
+        }
       }
+      setHandleFunction(() => handleFunction)
+      const buttons = [
+        {
+          text: 'Aceptar',
+          value: true
+        },
+        {
+          text: 'Cancelar',
+          value: false
+        }
+      ]
+      setButtons(buttons)
+      setContentModal('¿Seguro que quieres descartar esta carta?')
     }
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
-    const played = playCard(setCardsPlayer, active.id, user, game, players, cardsPlayer, cardToExchange, setCardToExchange)
+    const played = playCard(setCardsPlayer, active.id, user, game, players, setContentModal, setButtons, setHandleFunction, cardsPlayer)
     if (played) {
       // setTurnState(turnStates.EXCHANGE)
     }
@@ -61,47 +78,49 @@ export const fetchCards = async (playerId, setCardsPlayer) => {
       }
     })
     setCardsPlayer(cards)
-    console.log(cards)
   } catch (error) {
     console.error('Error getting cards:', error)
   }
 }
 
-export const fetchResultsGame = async (gameName) => {
+export const fetchResultsGame = async (gameName, setContentModal, setButtons, setHandleFunction) => {
   try {
     const response = await axios.get(
       `http://localhost:8000/games/${gameName}/result`
     )
-    console.log(response.data)
     const data = response.data
     const theThingPlayer = data.winners.find(winner => winner.was_the_thing) ||
       data.losers.find(loser => loser.was_the_thing)
     const message = `
       Los ganadores son :
       ${data.winners.map(winner => `${winner.name}`)}
-      Los perdedores son:
+      \nLos perdedores son:
       ${data.losers.map(loser => `${loser.name}`)}
-      La Cosa: ${theThingPlayer?.name}
+      \nLa Cosa: ${theThingPlayer?.name}
     `
-
-    alert(message)
-    deleteGame(gameName)
+    const buttons = [
+      {
+        text: 'Aceptar',
+        value: true
+      }
+    ]
+    setButtons(buttons)
+    const handleAccept = (value) => {
+      deleteGame(gameName)
+    }
+    setHandleFunction(() => handleAccept)
+    setContentModal(message)
   } catch (error) {
     console.error('Error getting results:', error)
   }
 }
 
-export const openModal = (setShowModal) => {
-  setShowModal('gameEnded')
-}
-
 function Table () {
   const router = useRouter()
-  const { user, game, setUserValues } = useUserGame()
+  const { user, game, setUserValues, setNewRecord } = useUserGame()
   const wsObject = useWebSocket()
   const wsEvent = wsObject.event
   const [cardsPlayer, setCardsPlayer] = useState([])
-  const [cardToExchange, setCardToExchange] = useState(null)
   const [playBG, setPlayBG] = useState('/cards/rev/109Rev.png')
   const [discardBG, setDiscardBG] = useState('/cards/rev/revPanic.png')
   const [drawBG, setDrawBG] = useState('/cards/rev/revTakeAway.png')
@@ -109,7 +128,10 @@ function Table () {
   const [turn, setTurn] = useState(0)
   const items = [...cardsPlayer, 'discard-deck', 'play-card']
   const [players, setPlayers] = useState('vacio')
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setCardsPlayer }
+  const [contentModal, setContentModal] = useState('')
+  const [buttons, setButtons] = useState('')
+  const [handleFunction, setHandleFunction] = useState(null)
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setCardsPlayer, setNewRecord }
   const userId = user?.id
   const gameName = game?.name
 
@@ -130,8 +152,6 @@ function Table () {
         const position = sortedPlayers.findIndex(
           (player) => player.id === user.id
         )
-
-        console.log(sortedPlayers)
         const userParams = {
           id: user.id,
           name: user.name,
@@ -165,7 +185,7 @@ function Table () {
     const eventJSON = JSON.parse(wsEvent)
     const eventType = eventJSON?.event
     if (eventType === 'game_ended') {
-      fetchResultsGame(gameName)
+      fetchResultsGame(gameName, setContentModal, setButtons, setHandleFunction)
     } else if (eventType === 'game_deleted') {
       router.push('/search-game')
     } else if (eventType === 'cheat_used') {
@@ -181,9 +201,17 @@ function Table () {
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={(event) => {
-            handleDragEnd(event, turnState, user, game, setCardsPlayer, players, cardsPlayer, cardToExchange, setCardToExchange)
+            handleDragEnd(event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction, cardsPlayer)
           }} // as onChange
         >
+          <Modal
+            contentModal={contentModal}
+            setContentModal={setContentModal}
+            buttons={buttons}
+            setButtons={setButtons}
+            handleButtons={handleFunction}
+            setHandleButtons={setHandleFunction}
+          />
 
           <SortableContext
             items={items}
@@ -359,11 +387,9 @@ function Table () {
         </DndContext>
       </div>
       <div
-        className='chat has-text-centered column is-flex is-flex-direction-column is-justify-content-space-evenly'
-        style={{
-          backgroundColor: 'grey'
-        }}
+        className='record-chat'
       >
+        <Record />
         <Chat />
       </div>
     </div>

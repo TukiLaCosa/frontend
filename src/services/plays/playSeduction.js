@@ -32,7 +32,6 @@ export const playSeduction = async (activeId, idPlayer, gameName, players, hand)
   try {
     const objetives = players.filter((player) => player.position !== -1 && player.id !== idPlayer)
     const selectedVictim = await waitForSelection('Selecciona un jugador vecino para intercambiar', objetives.map(player => player.id))
-    console.log(selectedVictim)
     const cardIds = hand.map(card => card.id)
     const nonSelectableCards = cardIds.filter(cardId => {
       const nameCard = cards.cards[cardId - 1].name
@@ -40,9 +39,8 @@ export const playSeduction = async (activeId, idPlayer, gameName, players, hand)
     })
 
     const selectableCards = cardIds.filter(cardId => !nonSelectableCards.includes(cardId))
-    console.log(selectableCards.map(cardId => 'card' + cardId))
-    const selectedCard = await waitForSelection('Selecciona la carta que quieres intercambiar', selectableCards.map(cardId => 'card' + cardId))
-    const cardID = selectedCard.replace(/^card/, '')
+    const selectedCard = await waitForSelection('Selecciona la carta que quieres intercambiar', selectableCards.map(cardId => 'card_' + cardId))
+    const cardID = selectedCard.replace(/^card_/, '')
 
     const request = {
       card_id: activeId,
@@ -50,7 +48,6 @@ export const playSeduction = async (activeId, idPlayer, gameName, players, hand)
       objective_player_id: selectedVictim,
       card_to_exchange: cardID
     }
-    console.log(request)
     await axios.post(`http://localhost:8000/games/${gameName}/play-action-card`, request)
   } catch (error) {
     console.error('play-action-card-error', error)
