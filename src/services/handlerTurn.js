@@ -1,3 +1,4 @@
+import { fetchCards } from '@/components/gameComponents/Table'
 import { exchangeIntention, exchangeResponse } from './exchange'
 import { setPath } from './setPath'
 
@@ -7,6 +8,11 @@ export const turnStates = {
   PLAY: 'PLAY',
   EXCHANGE: 'EXCHANGE'
 }
+
+export const handleExchangeDone = (setCardsPlayer) => {
+  fetchCards(setCardsPlayer)
+}
+
 
 /*
 handleExchangeIntention deberia: 
@@ -58,7 +64,7 @@ export const handleInterchange = (setContentModal,userId,gameName) => {
   })
   //removes eventlistener: ----> we sure esto va aca?
    const removeEventListeners = () => {
-    options.forEach(option => {
+    cards.forEach(card => {
       const element = document.getElementById(option)
       element.removeEventListener('click', selectionHandler)
     })
@@ -81,7 +87,7 @@ export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
 
 export const handlerTurn = (eventTurn, user, setUserValues, players,game,
   {
-    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, setContentModal
+    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, setContentModal,setCardsPlayer
   }) => {
   const userID = user?.id
   const gameName = game.name
@@ -145,7 +151,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,game,
     case 'exchange_card_finish':
       break
     case 'exchange_done':
-
+    handleExchangeDone(setCardsPlayer)
     setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.player_objective}`) 
       break
     default:
