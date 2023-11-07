@@ -26,7 +26,7 @@ import axios from 'axios'
 import '@/styles/game_ended.scss'
 import Record from './Record'
 
-export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction) => {
+export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction, cardsPlayer) => {
   const { active, over } = event
 
   if (over.id === 'discard-deck' && turnState === turnStates.PLAY) {
@@ -35,7 +35,6 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
       setContentModal('No puedes descartar esta carta')
     } else {
       const handleFunction = (value) => {
-        console.log('Decision: ', value)
         if (value) {
           discardCard(setCardsPlayer, active.id, user?.id, game?.name)
         }
@@ -56,10 +55,7 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
     }
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
-    const played = playCard(setCardsPlayer, active.id, user.id, game.name, user, game, players, setContentModal, setButtons, setHandleFunction)
-    if (played) {
-      // setTurnState(turnStates.EXCHANGE)
-    }
+    playCard(setCardsPlayer, active.id, user, game, players, setContentModal, setButtons, setHandleFunction, cardsPlayer)
   } else {
     // Just sorting
     sortCards(setCardsPlayer, over.id, active.id)
@@ -67,8 +63,7 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
   }
 }
 
-export const fetchCards = async (user, setCardsPlayer) => {
-  const playerId = user?.id
+export const fetchCards = async (playerId, setCardsPlayer) => {
   try {
     const response = await axios.get(
       `http://localhost:8000/players/${playerId}/hand`
@@ -80,7 +75,6 @@ export const fetchCards = async (user, setCardsPlayer) => {
       }
     })
     setCardsPlayer(cards)
-    console.log(cards)
   } catch (error) {
     console.error('Error getting cards:', error)
   }
@@ -91,7 +85,6 @@ export const fetchResultsGame = async (gameName, setContentModal, setButtons, se
     const response = await axios.get(
       `http://localhost:8000/games/${gameName}/result`
     )
-    console.log(response.data)
     const data = response.data
     const theThingPlayer = data.winners.find(winner => winner.was_the_thing) ||
       data.losers.find(loser => loser.was_the_thing)
@@ -135,7 +128,7 @@ function Table () {
   const [contentModal, setContentModal] = useState('')
   const [buttons, setButtons] = useState('')
   const [handleFunction, setHandleFunction] = useState(null)
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, setContentModal, setButtons, setHandleFunction, setCardsPlayer}
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setCardsPlayer, setNewRecord, setContentModal, setButtons, setHandleFunction }
   const userId = user?.id
   const gameName = game?.name
 
@@ -156,8 +149,6 @@ function Table () {
         const position = sortedPlayers.findIndex(
           (player) => player.id === user.id
         )
-
-        console.log(sortedPlayers)
         const userParams = {
           id: user.id,
           name: user.name,
@@ -184,7 +175,7 @@ function Table () {
     } else if (game?.nextCard === 'PANIC') {
       setDrawBG('/cards/rev/revPanic.png')
     }
-    fetchCards(user, setCardsPlayer)
+    fetchCards(user?.id, setCardsPlayer)
   }, [])
 
   useEffect(() => {
@@ -195,9 +186,9 @@ function Table () {
     } else if (eventType === 'game_deleted') {
       router.push('/search-game')
     } else if (eventType === 'cheat_used') {
-      fetchCards(user, setCardsPlayer)
+      fetchCards(user?.id, setCardsPlayer)
     } else {
-      handlerTurn(eventJSON, user, setUserValues, players,game,cardsPlayer, turnSeters)
+      handlerTurn(eventJSON, user, setUserValues, players, game, cardsPlayer, turnSeters)
     }
   }, [wsEvent])
 
@@ -207,7 +198,7 @@ function Table () {
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={(event) => {
-            handleDragEnd(event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction)
+            handleDragEnd(event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction, cardsPlayer)
           }} // as onChange
         >
           <Modal

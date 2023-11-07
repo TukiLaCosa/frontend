@@ -1,22 +1,23 @@
 import { removeFromHand } from './removeFromHand'
 import { playFlamethrower } from './plays/playFlamethrower'
+import { playSeduction } from './plays/playSeduction'
 import { playWhisky } from './plays/playWhisky'
 import cards from './cards.JSON'
-import axios from 'axios'
 
 export const playCard = (
   setCardsPlayer,
   activeId,
-  playerId,
-  gameName,
   user,
   game,
   players,
   setContentModal,
   setButtons,
-  setHandleFunction
+  setHandleFunction,
+  hand
 ) => {
   const activeCard = cards.cards[activeId - 1].name
+  const playerId = user?.id
+  const gameName = game?.name
 
   if (activeCard === 'La Cosa' || activeCard === '¡Infectado!') {
     setContentModal('¡No puedes jugar esta carta!')
@@ -74,6 +75,7 @@ export const playCard = (
           console.log('You Better Run')
           break
         case 'Seducción':
+          playSeduction(activeId, user.id, game.name, players, hand, setContentModal)
           console.log('Seduction')
           break
         case 'Aterrador':
