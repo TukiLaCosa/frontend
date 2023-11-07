@@ -43,7 +43,7 @@ export const handleExchangeIntention = (eventTurn, userId,setContentModal,gameNa
 
 export const handleInterchange = (setContentModal,userId,gameName,cards) => {
   console.log(cards)
-  setContentModal('Seleccion una carta para intercambiar')
+  setContentModal('Selecciona una carta para intercambiar')
   //make cards clickeables
   const selectionHandler = (id) => {
     exchangeIntention(id,userId,gameName)
