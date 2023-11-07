@@ -1,5 +1,6 @@
 import { setPath } from './setPath'
 import axios from 'axios'
+import { defenseFlamethrower } from './defense/defenseFlamethrower'
 
 export const turnStates = {
   NOTURN: 'NOTURN',
@@ -43,9 +44,11 @@ export const handlerWhisky = async (playerId, setWhiskyCards) => {
   }
 }
 
-export const handlerTurn = (eventTurn, user, setUserValues, players,
+export const handlerTurn = (eventTurn, user, game, setUserValues, players,
   {
-    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, whiskyCards, setWhiskyCards
+    setTurnState, setTurn, setDrawBG, setDiscardBG,
+    setPlayBG, setPlayers, setNewRecord, whiskyCards,
+    setWhiskyCards, setContent
   }) => {
   const userID = user?.id
   switch (eventTurn?.event) {
@@ -105,6 +108,9 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       break
     case 'whiskey_card_played':
       handlerWhisky(eventTurn?.player_id, setWhiskyCards)
+      break
+    case 'Lanzallamas':
+      defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name)
       break
     default:
       break

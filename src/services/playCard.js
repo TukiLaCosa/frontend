@@ -69,7 +69,6 @@ export const playCard = (
           break
         case 'Lanzallamas':
           console.log('Flamethrower')
-          // setShow('Flamethrower')
           playFlamethrower(activeId, user, game, players, setContentModal)
           break
         case 'Análisis':
