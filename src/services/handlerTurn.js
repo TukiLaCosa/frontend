@@ -1,15 +1,67 @@
+import { fetchCards } from '@/components/gameComponents/Table'
+import { exchangeIntention, exchangeResponse } from './exchange'
 import { setPath } from './setPath'
 import axios from 'axios'
 
 export const turnStates = {
   NOTURN: 'NOTURN',
   DRAW: 'DRAW',
-  PLAY: 'PLAY'
-  // EXCHANGE: 'EXCHANGE'
+  PLAY: 'PLAY',
+  EXCHANGE: 'EXCHANGE'
 }
 
-export const handlePlayedCardEvent = () => {
+export const handleExchangeDone = (user,setCardsPlayer) => {
+  fetchCards(user,setCardsPlayer)
+}
 
+
+/*
+handleExchangeIntention deberia: 
+1. Mostrar el modalp que avisa que alguienq  uiere iontercambiar con vosCards
+*/
+
+export const handleExchangeIntention = (eventTurn, userId,setContentModal,gameName, cards) => {  
+  setContentModal(`${eventTurn.player_name} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
+  //make cards clickeables
+  const selectionHandler = (e) => {
+    exchangeResponse(e,userId,gameName, eventTurn)
+    //removes eventlistener:
+   const removeEventListeners = () => {
+    cards.forEach(card => {
+      const element = document.getElementById(`card_${card.id}`)
+      element.removeEventListener('click', selectionHandler)
+    })
+    } 
+    removeEventListeners()
+  }
+  cards.forEach(card => {
+    const element = document.getElementById(`card_${card.id}`)
+    //const id = element.split("card_")[1]
+    element.addEventListener('click',(e) => selectionHandler(card.id))
+  })
+  
+}
+
+export const handleInterchange = (setContentModal,userId,gameName,cards) => {
+  console.log(cards)
+  setContentModal('Selecciona una carta para intercambiar')
+  //make cards clickeables
+  const selectionHandler = (id) => {
+    exchangeIntention(id,userId,gameName)
+    //removes eventlistener:
+   const removeEventListeners = () => {
+      cards.forEach(card => {
+      const element = document.getElementById(`card_${card.id}`)
+      element.removeEventListener('click', selectionHandler)
+      })
+    } 
+    removeEventListeners()
+  }
+  cards.forEach(card => {
+    const element = document.getElementById(`card_${card.id}`)
+    //const id = element.split("card_")[1]
+    element.addEventListener('click',(e) => selectionHandler(card.id))
+  })
 }
 
 export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
@@ -60,11 +112,15 @@ export const handlerWhisky = async (playerId, playerName, setContentModal, setBu
   }
 }
 
-export const handlerTurn = (eventTurn, user, setUserValues, players,
+
+
+
+export const handlerTurn = (eventTurn, user, setUserValues, players,game,cards,
   {
-    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, setContentModal, setButtons, setHandleFunction
+    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, setContentModal, setButtons, setHandleFunction,setCardsPlayer
   }) => {
   const userID = user?.id
+  const gameName = game.name
   switch (eventTurn?.event) {
     case 'message':
       break
@@ -78,9 +134,10 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       break
     case 'played_card':
       if (eventTurn?.player_id === userID) {
-        // setTurnState(turnStates.EXCHANGE)
-        // handlePlayedCardEvent()
+        setTurnState(turnStates.EXCHANGE)
+        handleInterchange(setContentModal,userID,gameName,cards)
       }
+      //setNewRecord(`${eventTurn.player_name} Jugo la carta: ${eventTurn.card_name}`)
       setPlayBG(setPath(eventTurn?.card_id))
       setNewRecord(`${eventTurn?.player_name} jugó la carta ${eventTurn?.card_name}`) // log para la whisky
       break
@@ -100,6 +157,10 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       } else if (eventTurn?.card_type === 'PANIC') {
         setDiscardBG('/cards/rev/revPanic.png')
       }
+      if (eventTurn.player_id == userID) { // EL BACK NO ESTA MANDANDO EL IDPLYAER
+        setTurnState(turnStates.EXCHANGE)
+        handleInterchange(setContentModal,userID,gameName,cards)
+      }
       break
     case 'player_eliminated':
       handlePlayerEliminated(eventTurn, setPlayers, players)
@@ -112,6 +173,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
       })
       break
     case 'exchange_intention':
+      handleExchangeIntention(eventTurn,userID, setContentModal,gameName,cards)
       break
     case 'exchange_card_start':
       break
@@ -120,6 +182,8 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
     case 'exchange_card_finish':
       break
     case 'exchange_done':
+      handleExchangeDone(user, setCardsPlayer)
+      setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.player_objective}`) 
       break
     case 'whiskey_card_played':
       handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
