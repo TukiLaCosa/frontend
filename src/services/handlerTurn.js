@@ -82,6 +82,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
         // handlePlayedCardEvent()
       }
       setPlayBG(setPath(eventTurn?.card_id))
+      setNewRecord(`${eventTurn?.player_name} jugó la carta ${eventTurn?.card_name}`) // log para la whisky
       break
     case 'player_draw_card':
       if (eventTurn?.player_id === userID) {
