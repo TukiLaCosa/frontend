@@ -135,7 +135,7 @@ function Table () {
   const [contentModal, setContentModal] = useState('')
   const [buttons, setButtons] = useState('')
   const [handleFunction, setHandleFunction] = useState(null)
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord }
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, setContentModal }
   const userId = user?.id
   const gameName = game?.name
 
@@ -197,7 +197,7 @@ function Table () {
     } else if (eventType === 'cheat_used') {
       fetchCards(user, setCardsPlayer)
     } else {
-      handlerTurn(eventJSON, user, setUserValues, players, turnSeters)
+      handlerTurn(eventJSON, user, setUserValues, players,game, turnSeters)
     }
   }, [wsEvent])
 
