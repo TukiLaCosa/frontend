@@ -1,11 +1,11 @@
 import cards from '../cards.JSON'
 import axios from 'axios'
 
-export const playSeduction = async (activeId, idPlayer, gameName, players, hand) => {
+export const playSeduction = async (activeId, idPlayer, gameName, players, hand, setContentModal) => {
   // Función para mostrar una alerta y esperar a que el jugador haga una selección.
   const waitForSelection = (message, options) => {
     return new Promise((resolve) => {
-      alert(message)
+      setContentModal(message)
 
       const selectionHandler = (e) => {
         resolve(e.target.id)

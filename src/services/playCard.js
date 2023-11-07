@@ -71,7 +71,7 @@ export const playCard = (
           console.log('You Better Run')
           break
         case 'Seducción':
-          playSeduction(activeId, user.id, game.name, players, hand)
+          playSeduction(activeId, user.id, game.name, players, hand, setContentModal)
           console.log('Seduction')
           break
         case 'Aterrador':
