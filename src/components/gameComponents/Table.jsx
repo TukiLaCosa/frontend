@@ -197,7 +197,7 @@ function Table () {
     } else if (eventType === 'cheat_used') {
       fetchCards(user, setCardsPlayer)
     } else {
-      handlerTurn(eventJSON, user, setUserValues, players,game, turnSeters)
+      handlerTurn(eventJSON, user, setUserValues, players,game,cardsPlayer, turnSeters)
     }
   }, [wsEvent])
 

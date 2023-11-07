@@ -9,67 +9,58 @@ export const turnStates = {
   EXCHANGE: 'EXCHANGE'
 }
 
-export const handleExchangeDone = (setCardsPlayer) => {
-  fetchCards(setCardsPlayer)
+export const handleExchangeDone = (user,setCardsPlayer) => {
+  fetchCards(user,setCardsPlayer)
 }
 
 
 /*
 handleExchangeIntention deberia: 
-1. Mostrar el modalp que avisa que alguienq  uiere iontercambiar con vos
-2. hacer clickeables las cartas 
+1. Mostrar el modalp que avisa que alguienq  uiere iontercambiar con vosCards
 */
 
-export const handleExchangeIntention = (eventTurn, userId,setContentModal) => {  
+export const handleExchangeIntention = (eventTurn, userId,setContentModal,gameName, cards) => {  
   setContentModal(`${eventTurn.player_name} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
   //make cards clickeables
   const selectionHandler = (e) => {
     exchangeResponse(e,userId,gameName, eventTurn)
-  }
-  cards.forEach(card => {
-    const element = document.getElementById(card)
-    element.addEventListener('click',(e) => selectionHandler(element.id,userId,gameName))
-  })
-  //removes eventlistener: ----> we sure esto va aca?
-   const removeEventListeners = () => {
-    options.forEach(option => {
-      const element = document.getElementById(option)
-      element.removeEventListener('click', selectionHandler)
-    })
-  }
-  resolve.removeListeners = removeEventListeners
-}
-
-
-
-
-
-/*
-  handleInterchange deberia:
-  1. mostrar el alerta de que empieza el momento de intercambio
-  2. Hacer clickeables las cartas 
-  3. Pegarle al Endpoint cuando seleccione una de las dos cartas
-  4. Luego de seleccionar que carta quiere intercambiar se le deberia mostrar un mensaje de esperando "respuesta de intercambio"
-  */  
-
-export const handleInterchange = (setContentModal,userId,gameName) => {
-  setContentModal('Seleccion una carta para intercambiar')
-  //make cards clickeables
-  const selectionHandler = (e) => {
-    exchangeIntention(e,userId,gameName)
-  }
-  cards.forEach(card => {
-    const element = document.getElementById(card)
-    element.addEventListener('click',(e) => selectionHandler(element.id,userId,gameName))
-  })
-  //removes eventlistener: ----> we sure esto va aca?
+    //removes eventlistener:
    const removeEventListeners = () => {
     cards.forEach(card => {
-      const element = document.getElementById(option)
+      const element = document.getElementById(`card_${card.id}`)
       element.removeEventListener('click', selectionHandler)
     })
+    } 
+    removeEventListeners()
   }
-  resolve.removeListeners = removeEventListeners
+  cards.forEach(card => {
+    const element = document.getElementById(`card_${card.id}`)
+    //const id = element.split("card_")[1]
+    element.addEventListener('click',(e) => selectionHandler(card.id))
+  })
+  
+}
+
+export const handleInterchange = (setContentModal,userId,gameName,cards) => {
+  console.log(cards)
+  setContentModal('Seleccion una carta para intercambiar')
+  //make cards clickeables
+  const selectionHandler = (id) => {
+    exchangeIntention(id,userId,gameName)
+    //removes eventlistener:
+   const removeEventListeners = () => {
+      cards.forEach(card => {
+      const element = document.getElementById(`card_${card.id}`)
+      element.removeEventListener('click', selectionHandler)
+      })
+    } 
+    removeEventListeners()
+  }
+  cards.forEach(card => {
+    const element = document.getElementById(`card_${card.id}`)
+    //const id = element.split("card_")[1]
+    element.addEventListener('click',(e) => selectionHandler(card.id))
+  })
 }
 
 export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
@@ -85,7 +76,7 @@ export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
   elem?.setAttribute('class', 'button is-danger')
 }
 
-export const handlerTurn = (eventTurn, user, setUserValues, players,game,
+export const handlerTurn = (eventTurn, user, setUserValues, players,game,cards,
   {
     setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, setContentModal,setCardsPlayer
   }) => {
@@ -105,7 +96,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,game,
     case 'played_card':
       if (eventTurn?.player_id === userID) {
         setTurnState(turnStates.EXCHANGE)
-        handleInterchange(setContentModal,userID,gameName)
+        handleInterchange(setContentModal,userID,gameName,cards)
       }
       //setNewRecord(`${eventTurn.player_name} Jugo la carta: ${eventTurn.card_name}`)
       setPlayBG(setPath(eventTurn?.card_id))
@@ -128,7 +119,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,game,
       }
       if (eventTurn.player_id == userID) { // EL BACK NO ESTA MANDANDO EL IDPLYAER
         setTurnState(turnStates.EXCHANGE)
-        handleInterchange(setContentModal,userID,gameName)
+        handleInterchange(setContentModal,userID,gameName,cards)
       }
       break
     case 'player_eliminated':
@@ -142,7 +133,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,game,
       })
       break
     case 'exchange_intention':
-      handleExchangeIntention(eventTurn,userID, setContentModal)
+      handleExchangeIntention(eventTurn,userID, setContentModal,gameName,cards)
       break
     case 'exchange_card_start':
       break
@@ -151,7 +142,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,game,
     case 'exchange_card_finish':
       break
     case 'exchange_done':
-    handleExchangeDone(setCardsPlayer)
+    handleExchangeDone(user, setCardsPlayer)
     setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.player_objective}`) 
       break
     default:
