@@ -25,19 +25,36 @@ export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
   elem?.setAttribute('class', 'button is-danger')
 }
 
-export const handlerWhisky = async (playerId, setWhiskyCards) => {
+export const handlerWhisky = async (playerId, playerName, setContentModal, setButtons, setHandleFunction) => {
   try { // esto es un fetchCards (o sea, el servicio), pero todavia no lo tengo mergeado
     const response = await axios.get(
-      `http://localhost:8000/players/${playerId}/hand`
+      `http://localhost:8000/players/${playerId}/hand` // luego de este get, se deben mostrar las cartas a todos los demas jugadores
     )
-    const cards = await response.data.map((card) => { // mapea los datos q trae
+    const data = response.data // guardo los datos q traigo en data
+    const cards = await data.map((card) => { // mapea los datos q trae
       return {
         id: card.id,
         name: card.name
       }
     })
-    setWhiskyCards(cards)
-    console.log(cards)
+    const cardNames = cards.map((card) => card.name) // obtengo solo el nombre de las cartas
+    const cardNamesString = cardNames.join(', ') // las uno
+
+    const cardIDs = cards.map((card) => card.id) // obtengo los id de las cartas. Por ahora no los uso
+    const cardIDsString = cardIDs.join(', ')
+    // modal
+    const buttons = [
+      {
+        text: 'Entendido',
+        value: true
+      }
+    ]
+    setButtons(buttons)
+    const handleEntendido = (value) => {
+      setContentModal("") // solo debe cerrarse el modal. Ver esto luego del merge con lo del intercambio
+    }
+    setHandleFunction(() => handleEntendido)
+    setContentModal(`Las cartas de ${playerName} son: ${cardNamesString}`) // POSIBLE MEJORA: TENIENDO LOS ID DE LAS CARTAS, RENDERIZAR LAS CARTAS
   } catch (error) {
     console.error('Error getting cards:', error)
   }
@@ -45,7 +62,7 @@ export const handlerWhisky = async (playerId, setWhiskyCards) => {
 
 export const handlerTurn = (eventTurn, user, setUserValues, players,
   {
-    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, whiskyCards, setWhiskyCards
+    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, setContentModal, setButtons, setHandleFunction
   }) => {
   const userID = user?.id
   switch (eventTurn?.event) {
@@ -104,7 +121,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,
     case 'exchange_done':
       break
     case 'whiskey_card_played':
-      handlerWhisky(eventTurn?.player_id, setWhiskyCards)
+      handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
       break
     default:
       break
