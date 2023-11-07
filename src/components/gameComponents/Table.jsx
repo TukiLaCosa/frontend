@@ -55,10 +55,7 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
     }
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
-    const played = playCard(setCardsPlayer, active.id, user, game, players, setContentModal, setButtons, setHandleFunction, cardsPlayer)
-    if (played) {
-      // setTurnState(turnStates.EXCHANGE)
-    }
+    playCard(setCardsPlayer, active.id, user, game, players, setContentModal, setButtons, setHandleFunction, cardsPlayer)
   } else {
     // Just sorting
     sortCards(setCardsPlayer, over.id, active.id)
@@ -131,7 +128,7 @@ function Table () {
   const [contentModal, setContentModal] = useState('')
   const [buttons, setButtons] = useState('')
   const [handleFunction, setHandleFunction] = useState(null)
-  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setCardsPlayer, setNewRecord }
+  const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setCardsPlayer, setNewRecord, setContentModal, setButtons, setHandleFunction }
   const userId = user?.id
   const gameName = game?.name
 
@@ -211,6 +208,7 @@ function Table () {
             setButtons={setButtons}
             handleButtons={handleFunction}
             setHandleButtons={setHandleFunction}
+
           />
 
           <SortableContext

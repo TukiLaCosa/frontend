@@ -17,7 +17,7 @@ export const getAdjacent = (players, id) => {
 export const playFlamethrower = async (activeId, user, game, players, setContentModal) => {
   const adyc = getAdjacent(players, user?.id)
 
-  setContentModal('Seleccion un jugador vecino para eliminar')
+  setContentModal('Selecciona un jugador vecino para eliminar')
 
   const left = document.getElementById(adyc?.left.id)
   const right = document.getElementById(adyc?.right.id)

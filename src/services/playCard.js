@@ -1,6 +1,7 @@
 import { removeFromHand } from './removeFromHand'
 import { playFlamethrower } from './plays/playFlamethrower'
 import { playSeduction } from './plays/playSeduction'
+import { playWhisky } from './plays/playWhisky'
 import cards from './cards.JSON'
 
 export const playCard = (
@@ -15,6 +16,8 @@ export const playCard = (
   hand
 ) => {
   const activeCard = cards.cards[activeId - 1].name
+  const playerId = user?.id
+  const gameName = game?.name
 
   if (activeCard === 'La Cosa' || activeCard === '¡Infectado!') {
     setContentModal('¡No puedes jugar esta carta!')
@@ -55,8 +58,9 @@ export const playCard = (
         case 'Sospecha':
           console.log('Suspicion')
           break
-        case 'Whisky':
+        case 'Whisky': // whisky
           console.log('Whisky')
+          playWhisky(activeId, playerId, gameName)
           break
         case 'Determinación':
           console.log('Determination')
