@@ -1,6 +1,7 @@
 import { fetchCards } from '@/components/gameComponents/Table'
 import { exchangeIntention, exchangeResponse } from './exchange'
 import { setPath } from './setPath'
+import axios from 'axios'
 
 export const turnStates = {
   NOTURN: 'NOTURN',
@@ -76,9 +77,30 @@ export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
   elem?.setAttribute('class', 'button is-danger')
 }
 
+export const handlerWhisky = async (playerId, setWhiskyCards) => {
+  try { // esto es un fetchCards (o sea, el servicio), pero todavia no lo tengo mergeado
+    const response = await axios.get(
+      `http://localhost:8000/players/${playerId}/hand`
+    )
+    const cards = await response.data.map((card) => { // mapea los datos q trae
+      return {
+        id: card.id,
+        name: card.name
+      }
+    })
+    setWhiskyCards(cards)
+    console.log(cards)
+  } catch (error) {
+    console.error('Error getting cards:', error)
+  }
+}
+
+
+
+
 export const handlerTurn = (eventTurn, user, setUserValues, players,game,cards,
   {
-    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, setContentModal,setCardsPlayer
+    setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setNewRecord, whiskyCards, setWhiskyCards, setContentModal,setCardsPlayer
   }) => {
   const userID = user?.id
   const gameName = game.name
@@ -124,7 +146,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,game,cards,
       break
     case 'player_eliminated':
       handlePlayerEliminated(eventTurn, setPlayers, players)
-      const msg = '' + eventTurn?.killer_player_name + ' eliminado por ' + eventTurn?.player_name
+      const msg = '' + eventTurn?.player_name + ' eliminado por ' + eventTurn?.killer_player_name
       setNewRecord(msg)
       setUserValues({
         id: user.id,
@@ -142,8 +164,11 @@ export const handlerTurn = (eventTurn, user, setUserValues, players,game,cards,
     case 'exchange_card_finish':
       break
     case 'exchange_done':
-    handleExchangeDone(user, setCardsPlayer)
-    setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.player_objective}`) 
+      handleExchangeDone(user, setCardsPlayer)
+      setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.player_objective}`) 
+      break
+    case 'whiskey_card_played':
+      handlerWhisky(eventTurn?.player_id, setWhiskyCards)
       break
     default:
       break

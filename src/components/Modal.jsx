@@ -26,17 +26,17 @@ export const handleButton = (handleClick, value, setContentModal, setButtons, se
 const Modal = ({ contentModal, setContentModal, buttons, setButtons, handleButtons, setHandleButtons }) => {
   if (contentModal !== '' && contentModal !== undefined) {
     return (
-      <div class='modal is-active'>
-        <div class='modal-background' />
-        <div class='modal-card'>
-          <header class='modal-card-head'>
-            <p class='modal-card-title'>Opciones</p>
-            <button class='delete' aria-label='close' onClick={() => { setContentModal('') }} />
+      <div className='modal is-active'>
+        <div className='modal-background' />
+        <div className='modal-card'>
+          <header className='modal-card-head'>
+            <p className='modal-card-title'>Opciones</p>
+            <button className='delete' aria-label='close' onClick={() => { setContentModal('') }} />
           </header>
-          <section class='modal-card-body'>
+          <section className='modal-card-body'>
             {contentModal}
           </section>
-          <footer class='modal-card-foot'>
+          <footer className='modal-card-foot'>
             {
               buttons && buttons?.map((but, i) => {
                 return (
