@@ -2,6 +2,7 @@ import { removeFromHand } from './removeFromHand'
 import { playFlamethrower } from './plays/playFlamethrower'
 import { playSeduction } from './plays/playSeduction'
 import { playWhisky } from './plays/playWhisky'
+import { playWatchYourBack } from './plays/playWatchYourBack'
 import cards from './cards.JSON'
 
 export const playCard = (
@@ -65,8 +66,9 @@ export const playCard = (
         case 'Determinación':
           console.log('Determination')
           break
-        case 'Vigila tus espaldas':
+        case 'Vigila tus espaldas': // vigila tus espaldas
           console.log('Watch Your Back')
+          playWatchYourBack(activeId, playerId, gameName)
           break
         case '¡Cambio de lugar!':
           console.log('Switch')
