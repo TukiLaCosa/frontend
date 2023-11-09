@@ -50,6 +50,7 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
     // removes eventlistener:
     const removeEventListeners = () => {
       cards.forEach(card => {
+        console.log(card.id)
         const element = document.getElementById(`card_${card.id}`)
         element.removeEventListener('click', selectionHandler)
       })
