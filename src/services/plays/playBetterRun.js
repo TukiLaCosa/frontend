@@ -1,5 +1,12 @@
 import axios from 'axios'
 
+export const makeRequest = async (url, body) => {
+  const response = await axios.post(url, body)
+  if (!response.ok) {
+    console.error(response)
+  }
+}
+
 export const defendBetterRun = async (
   playerId,
   gameName,
@@ -8,7 +15,6 @@ export const defendBetterRun = async (
   setButtons,
   setHandleFunction) => {
   const cardsToDefend = eventBetterRun?.defense_cards
-  console.log('Los que me llego es: ', cardsToDefend)
   const url = `http://localhost:8000/games/${gameName}/play-defense-card`
   const body = {
     player_id: playerId
@@ -28,14 +34,11 @@ export const defendBetterRun = async (
     ]
 
     const handleMouseDown = async (event) => {
-      body.card_id = (event.target.id).replace('card_', '')
-      console.log('body url: ', body, url)
-      const response = await axios.post(url, body)
-      console.log(response)
+      body.card_id = parseInt((event.target.id).replace('card_', ''))
+      await makeRequest(url, body)
     }
 
     const handleMouseUp = (element) => {
-      console.log('Removiendo de: ', element)
       element.removeEventListener('mousedown', handleMouseDown)
     }
 
@@ -53,17 +56,13 @@ export const defendBetterRun = async (
     setButtons(buttons)
     setContentModal('Quieren intercambiar de lugar con vos, te queres defender?, Si es asi selecciona una carta')
   } else {
-    console.log('No puedo defenderme: ', url, body)
-    const response = await axios.post(url, body)
-    console.log(response)
+    await makeRequest(url, body)
   }
 }
 
 const tryChangePlace = async (body, gameName) => {
   const url = `http://localhost:8000/games/${gameName}/play-action-card`
-  console.log(url, body)
-  const response = await axios.post(url, body)
-  console.log(response)
+  await makeRequest(url, body)
 }
 
 export const playBetterRun = (

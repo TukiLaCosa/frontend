@@ -1,5 +1,12 @@
 import axios from 'axios'
 
+export const makeRequest = async (url, body) => {
+  const response = await axios.post(url, body)
+  if (!response.ok) {
+    console.error(response)
+  }
+}
+
 export const getAdjacentIndex = (players, id) => {
   const index = players.map((e) => e.id).indexOf(id)
   const alives = players.filter((player) => player.position !== -1)
@@ -15,9 +22,7 @@ export const getAdjacentIndex = (players, id) => {
 
 const tryChangePlace = async (body, gameName) => {
   const url = `http://localhost:8000/games/${gameName}/play-action-card`
-  console.log(url, body)
-  const response = await axios.post(url, body)
-  console.log(response)
+  await makeRequest(url, body)
 }
 
 export const defendChangePlaces = async (
@@ -28,7 +33,6 @@ export const defendChangePlaces = async (
   setButtons,
   setHandleFunction) => {
   const cardsToDefend = eventChangePlaces?.defense_cards
-  console.log('Los que me llego es: ', cardsToDefend)
   const url = `http://localhost:8000/games/${gameName}/play-defense-card`
   const body = {
     player_id: playerId
@@ -48,20 +52,16 @@ export const defendChangePlaces = async (
     ]
 
     const handleMouseDown = async (event) => {
-      body.card_id = (event.target.id).replace('card_', '')
-      console.log('body url: ', body, url)
-      const response = await axios.post(url, body)
-      console.log(response)
+      body.card_id = parseInt((event.target.id).replace('card_', ''))
+      await makeRequest(url, body)
     }
 
     const handleMouseUp = (element) => {
-      console.log('Removiendo de: ', element)
       element.removeEventListener('mousedown', handleMouseDown)
     }
 
     const handleDefense = async (defense) => {
       if (defense) {
-        console.log('Defendiendo con: ', cardsToDefend)
         cardsToDefend.forEach((card) => {
           const idCard = `card_${card}`
           const cardElement = document.getElementById(idCard)
@@ -74,9 +74,7 @@ export const defendChangePlaces = async (
     setButtons(buttons)
     setContentModal('Quieren intercambiar de lugar con vos, te queres defender?, Si es asi selecciona una carta')
   } else {
-    console.log('No puedo defenderme: ', url, body)
-    const response = await axios.post(url, body)
-    console.log(response)
+    await makeRequest(url, body)
   }
 }
 
@@ -96,9 +94,6 @@ export const playChangePlaces = (
   const leftPlayer = document.getElementById(leftId)
   const rightPlayer = document.getElementById(rightId)
 
-  console.log(leftPlayer)
-  console.log(rightPlayer)
-
   const handleMouseDown = async (event) => {
     const objective = event.target.id
     const body = {
@@ -106,12 +101,10 @@ export const playChangePlaces = (
       player_id: playerId,
       objective_player_id: objective
     }
-    console.log(`Mouse Down ${objective}`)
     await tryChangePlace(body, gameName)
   }
 
   const handleMouseUp = (player) => {
-    console.log('Mouse Up')
     player.removeEventListener('mousedown', handleMouseDown)
   }
 
