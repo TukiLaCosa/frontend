@@ -15,29 +15,43 @@ export const handleExchangeDone = (playerID, setCardsPlayer) => {
   fetchCards(playerID, setCardsPlayer)
 }
 
-/*
-handleExchangeIntention deberia:
-1. Mostrar el modalp que avisa que alguienq  uiere iontercambiar con vosCards
-*/
-
 export const handleExchangeIntention = (eventTurn, userId, setContentModal, gameName, cards) => {
   setContentModal(`${eventTurn.player_name} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
-  // make cards clickeables
   const selectionHandler = (e) => {
     exchangeResponse(e.target.dataset.cardId, userId, gameName, eventTurn)
     // removes eventlistener:
     const removeEventListeners = () => {
       cards.forEach(card => {
         const element = document.getElementById(`card_${card.id}`)
-        element.removeEventListener('mousedown', selectionHandler)
+        element.removeEventListener('click', selectionHandler)
       })
     }
     removeEventListeners()
   }
+  //check if I am theThing
+  let theThing = false
   cards.forEach(card => {
-    const element = document.getElementById(`card_${card.id}`)
-    element.dataset.cardId = card.id
-    element.addEventListener('mousedown', selectionHandler)
+    if (card.name === 'La Cosa') { 
+      theThing = true
+    } 
+  })
+  // make cards clickeables
+  console.log(theThing)
+  cards.forEach(card => {
+    if (theThing) { // make all cards clickeable except LaCosa
+      if (card.name !== 'La Cosa'){
+        const element = document.getElementById(`card_${card.id}`)
+        element.dataset.cardId = card.id
+        element.addEventListener('click', selectionHandler)  
+      }  
+    }
+    else {
+      if ((card.name !== '¡Infectado!')) {
+        const element = document.getElementById(`card_${card.id}`)
+        element.dataset.cardId = card.id
+        element.addEventListener('click', selectionHandler)
+      }    
+    }
   })
 }
 
@@ -50,17 +64,36 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
     // removes eventlistener:
     const removeEventListeners = () => {
       cards.forEach(card => {
-        console.log(card.id)
         const element = document.getElementById(`card_${card.id}`)
-        element.removeEventListener('mousedown', selectionHandler)
+        element.removeEventListener('click', selectionHandler)
       })
     }
     removeEventListeners()
   }
+  //check if I am theThing
+  let theThing = false
   cards.forEach(card => {
-    const element = document.getElementById(`card_${card.id}`)
-    element.dataset.cardId = card.id
-    element.addEventListener('mousedown', selectionHandler)
+    if (card.name === 'La Cosa') { 
+      theThing = true
+    } 
+  })
+  // make cards clickeables
+  console.log(theThing)
+  cards.forEach(card => {
+    if (theThing) { // make all cards clickeable except LaCosa
+      if (card.name !== 'La Cosa'){
+        const element = document.getElementById(`card_${card.id}`)
+        element.dataset.cardId = card.id
+        element.addEventListener('click', selectionHandler)  
+      }  
+    }
+    else {
+      if ((card.name !== '¡Infectado!')) {
+        const element = document.getElementById(`card_${card.id}`)
+        element.dataset.cardId = card.id
+        element.addEventListener('click', selectionHandler)
+      }    
+    }
   })
 }
 
