@@ -180,7 +180,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       break
     case 'exchange_done':
       handleExchangeDone(userID, setCardsPlayer)
-      setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.objective_player_name}`) 
+      setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.objective_player_name}`)
       break
     case 'seduction_done':
       fetchCards(userID, setCardsPlayer)
@@ -189,7 +189,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
       break
     case 'Lanzallamas':
-      defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name)
+      defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction)
       break
     default:
       break

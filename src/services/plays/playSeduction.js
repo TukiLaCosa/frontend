@@ -13,14 +13,14 @@ export const playSeduction = async (activeId, idPlayer, gameName, players, hand,
 
       options.forEach(option => {
         const element = document.getElementById(option)
-        element.addEventListener('click', selectionHandler)
+        element.addEventListener('mousedown', selectionHandler)
       })
 
       // También debes eliminar los event listeners al resolver la promesa.
       const removeEventListeners = () => {
         options.forEach(option => {
           const element = document.getElementById(option)
-          element.removeEventListener('click', selectionHandler)
+          element.removeEventListener('mousedown', selectionHandler)
         })
       }
 
