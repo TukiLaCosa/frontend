@@ -29,7 +29,7 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
     const removeEventListeners = () => {
       cards.forEach(card => {
         const element = document.getElementById(`card_${card.id}`)
-        element.removeEventListener('click', selectionHandler)
+        element.removeEventListener('mousedown', selectionHandler)
       })
     }
     removeEventListeners()
@@ -37,7 +37,7 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
   cards.forEach(card => {
     const element = document.getElementById(`card_${card.id}`)
     element.dataset.cardId = card.id
-    element.addEventListener('click', selectionHandler)
+    element.addEventListener('mousedown', selectionHandler)
   })
 }
 
@@ -52,7 +52,7 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
       cards.forEach(card => {
         console.log(card.id)
         const element = document.getElementById(`card_${card.id}`)
-        element.removeEventListener('click', selectionHandler)
+        element.removeEventListener('mousedown', selectionHandler)
       })
     }
     removeEventListeners()
@@ -60,7 +60,7 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
   cards.forEach(card => {
     const element = document.getElementById(`card_${card.id}`)
     element.dataset.cardId = card.id
-    element.addEventListener('click', selectionHandler)
+    element.addEventListener('mousedown', selectionHandler)
   })
 }
 
