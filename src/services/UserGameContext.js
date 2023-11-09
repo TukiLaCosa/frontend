@@ -2,6 +2,12 @@ import React, { createContext, useContext, useState } from 'react'
 
 const UserGameContext = createContext()
 
+export const playerStatus = {
+  HUMAN: 'HUMAN',
+  THETHING: 'THETHING',
+  INFECTED: 'INFECTED'
+}
+
 export function UserGameProvider ({ children }) {
   /**
    * user = {
@@ -28,20 +34,24 @@ export function UserGameProvider ({ children }) {
     setRecord(oldRecord => [...oldRecord, newRecord])
   }
 
-  const setUserValues = ({ id, name, position }) => {
+  const setUserValues = ({ id, name, position, status, quarentine }) => {
     setUser({
       id,
       name,
-      position
+      position,
+      status,
+      quarentine
     })
   }
 
-  const setGameValues = ({ name, nextCard, turn, cards }) => {
+  const setGameValues = ({ name, nextCard, turn, cards, theThing, doors }) => {
     setGame({
       name,
       nextCard,
       turn,
-      cards
+      cards,
+      theThing,
+      doors
     })
   }
 
