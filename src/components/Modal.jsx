@@ -1,8 +1,8 @@
 export const handleButton = (handleClick, value, setContentModal, setButtons, setHandleButtons) => {
-  handleClick(value)
   setContentModal('')
   setButtons([])
   setHandleButtons(null)
+  handleClick(value)
 }
 
 /**

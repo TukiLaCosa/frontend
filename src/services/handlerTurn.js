@@ -1,6 +1,8 @@
 import { fetchCards } from '@/components/gameComponents/Table'
 import { exchangeIntention, exchangeResponse } from './exchange'
 import { setPath } from './setPath'
+import { defendChangePlaces } from './plays/playChangePlaces'
+import { defendBetterRun } from './plays/playBetterRun'
 import axios from 'axios'
 
 export const turnStates = {
@@ -179,13 +181,19 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       break
     case 'exchange_done':
       handleExchangeDone(userID, setCardsPlayer)
-      setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.objective_player_name}`) 
+      setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.objective_player_name}`)
       break
     case 'seduction_done':
       fetchCards(userID, setCardsPlayer)
       break
     case 'whiskey_card_played':
       handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
+      break
+    case '\u00a1Cambio de lugar!':
+      defendChangePlaces(userID, gameName, eventTurn, setContentModal, setButtons, setHandleFunction)
+      break
+    case '\u00a1M\u00e1s vale que corras!':
+      defendBetterRun(userID, gameName, eventTurn, setContentModal, setButtons, setHandleFunction)
       break
     default:
       break

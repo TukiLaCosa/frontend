@@ -2,6 +2,8 @@ import { removeFromHand } from './removeFromHand'
 import { playFlamethrower } from './plays/playFlamethrower'
 import { playSeduction } from './plays/playSeduction'
 import { playWhisky } from './plays/playWhisky'
+import { playChangePlaces } from './plays/playChangePlaces'
+import { playBetterRun } from './plays/playBetterRun'
 import cards from './cards.JSON'
 
 export const playCard = (
@@ -10,6 +12,7 @@ export const playCard = (
   user,
   game,
   players,
+  setPlayers,
   setContentModal,
   setButtons,
   setHandleFunction,
@@ -70,9 +73,11 @@ export const playCard = (
           break
         case '¡Cambio de lugar!':
           console.log('Switch')
+          playChangePlaces(activeId, playerId, gameName, players, setPlayers, setContentModal)
           break
         case '¡Más vale que corras!':
           console.log('You Better Run')
+          playBetterRun(activeId, playerId, gameName, players, setPlayers, setContentModal)
           break
         case 'Seducción':
           playSeduction(activeId, user.id, game.name, players, hand, setContentModal)
