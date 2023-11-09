@@ -4,7 +4,7 @@ import axios from 'axios'
 export const defenseFlamethrower = (defCards, playerId, gameName, setContentModal, setButtons, setHandleFunction, setCardsPlayer) => {
   const selectionHandler = (e) => {
     axios.post(`http://localhost:8000/games/${gameName}/play-defense-card`,
-      { player_id: playerId, car_id: e.target.dataset.cardId }
+      { player_id: playerId, card_id: e.target.dataset.cardId }
     )
     defCards.forEach(card => {
       const element = document.getElementById(`card_${card}`)
@@ -15,7 +15,7 @@ export const defenseFlamethrower = (defCards, playerId, gameName, setContentModa
   const defense = () => {
     defCards.forEach(card => {
       const element = document.getElementById(`card_${card}`)
-      element.dataset.cardId = card.id
+      element.dataset.cardId = card
       element.addEventListener('mousedown', selectionHandler)
     })
     fetchCards(playerId, setCardsPlayer)
