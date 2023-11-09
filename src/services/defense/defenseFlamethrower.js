@@ -1,6 +1,7 @@
+import { fetchCards } from '@/components/gameComponents/Table'
 import axios from 'axios'
 
-export const defenseFlamethrower = (defCards, playerId, gameName, setContentModal, setButtons, setHandleFunction) => {
+export const defenseFlamethrower = (defCards, playerId, gameName, setContentModal, setButtons, setHandleFunction, setCardsPlayer) => {
   const selectionHandler = (e) => {
     axios.post(`http://localhost:8000/games/${gameName}/play-defense-card`,
       { player_id: playerId, car_id: e.target.dataset.cardId }
@@ -17,6 +18,7 @@ export const defenseFlamethrower = (defCards, playerId, gameName, setContentModa
       element.dataset.cardId = card.id
       element.addEventListener('mousedown', selectionHandler)
     })
+    fetchCards(playerId, setCardsPlayer)
   }
 
   const noDefense = async () => {
@@ -28,7 +30,6 @@ export const defenseFlamethrower = (defCards, playerId, gameName, setContentModa
       console.error('Error getting cards:', error)
     }
   }
-
   if (defCards.length === 0) {
     noDefense()
     return

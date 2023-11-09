@@ -188,8 +188,8 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
     case 'whiskey_card_played':
       handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
       break
-    case 'Lanzallamas':
-      defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction)
+    case 'flamethrower':
+      defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
       break
     default:
       break
