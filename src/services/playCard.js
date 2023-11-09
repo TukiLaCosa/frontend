@@ -3,6 +3,7 @@ import { playFlamethrower } from './plays/playFlamethrower'
 import { playSeduction } from './plays/playSeduction'
 import { playWhisky } from './plays/playWhisky'
 import { playWatchYourBack } from './plays/playWatchYourBack'
+import { playAnalysis } from './plays/playAnalysis'
 import cards from './cards.JSON'
 
 export const playCard = (
@@ -50,8 +51,9 @@ export const playCard = (
           // setShow('Flamethrower')
           playFlamethrower(activeId, user, game, players, setContentModal)
           break
-        case 'Análisis':
+        case 'Análisis': // análisis
           console.log('Analysis')
+          playAnalysis(activeId, playerId, gameName)
           break
         case 'Hacha':
           console.log('Axe')
