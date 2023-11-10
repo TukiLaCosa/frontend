@@ -88,7 +88,6 @@ export const fetchResultsGame = async (gameName, setContentModal, setButtons, se
     )
     const data = response.data
     const reason = data.reason // aca guardo la reason
-    console.log(reason) // ver q imprime
     const theThingPlayer = data.winners.find(winner => winner.was_the_thing) ||
       data.losers.find(loser => loser.was_the_thing)
     const message = `
@@ -118,7 +117,6 @@ export const fetchResultsGame = async (gameName, setContentModal, setButtons, se
   }
 }
 
-
 // FINALIZAR PARTIDA POR LA COSA
 // armar el body 
 export const makeBodyRequest = (playerId) => {
@@ -131,7 +129,6 @@ export const makeBodyRequest = (playerId) => {
 export const endGame = async (gameName, playerId) => {
   try {
     const dataPatch = makeBodyRequest(playerId)
-    // luego del patch, el back finaliza la partida y envía el evento de 'game_ended'
     const response = await axios.patch(`http://localhost:8000/games/${gameName}/the-thing-end-game`, dataPatch)
   } catch (error) {
     console.error('Error:', error)
@@ -140,7 +137,7 @@ export const endGame = async (gameName, playerId) => {
 
 function Table() {
   const router = useRouter()
-  const { user, game, setUserValues, setGameValues, setNewRecord } = useUserGame() // aca trae quien es la cosa?
+  const { user, game, setUserValues, setGameValues, setNewRecord } = useUserGame()
   const wsObject = useWebSocket()
   const wsEvent = wsObject.event
   const [cardsPlayer, setCardsPlayer] = useState([])
@@ -154,7 +151,6 @@ function Table() {
   const [contentModal, setContentModal] = useState('')
   const [buttons, setButtons] = useState('')
   const [handleFunction, setHandleFunction] = useState(null)
-  //const [showEndGameButton, setShowEndGameButton] = useState(false)
   const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setCardsPlayer, setNewRecord, setContentModal, setButtons, setHandleFunction }
   const userId = user?.id
   const playerId = user?.id
