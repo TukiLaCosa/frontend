@@ -154,6 +154,7 @@ function Table() {
   const [contentModal, setContentModal] = useState('')
   const [buttons, setButtons] = useState('')
   const [handleFunction, setHandleFunction] = useState(null)
+  //const [showEndGameButton, setShowEndGameButton] = useState(false)
   const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setCardsPlayer, setNewRecord, setContentModal, setButtons, setHandleFunction }
   const userId = user?.id
   const playerId = user?.id
@@ -207,6 +208,7 @@ function Table() {
           quarentine: 0
         }
         setUserValues(userParams)
+
         const gameState = {
           ...game,
           theThing,
