@@ -36,6 +36,8 @@ export const playCard = (
     }
   ]
   setButtons(buttons)
+  setHandleFunction(() => handleOption)
+  setContentModal('¿Seguro que quieres jugar esta carta?')
 
   const handleOption = (value) => {
     if (value) {
@@ -47,7 +49,6 @@ export const playCard = (
           break
         case 'Lanzallamas':
           console.log('Flamethrower')
-          // setShow('Flamethrower')
           playFlamethrower(activeId, user, game, players, setContentModal)
           break
         case 'Análisis':
@@ -141,10 +142,6 @@ export const playCard = (
           console.log('No lo se rick')
           break
       }
-      return true
     }
   }
-
-  setHandleFunction(() => handleOption)
-  setContentModal('¿Seguro que quieres jugar esta carta?')
 }

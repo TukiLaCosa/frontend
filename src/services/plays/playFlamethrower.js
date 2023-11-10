@@ -1,7 +1,6 @@
 import axios from 'axios'
 
 export const getAdjacent = (players, id) => {
-  console.log(players)
   const index = players.map((e) => e.id).indexOf(id)
   const alives = players.filter((player) => player.position !== -1)
   const left = ((index - 1) % alives.length === -1)
