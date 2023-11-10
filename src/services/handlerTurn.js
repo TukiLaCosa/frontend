@@ -173,12 +173,6 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
     case 'exchange_intention':
       handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards)
       break
-    case 'exchange_card_start':
-      break
-    case 'exchange_card_accept':
-      break
-    case 'exchange_card_finish':
-      break
     case 'exchange_done':
       handleExchangeDone(userID, setCardsPlayer)
       setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.objective_player_name}`)
@@ -189,7 +183,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
     case 'flamethrower':
       defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
       break
-    case 'seduction':
+    case 'exchange_offer':
       defenseSeduction(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
       break
     default:
