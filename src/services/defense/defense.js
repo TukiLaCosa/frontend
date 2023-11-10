@@ -11,9 +11,23 @@ export const initDefense = async (msg, defCards, playerId, gameName, setContentM
         const element = document.getElementById(`card_${card}`)
         element.removeEventListener('mousedown', selectionHandler)
       })
-      fetchCards(playerId, selectionHandler)
+      fetchCards(playerId, setCardsPlayer)
     } catch (error) {
       console.error(error)
+    }
+  }
+  const addDefense = (cards) => {
+    cards.forEach(card => {
+      const element = document.getElementById(`card_${card}`)
+      element.dataset.cardId = card
+      element.addEventListener('mousedown', selectionHandler)
+    })
+  }
+  const handleFunction = (defDesicion) => {
+    if (defDesicion) {
+      addDefense(defCards)
+    } else {
+      noDefense(gameName, playerId)
     }
   }
 
@@ -21,13 +35,7 @@ export const initDefense = async (msg, defCards, playerId, gameName, setContentM
     noDefense(gameName, playerId)
     return
   }
-  const handleFunction = (defDesicion) => {
-    if (defDesicion) {
-      addDefense(defCards, selectionHandler)
-    } else {
-      noDefense(gameName, playerId)
-    }
-  }
+
   setHandleFunction(() => handleFunction)
   const buttons = [
     {
@@ -51,12 +59,4 @@ export const noDefense = async (gameName, playerId) => {
   } catch (error) {
     console.error('Error getting cards:', error)
   }
-}
-
-const addDefense = (cards, selectionHandler) => {
-  cards.forEach(card => {
-    const element = document.getElementById(`card_${card}`)
-    element.dataset.cardId = card
-    element.addEventListener('mousedown', selectionHandler)
-  })
 }

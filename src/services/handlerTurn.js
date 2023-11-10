@@ -3,6 +3,7 @@ import { exchangeIntention, exchangeResponse } from './exchange'
 import { setPath } from './setPath'
 import axios from 'axios'
 import { defenseFlamethrower } from './defense/defenseFlamethrower'
+import { defenseSeduction } from './defense/defenseSeduction'
 
 export const turnStates = {
   NOTURN: 'NOTURN',
@@ -182,14 +183,14 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       handleExchangeDone(userID, setCardsPlayer)
       setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.objective_player_name}`)
       break
-    case 'seduction_done':
-      fetchCards(userID, setCardsPlayer)
-      break
     case 'whiskey_card_played':
       handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
       break
     case 'flamethrower':
       defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
+      break
+    case 'seduction':
+      defenseSeduction(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
       break
     default:
       break
