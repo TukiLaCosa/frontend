@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// obtiene los adyacentes
+// función q obtiene los adyacentes
 export const getAdjacent = (players, id) => {
     const index = players.map((e) => e.id).indexOf(id)
     const alives = players.filter((player) => player.position !== -1)
@@ -19,8 +19,8 @@ export const playAnalysis = async (activeId, user, game, players, setContentModa
 
     setContentModal('Selecciona un jugador vecino para mirar sus cartas')
 
-    const left = document.getElementById(adyc?.left.id) // obtengo el boton del izq
-    const right = document.getElementById(adyc?.right.id) // obtengo el boton del der
+    const left = document.getElementById(adyc?.left.id)
+    const right = document.getElementById(adyc?.right.id)
 
     left.addEventListener('click', (e) => {
         selectVictim(adyc?.left.id)
@@ -44,8 +44,7 @@ export const playAnalysis = async (activeId, user, game, players, setContentModa
         const request = makePostRequest(activeId, user?.id, idVictim)
 
         try {
-            const response = await axios.post( // en teoria dsp de pegarle a este endpoint, el back devuelve las cartas q tiene la victima en su mano
-                // entonces, lo q sigue es muy parecido al whisky (lo que está en el handlerWhisky)
+            const response = await axios.post(
                 `http://localhost:8000/games/${game?.name}/play-action-card`,
                 request
             )
@@ -77,7 +76,7 @@ export const playAnalysis = async (activeId, user, game, players, setContentModa
             }
             setHandleFunction(() => handleEntendido)
             setContentModal(`Las cartas de ${idVictim} son: ${cardNamesString}`) // NECESITO EL NOMBRE DE LA VICTIMA!!
-            // funciona pero ojo con el modal del intercambio obligatorio
+            // funciona pero ojo con el modal del intercambio obligatorio!!
         } catch (error) {
             console.error('play-action-card-error', error)
         }
