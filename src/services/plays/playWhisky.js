@@ -10,8 +10,8 @@ export const makePostRequest = (activeId, playerId, victimId) => {
   }
   
   // función q se llamará al jugar la carta de whisky
-  export const playWhisky = async (activeId, playerId, gameName) => {
-    const request = makePostRequest(activeId, playerId)
+  export const playWhisky = async (activeId, playerId, gameName, victimId) => {
+    const request = makePostRequest(activeId, playerId, victimId)
     try {
       const response = await axios.post(
         `http://localhost:8000/games/${gameName}/play-action-card`,

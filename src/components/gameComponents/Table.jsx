@@ -80,15 +80,20 @@ export const fetchCards = async (playerId, setCardsPlayer) => {
   }
 }
 
-export const fetchResultsGame = async (gameName, setContentModal, setButtons, setHandleFunction) => {
+export const fetchResultsGame = async (gameName, setContentModal, setButtons, setHandleFunction) => { // cambiarlo un poco pq ahora trae reason
   try {
     const response = await axios.get(
       `http://localhost:8000/games/${gameName}/result`
     )
     const data = response.data
+    const reason = data.reason // aca guardo la reason
+    console.log(reason) // ver q imprime
     const theThingPlayer = data.winners.find(winner => winner.was_the_thing) ||
       data.losers.find(loser => loser.was_the_thing)
     const message = `
+      La razón por la que el juego finalizó es:
+      ${reason}
+      \n
       Los ganadores son :
       ${data.winners.map(winner => `${winner.name}`)}
       \nLos perdedores son:
@@ -112,7 +117,28 @@ export const fetchResultsGame = async (gameName, setContentModal, setButtons, se
   }
 }
 
-function Table () {
+// FINALIZAR PARTIDA POR LA COSA
+// armar el body 
+export const makeBodyRequest = (gameName, playerId) => {
+  return ({
+    game_name: gameName,
+    player_id: playerId
+  })
+}
+
+// funcion
+export const endGame = async (gameName, playerId) => { // agregar la validacion o lo q sea para q el boton solo le aparezca a la cosa
+  //const playerId = user.id
+  try {
+    const dataPatch = makeBodyRequest(gameName, playerId)
+    // luego del patch, el back finaliza la partida y envía el evento de 'game_ended'
+    const response = await axios.patch(`http://localhost:8000/games/${gameName}/the-thing-end-game`, dataPatch)
+  } catch (error) {
+    console.error('Error:', error)
+  }
+}
+
+function Table() {
   const router = useRouter()
   const { user, game, setUserValues, setNewRecord } = useUserGame()
   const wsObject = useWebSocket()
@@ -130,6 +156,7 @@ function Table () {
   const [handleFunction, setHandleFunction] = useState(null)
   const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setCardsPlayer, setNewRecord, setContentModal, setButtons, setHandleFunction }
   const userId = user?.id
+  const playerId = user?.id
   const gameName = game?.name
 
   useEffect(() => {
@@ -201,6 +228,15 @@ function Table () {
             handleDragEnd(event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction, cardsPlayer)
           }} // as onChange
         >
+          <button
+            className='button is-success is-danger is-large'
+            onClick={() => {
+              endGame(gameName, playerId); // agregar la validacion para q el boton solo le aparezca a la cosa
+              //openModal(setShowModal); // abre el modal dsp de obtener los resultados
+            }}
+          >
+            Soy La Cosa y gané
+          </button>
           <Modal
             contentModal={contentModal}
             setContentModal={setContentModal}
