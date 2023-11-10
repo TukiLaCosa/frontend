@@ -53,15 +53,18 @@ export const playAnalysis = async (activeId, user, game, players, setContentModa
             }
             console.log(response)
             console.log(response.data)
-            const data = response.data // guardo la data
-            const cards = await data.map((card) => { // mapeo los datos q trae
+
+            const { cards, objective_player_name } = response.data; // desestructura la respuesta
+            
+            const nameVictim = objective_player_name
+            const cardsMap = cards.map((card) => { // mapeo los datos q trae de las cartas
                 return {
                     id: card.id,
                     name: card.name
                 }
             })
-            console.log(cards)
-            const cardNames = cards.map((card) => card.name) // obtengo solo los nombres
+            console.log(cardsMap)
+            const cardNames = cardsMap.map((card) => card.name) // obtengo solo los nombres
             const cardNamesString = cardNames.join(', ')
 
             const buttons = [
@@ -75,7 +78,7 @@ export const playAnalysis = async (activeId, user, game, players, setContentModa
                 setContentModal('')
             }
             setHandleFunction(() => handleEntendido)
-            setContentModal(`Las cartas de ${idVictim} son: ${cardNamesString}`) // NECESITO EL NOMBRE DE LA VICTIMA!!
+            setContentModal(`Las cartas de ${nameVictim} son: ${cardNamesString}`) // NECESITO EL NOMBRE DE LA VICTIMA!!
             // funciona pero ojo con el modal del intercambio obligatorio!!
         } catch (error) {
             console.error('play-action-card-error', error)
