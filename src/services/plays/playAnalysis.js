@@ -17,37 +17,37 @@ export const getAdjacent = (players, id) => {
 
 // para armar el body
 export const makePostRequest = (activeId, playerId, victimId) => {
-    return {
-      card_id: activeId,
-      player_id: playerId,
-      objective_player_id: victimId
-    }
+  return {
+    card_id: activeId,
+    player_id: playerId,
+    objective_player_id: victimId
   }
-  
-  // función q se llamará al jugar la carta de Analysys
-  export const playAnalysis = async (activeId, playerId, gameName) => {
-    const adyc = getAdjacent(players, idPlayer) // obtengo los adyacentes
-    setContentModal('Selecciona un jugador vecino para mirar sus cartas')
-  
-    const left = document.getElementById(adyc?.left.id) // jugador de la izq
-    const right = document.getElementById(adyc?.right.id) // jugador de la der
-  
-    left.addEventListener('click', (e) => {
-      selectionVictim(adyc?.left.id)
-    })
-  
-    left.addEventListener('click', (e) => {
-      selectedVictim(adyc?.right.id)
-    })
-  
-    const selectionVictim = async (id) => {
-      const victimId = id
-    }
+}
 
-    const request = makePostRequest(activeId, playerId, victimId)
+// función q se llamará al jugar la carta de Analysys
+export const playAnalysis = async (activeId, user, game, players, setContentModal) => {
+  const adyc = getAdjacent(players, user?.id) // obtengo los adyacentes
+  setContentModal('Selecciona un jugador vecino para mirar sus cartas')
+
+  const left = document.getElementById(adyc?.left.id) // jugador de la izq
+  const right = document.getElementById(adyc?.right.id) // jugador de la der
+
+  left.addEventListener('click', (e) => {
+    selectionVictim(adyc?.left.id)
+  })
+
+  left.addEventListener('click', (e) => {
+    selectedVictim(adyc?.right.id)
+  })
+
+  const selectionVictim = async (id) => {
+    const victimId = id
+
+    const request = makePostRequest(activeId, user?.id, victimId)
+    
     try {
       const response = await axios.post(
-        `http://localhost:8000/games/${gameName}/play-action-card`,
+        `http://localhost:8000/games/${game?.name}/play-action-card`,
         request
       )
       if (!response?.ok) {
@@ -57,6 +57,7 @@ export const makePostRequest = (activeId, playerId, victimId) => {
       console.error('play-action-card-error', error)
     }
   }
+}
 
 
 // toma id de la carta de acc, id del jugador q la juega, nombre de la partida, jugadores(?), hand(?), seter

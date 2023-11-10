@@ -53,7 +53,7 @@ export const playCard = (
           break
         case 'Análisis': // análisis
           console.log('Analysis')
-          playAnalysis(activeId, playerId, gameName)
+          playAnalysis(activeId, user, game, players, setContentModal)
           break
         case 'Hacha':
           console.log('Axe')
