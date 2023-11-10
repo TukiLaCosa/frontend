@@ -1,10 +1,32 @@
 import axios from 'axios'
 
-export const makeRequest = async (url, body) => {
-  const response = await axios.post(url, body)
-  if (!response.ok) {
-    console.error(response)
+export const setFPlayers = async (gameName, setPlayers, eventTurn, setNewRecord) => {
+  const url = `http://localhost:8000/games/${gameName}`
+  const response = await axios.get(url)
+  if (response.status === 200) {
+    console.log(response)
+    const players = response.data.list_of_players
+    const playerA = players.findIndex((player) => player.id === eventTurn?.player_id)
+    const playerB = players.findIndex((player) => player.id === eventTurn?.objective_player_id)
+    const msg = players[playerA].name + ' cambio de lugar con ' + players[playerB].name
+    const sortedPlayers = players.sort(
+      (a, b) => a.position - b.position
+    )
+    setNewRecord(msg)
+    setPlayers(sortedPlayers)
+  } else {
+    console.log(response)
   }
+}
+
+export const handleChangePlaces = (response) => {
+  console.log(response)
+}
+
+export const makeRequest = async (url, body) => {
+  console.log('haciendo request: ', url, body)
+  const response = await axios.post(url, body)
+  return response
 }
 
 export const getAdjacentIndex = (players, id) => {
@@ -21,8 +43,12 @@ export const getAdjacentIndex = (players, id) => {
 }
 
 const tryChangePlace = async (body, gameName) => {
+  console.log('Intentando cambio de lugar')
   const url = `http://localhost:8000/games/${gameName}/play-action-card`
-  await makeRequest(url, body)
+  const response = await makeRequest(url, body)
+  if (!response.ok) {
+    console.log(response)
+  }
 }
 
 export const defendChangePlaces = async (
@@ -53,7 +79,9 @@ export const defendChangePlaces = async (
 
     const handleMouseDown = async (event) => {
       body.card_id = parseInt((event.target.id).replace('card_', ''))
-      await makeRequest(url, body)
+      console.log('POr llamar a la request')
+      const response = await makeRequest(url, body)
+      handleChangePlaces(response)
     }
 
     const handleMouseUp = (element) => {
@@ -68,13 +96,17 @@ export const defendChangePlaces = async (
           cardElement.addEventListener('mousedown', handleMouseDown)
           cardElement.addEventListener('mouseup', () => handleMouseUp(idCard))
         })
+      } else {
+        const response = await makeRequest(url, body)
+        handleChangePlaces(response)
       }
     }
     setHandleFunction(() => handleDefense)
     setButtons(buttons)
     setContentModal('Quieren intercambiar de lugar con vos, te queres defender?, Si es asi selecciona una carta')
   } else {
-    await makeRequest(url, body)
+    const response = await makeRequest(url, body)
+    handleChangePlaces(response)
   }
 }
 
@@ -101,13 +133,15 @@ export const playChangePlaces = (
       player_id: playerId,
       objective_player_id: objective
     }
+    console.log('Manejando click')
     await tryChangePlace(body, gameName)
   }
 
   const handleMouseUp = (player) => {
     player.removeEventListener('mousedown', handleMouseDown)
   }
-
+  console.log(leftPlayer)
+  console.log(rightPlayer)
   leftPlayer.addEventListener('mousedown', handleMouseDown)
   leftPlayer.addEventListener('mouseup', handleMouseUp(leftPlayer))
   rightPlayer.addEventListener('mousedown', handleMouseDown)

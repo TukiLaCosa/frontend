@@ -1,10 +1,13 @@
 import axios from 'axios'
 
+export const handleChangePlaces = (response) => {
+  console.log(response)
+}
+
 export const makeRequest = async (url, body) => {
+  console.log('haciendo request: ', url, body)
   const response = await axios.post(url, body)
-  if (!response.ok) {
-    console.error(response)
-  }
+  return response
 }
 
 export const defendBetterRun = async (
@@ -35,7 +38,9 @@ export const defendBetterRun = async (
 
     const handleMouseDown = async (event) => {
       body.card_id = parseInt((event.target.id).replace('card_', ''))
-      await makeRequest(url, body)
+      console.log('POr llamar a la request')
+      const response = await makeRequest(url, body)
+      handleChangePlaces(response)
     }
 
     const handleMouseUp = (element) => {
@@ -50,19 +55,27 @@ export const defendBetterRun = async (
           cardElement.addEventListener('mousedown', handleMouseDown)
           cardElement.addEventListener('mouseup', () => handleMouseUp(cardElement))
         })
+      } else {
+        const response = await makeRequest(url, body)
+        handleChangePlaces(response)
       }
     }
     setHandleFunction(() => handleDefense)
     setButtons(buttons)
     setContentModal('Quieren intercambiar de lugar con vos, te queres defender?, Si es asi selecciona una carta')
   } else {
-    await makeRequest(url, body)
+    const response = await makeRequest(url, body)
+    handleChangePlaces(response)
   }
 }
 
 const tryChangePlace = async (body, gameName) => {
+  console.log('Intentando cambio de lugar')
   const url = `http://localhost:8000/games/${gameName}/play-action-card`
-  await makeRequest(url, body)
+  const response = await makeRequest(url, body)
+  if (!response.ok) {
+    console.log(response)
+  }
 }
 
 export const playBetterRun = (
@@ -73,6 +86,7 @@ export const playBetterRun = (
   setPlayers,
   setContentModal) => {
   const handleMouseDown = async (event) => {
+    console.log('Manejando click')
     const objective = event.target.id
     const body = {
       card_id: cardId,
@@ -89,6 +103,7 @@ export const playBetterRun = (
 
   players.forEach((player) => {
     const playerButton = document.getElementById(player.id)
+    console.log(player)
     playerButton.addEventListener('mousedown', handleMouseDown)
     playerButton.addEventListener('mouseup', () => handleMouseUp(playerButton))
   })
