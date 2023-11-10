@@ -16,41 +16,53 @@ export const getAdjacent = (players, id) => {
 }
 
 // para armar el body
-export const makePostRequest = (activeId, playerId, victimId) => {
-  return {
-    card_id: activeId,
-    player_id: playerId,
-    objective_player_id: victimId
-  }
-}
+// export const makePostRequest = (activeId, playerId, victimId) => {
+//   return {
+//     card_id: activeId,
+//     player_id: playerId,
+//     objective_player_id: victimId
+//   }
+// }
 
 // función q se llamará al jugar la carta de Analysys
 export const playAnalysis = async (activeId, user, game, players, setContentModal) => {
   const adyc = getAdjacent(players, user?.id) // obtengo los adyacentes
+  console.log(adyc) // a ver q trae?
   setContentModal('Selecciona un jugador vecino para mirar sus cartas')
 
   const left = document.getElementById(adyc?.left.id) // jugador de la izq
   const right = document.getElementById(adyc?.right.id) // jugador de la der
 
   left.addEventListener('click', (e) => {
-    selectionVictim(adyc?.left.id)
+    selectVictim(adyc?.left.id)
   })
 
-  left.addEventListener('click', (e) => {
-    selectedVictim(adyc?.right.id)
+  right.addEventListener('click', (e) => {
+    selectVictim(adyc?.right.id)
   })
+  console.log("HOLAAAAAA") // hasta aca llega
 
-  const selectionVictim = async (id) => {
+  const selectVictim = async (id) => {
+    console.log("HOLAAAA2") // aca no entra
     const victimId = id
 
+    const makePostRequest = (activeId, userId, victimId) => {
+      return {
+        card_id: activeId,
+        player_id: userId,
+        objective_player_id: victimId
+      }
+    }
+
     const request = makePostRequest(activeId, user?.id, victimId)
-    
+    console.log("HOLAAA333")
     try {
+      console.log("hola44444")
       const response = await axios.post(
         `http://localhost:8000/games/${game?.name}/play-action-card`,
         request
       )
-      if (!response?.ok) {
+      if (response?.status !== 200) {
         console.log(response)
       }
     } catch (error) {
