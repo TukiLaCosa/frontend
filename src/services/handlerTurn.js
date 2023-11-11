@@ -158,7 +158,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       break
     case 'player_eliminated':
       handlePlayerEliminated(eventTurn, setPlayers, players)
-      const msg = '' + eventTurn?.player_name + ' eliminado por ' + eventTurn?.killer_player_name
+      const msg = '' + eventTurn?.eliminated_name + ' eliminado por ' + eventTurn?.killer_player_name
       setNewRecord(msg)
       if (eventTurn?.eliminated_player_id === user.id) { // modificacion para q funcione el boton de fin aun cuando se eliminan jugadores
         setUserValues({
@@ -192,6 +192,9 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       break
     case 'exchange_offer':
       defenseSeduction(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
+      break
+    case 'defense_card_played':
+      setNewRecord('El jugador ' + eventTurn?.objective_player_id + 'se defendio de ' + eventTurn?.action_type + 'lanzado por ' + eventTurn?.player_id)
       break
     default:
       break
