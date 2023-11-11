@@ -4,6 +4,7 @@ import { setPath } from './setPath'
 import { defendChangePlaces, setFPlayers } from './plays/playChangePlaces'
 import { defendBetterRun } from './plays/playBetterRun'
 import axios from 'axios'
+import { defenseFlamethrower } from './defense/defenseFlamethrower'
 
 export const turnStates = {
   NOTURN: 'NOTURN',
@@ -30,7 +31,7 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
     const removeEventListeners = () => {
       cards.forEach(card => {
         const element = document.getElementById(`card_${card.id}`)
-        element.removeEventListener('click', selectionHandler)
+        element.removeEventListener('mousedown', selectionHandler)
       })
     }
     removeEventListeners()
@@ -38,7 +39,7 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
   cards.forEach(card => {
     const element = document.getElementById(`card_${card.id}`)
     element.dataset.cardId = card.id
-    element.addEventListener('click', selectionHandler)
+    element.addEventListener('mousedown', selectionHandler)
   })
 }
 
@@ -52,7 +53,7 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
     const removeEventListeners = () => {
       cards.forEach(card => {
         const element = document.getElementById(`card_${card.id}`)
-        element.removeEventListener('click', selectionHandler)
+        element.removeEventListener('mousedown', selectionHandler)
       })
     }
     removeEventListeners()
@@ -60,7 +61,7 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
   cards.forEach(card => {
     const element = document.getElementById(`card_${card.id}`)
     element.dataset.cardId = card.id
-    element.addEventListener('click', selectionHandler)
+    element.addEventListener('mousedown', selectionHandler)
   })
 }
 
@@ -197,6 +198,9 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       break
     case 'change_done':
       setFPlayers(gameName, setPlayers, eventTurn, setNewRecord)
+      break
+    case 'flamethrower':
+      defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
       break
     default:
       break

@@ -4,6 +4,8 @@ import { playSeduction } from './plays/playSeduction'
 import { playWhisky } from './plays/playWhisky'
 import { playChangePlaces } from './plays/playChangePlaces'
 import { playBetterRun } from './plays/playBetterRun'
+import { playWatchYourBack } from './plays/playWatchYourBack'
+import { playAnalysis } from './plays/playAnalysis'
 import cards from './cards.JSON'
 
 export const playCard = (
@@ -38,6 +40,8 @@ export const playCard = (
     }
   ]
   setButtons(buttons)
+  setHandleFunction(() => handleOption)
+  setContentModal('¿Seguro que quieres jugar esta carta?')
 
   const handleOption = (value) => {
     if (value) {
@@ -49,11 +53,11 @@ export const playCard = (
           break
         case 'Lanzallamas':
           console.log('Flamethrower')
-          // setShow('Flamethrower')
           playFlamethrower(activeId, user, game, players, setContentModal)
           break
         case 'Análisis':
           console.log('Analysis')
+          playAnalysis(activeId, user, game, players, setContentModal, setButtons, setHandleFunction)
           break
         case 'Hacha':
           console.log('Axe')
@@ -68,8 +72,9 @@ export const playCard = (
         case 'Determinación':
           console.log('Determination')
           break
-        case 'Vigila tus espaldas':
+        case 'Vigila tus espaldas': // vigila tus espaldas
           console.log('Watch Your Back')
+          playWatchYourBack(activeId, playerId, gameName)
           break
         case '¡Cambio de lugar!':
           console.log('Switch')
@@ -144,10 +149,6 @@ export const playCard = (
           console.log('No lo se rick')
           break
       }
-      return true
     }
   }
-
-  setHandleFunction(() => handleOption)
-  setContentModal('¿Seguro que quieres jugar esta carta?')
 }

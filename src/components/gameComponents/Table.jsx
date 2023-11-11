@@ -75,6 +75,7 @@ export const fetchCards = async (playerId, setCardsPlayer) => {
       }
     })
     setCardsPlayer(cards)
+    return cards
   } catch (error) {
     console.error('Error getting cards:', error)
   }
@@ -114,7 +115,7 @@ export const fetchResultsGame = async (gameName, setContentModal, setButtons, se
 
 function Table () {
   const router = useRouter()
-  const { user, game, setUserValues, setNewRecord } = useUserGame()
+  const { user, game, setUserValues, setGameValues, setNewRecord } = useUserGame()
   const wsObject = useWebSocket()
   const wsEvent = wsObject.event
   const [cardsPlayer, setCardsPlayer] = useState([])
@@ -149,13 +150,7 @@ function Table () {
         const position = sortedPlayers.findIndex(
           (player) => player.id === user.id
         )
-        const userParams = {
-          id: user.id,
-          name: user.name,
-          position
-        }
 
-        setUserValues(userParams)
         setPlayers(sortedPlayers)
         setTurn(sortedPlayers[0].id)
 
@@ -164,18 +159,38 @@ function Table () {
         } else {
           setTurnState(turnStates.NOTURN)
         }
+
+        if (game?.nextCard === 'STAY_AWAY') {
+          setDrawBG('/cards/rev/revTakeAway.png')
+        } else if (game?.nextCard === 'PANIC') {
+          setDrawBG('/cards/rev/revPanic.png')
+        }
+        const cards = await fetchCards(user?.id, setCardsPlayer)
+        let status = 'HUMAN'
+        let theThing = -1
+        if (cards.some((card) => card.id === 1)) {
+          status = 'THETHING'
+          theThing = user?.id
+        }
+        const userParams = {
+          id: user.id,
+          name: user.name,
+          position,
+          status,
+          quarentine: 0
+        }
+        setUserValues(userParams)
+        const gameState = {
+          ...game,
+          theThing,
+          doors: []
+        }
+        setGameValues(gameState)
       } catch (error) {
         console.error('Error al obtener los datos del juego:', error)
       }
     }
     fetchGameData()
-
-    if (game?.nextCard === 'STAY_AWAY') {
-      setDrawBG('/cards/rev/revTakeAway.png')
-    } else if (game?.nextCard === 'PANIC') {
-      setDrawBG('/cards/rev/revPanic.png')
-    }
-    fetchCards(user?.id, setCardsPlayer)
   }, [])
 
   useEffect(() => {
