@@ -3,6 +3,7 @@ import { playFlamethrower } from './plays/playFlamethrower'
 import { playSeduction } from './plays/playSeduction'
 import { playWhisky } from './plays/playWhisky'
 import { playWatchYourBack } from './plays/playWatchYourBack'
+import { playSuspicion } from './plays/playSuspicion'
 import cards from './cards.JSON'
 
 export const playCard = (
@@ -24,7 +25,7 @@ export const playCard = (
     setContentModal('¡No puedes jugar esta carta!')
     return
   }
-
+  handleInterchange
   const buttons = [
     {
       text: 'Si',
@@ -59,6 +60,7 @@ export const playCard = (
           break
         case 'Sospecha':
           console.log('Suspicion')
+          playSuspicion(activeId,user,gameName,players,setContentModal)
           break
         case 'Whisky': // whisky
           console.log('Whisky')

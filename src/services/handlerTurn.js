@@ -89,6 +89,7 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
     }
     else {
       if ((card.name !== '¡Infectado!')) {
+        console.log('=====000')
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
         element.addEventListener('mousedown', selectionHandler)
