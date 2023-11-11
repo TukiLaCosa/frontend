@@ -194,7 +194,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       defenseSeduction(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
       break
     case 'defense_card_played':
-      setNewRecord('El jugador ' + eventTurn?.objective_player_id + 'se defendio de ' + eventTurn?.action_type + 'lanzado por ' + eventTurn?.player_id)
+      setNewRecord('El jugador ' + eventTurn?.objective_player_id + ' se defendio de ' + eventTurn?.action_type + ' lanzado por ' + eventTurn?.player_id)
       break
     default:
       break
