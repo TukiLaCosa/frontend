@@ -128,7 +128,11 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       setTurn(eventTurn?.next_player_id)
       break
     case 'played_card':
-      if (eventTurn?.player_id === userID) {
+      const cardWithIntention = ['Seducción', 'Lanzallamas', '¡Cambio de lugar!', '¡Más vale que corras!']
+      if (eventTurn?.player_id === userID &&
+        (!cardWithIntention.includes(eventTurn?.card_name) ||
+          (eventTurn?.card_name === 'Seducción'))
+      ) {
         setTurnState(turnStates.EXCHANGE)
         handleInterchange(setContentModal, userID, gameName, cards)
       }
@@ -188,13 +192,36 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       setFPlayers(gameName, setPlayers, eventTurn, setNewRecord)
       break
     case 'flamethrower':
-      defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
+      (async () => {
+        try {
+          await defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
+        } catch (error) {
+          // Manejo de errores
+          console.error('Error al manejar el evento:', error)
+        }
+      })()
       break
     case 'exchange_offer':
-      defenseSeduction(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
+      (async () => {
+        try {
+          const defenseResult = await defenseSeduction(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
+          if (!defenseResult) {
+            setTurnState(turnStates.EXCHANGE)
+            handleExchangeIntention(setContentModal, userID, gameName, cards)
+          }
+        } catch (error) {
+          // Manejo de errores
+          console.error('Error al manejar el evento:', error)
+        }
+      })()
       break
     case 'defense_card_played':
       setNewRecord('El jugador ' + eventTurn?.objective_player_id + ' se defendio de ' + eventTurn?.action_type + ' lanzado por ' + eventTurn?.player_id)
+      if (eventTurn?.player_id === userID &&
+        eventTurn?.action_type !== 'exchange_offer') {
+        setTurnState(turnStates.EXCHANGE)
+        handleInterchange(setContentModal, userID, gameName, cards)
+      }
       break
     default:
       break
