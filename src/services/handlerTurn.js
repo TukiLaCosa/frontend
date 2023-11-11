@@ -1,6 +1,8 @@
 import { fetchCards } from '@/components/gameComponents/Table'
 import { exchangeIntention, exchangeResponse } from './exchange'
 import { setPath } from './setPath'
+import { defendChangePlaces, setFPlayers } from './plays/playChangePlaces'
+import { defendBetterRun } from './plays/playBetterRun'
 import axios from 'axios'
 import { defenseFlamethrower } from './defense/defenseFlamethrower'
 
@@ -183,6 +185,15 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       break
     case 'whiskey_card_played':
       handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
+      break
+    case 'change_places':
+      defendChangePlaces(userID, gameName, eventTurn, setContentModal, setButtons, setHandleFunction)
+      break
+    case 'better_run':
+      defendBetterRun(userID, gameName, eventTurn, setContentModal, setButtons, setHandleFunction)
+      break
+    case 'change_done':
+      setFPlayers(gameName, setPlayers, eventTurn, setNewRecord)
       break
     case 'flamethrower':
       defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)

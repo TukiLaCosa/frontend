@@ -26,7 +26,7 @@ import axios from 'axios'
 import '@/styles/game_ended.scss'
 import Record from './Record'
 
-export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction, cardsPlayer) => {
+export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction, cardsPlayer, setPlayers) => {
   const { active, over } = event
 
   if (over.id === 'discard-deck' && turnState === turnStates.PLAY) {
@@ -55,7 +55,7 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
     }
   } else if (over.id === 'play-card' && turnState === turnStates.PLAY) {
     // Playing
-    playCard(setCardsPlayer, active.id, user, game, players, setContentModal, setButtons, setHandleFunction, cardsPlayer)
+    playCard(setCardsPlayer, active.id, user, game, players, setPlayers, setContentModal, setButtons, setHandleFunction, cardsPlayer)
   } else {
     // Just sorting
     sortCards(setCardsPlayer, over.id, active.id)
@@ -238,7 +238,7 @@ function Table() {
         <DndContext
           collisionDetection={closestCenter}
           onDragEnd={(event) => {
-            handleDragEnd(event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction, cardsPlayer)
+            handleDragEnd(event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction, cardsPlayer, setPlayers)
           }} // as onChange
         >
           {/* Verificación para renderizar el botón solo si el jugador es La Cosa */}
