@@ -17,11 +17,6 @@ export const handleExchangeDone = (playerID, setCardsPlayer) => {
   fetchCards(playerID, setCardsPlayer)
 }
 
-/*
-handleExchangeIntention deberia:
-1. Mostrar el modalp que avisa que alguienq  uiere iontercambiar con vosCards
-*/
-
 export const handleExchangeIntention = (eventTurn, userId, setContentModal, gameName, cards) => {
   setContentModal(`${eventTurn.player_name} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
   // make cards clickeables
@@ -103,7 +98,7 @@ export const handlerWhisky = async (playerId, playerName, setContentModal, setBu
     ]
     setButtons(buttons)
     const handleEntendido = (value) => {
-      setContentModal('') // solo debe cerrarse el modal. Ver esto luego del merge con lo del intercambio
+      setContentModal('')
     }
     setHandleFunction(() => handleEntendido)
     setContentModal(`Las cartas de ${playerName} son: ${cardNamesString}`) // POSIBLE MEJORA: TENIENDO LOS ID DE LAS CARTAS, RENDERIZAR LAS CARTAS
@@ -136,9 +131,8 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
         setTurnState(turnStates.EXCHANGE)
         handleInterchange(setContentModal, userID, gameName, cards)
       }
-      // setNewRecord(`${eventTurn.player_name} Jugo la carta: ${eventTurn.card_name}`)
       setPlayBG(setPath(eventTurn?.card_id))
-      setNewRecord(`${eventTurn?.player_name} jugó la carta ${eventTurn?.card_name}`) // log para la whisky
+      setNewRecord(`${eventTurn?.player_name} jugó la carta ${eventTurn?.card_name}`)
       break
     case 'player_draw_card':
       if (eventTurn?.player_id === userID) {
@@ -156,7 +150,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       } else if (eventTurn?.card_type === 'PANIC') {
         setDiscardBG('/cards/rev/revPanic.png')
       }
-      if (eventTurn.player_id === userID) { // EL BACK NO ESTA MANDANDO EL IDPLYAER
+      if (eventTurn.player_id === userID) {
         setTurnState(turnStates.EXCHANGE)
         handleInterchange(setContentModal, userID, gameName, cards)
       }
@@ -165,11 +159,13 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       handlePlayerEliminated(eventTurn, setPlayers, players)
       const msg = '' + eventTurn?.player_name + ' eliminado por ' + eventTurn?.killer_player_name
       setNewRecord(msg)
-      setUserValues({
-        id: user.id,
-        name: user.name,
-        position: eventTurn?.players_positions[userID]
-      })
+      if (eventTurn?.eliminated_player_id === user.id) { // modificacion para q funcione el boton de fin aun cuando se eliminan jugadores
+        setUserValues({
+          id: user.id,
+          name: user.name,
+          position: -1 // jugador está eliminado
+        })
+      }
       break
     case 'exchange_intention':
       handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards)

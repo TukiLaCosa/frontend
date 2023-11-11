@@ -87,9 +87,13 @@ export const fetchResultsGame = async (gameName, setContentModal, setButtons, se
       `http://localhost:8000/games/${gameName}/result`
     )
     const data = response.data
+    const reason = data.reason // aca guardo la reason
     const theThingPlayer = data.winners.find(winner => winner.was_the_thing) ||
       data.losers.find(loser => loser.was_the_thing)
     const message = `
+    La razón por la que el juego finalizó es:
+      ${reason}
+      \n
       Los ganadores son :
       ${data.winners.map(winner => `${winner.name}`)}
       \nLos perdedores son:
@@ -113,7 +117,25 @@ export const fetchResultsGame = async (gameName, setContentModal, setButtons, se
   }
 }
 
-function Table () {
+// FINALIZAR PARTIDA POR LA COSA
+// armar el body 
+export const makeBodyRequest = (playerId) => {
+  return ({
+    player_id: playerId
+  })
+}
+
+// funcion
+export const endGame = async (gameName, playerId) => {
+  try {
+    const dataPatch = makeBodyRequest(playerId)
+    const response = await axios.patch(`http://localhost:8000/games/${gameName}/the-thing-end-game`, dataPatch)
+  } catch (error) {
+    console.error('Error:', error)
+  }
+}
+
+function Table() {
   const router = useRouter()
   const { user, game, setUserValues, setGameValues, setNewRecord } = useUserGame()
   const wsObject = useWebSocket()
@@ -131,6 +153,7 @@ function Table () {
   const [handleFunction, setHandleFunction] = useState(null)
   const turnSeters = { setTurnState, setTurn, setDrawBG, setDiscardBG, setPlayBG, setPlayers, setCardsPlayer, setNewRecord, setContentModal, setButtons, setHandleFunction }
   const userId = user?.id
+  const playerId = user?.id
   const gameName = game?.name
 
   useEffect(() => {
@@ -168,9 +191,10 @@ function Table () {
         const cards = await fetchCards(user?.id, setCardsPlayer)
         let status = 'HUMAN'
         let theThing = -1
+        // verifica si el jugador tiene la carta con el ID = 1
         if (cards.some((card) => card.id === 1)) {
           status = 'THETHING'
-          theThing = user?.id
+          theThing = user?.id // asigna a theThing el id del jugador q tiene esa carta
         }
         const userParams = {
           id: user.id,
@@ -180,6 +204,7 @@ function Table () {
           quarentine: 0
         }
         setUserValues(userParams)
+
         const gameState = {
           ...game,
           theThing,
@@ -216,6 +241,17 @@ function Table () {
             handleDragEnd(event, turnState, user, game, setCardsPlayer, players, setContentModal, setButtons, setHandleFunction, cardsPlayer, setPlayers)
           }} // as onChange
         >
+          {/* Verificación para renderizar el botón solo si el jugador es La Cosa */}
+          {user?.status === 'THETHING' && (
+            <button
+              className='button is-success is-danger is-large'
+              onClick={() => {
+                endGame(gameName, playerId);
+              }}
+            >
+              Soy La Cosa y gané
+            </button>
+          )}
           <Modal
             contentModal={contentModal}
             setContentModal={setContentModal}
