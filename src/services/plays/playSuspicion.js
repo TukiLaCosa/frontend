@@ -44,7 +44,7 @@ export const playSuspicion = async (activeId, user,gameName,players, setContentM
             )
             if (response?.status !== 200) {
             console.log(response)
-            setContentModal(`La carta mostrada es ${response?.body?.name}`)
+            //setContentModal(`La carta mostrada es ${response?.body?.name}`)
             }
             
         } catch (error) {

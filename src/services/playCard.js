@@ -25,7 +25,6 @@ export const playCard = (
     setContentModal('¡No puedes jugar esta carta!')
     return
   }
-  handleInterchange
   const buttons = [
     {
       text: 'Si',

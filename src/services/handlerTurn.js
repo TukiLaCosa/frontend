@@ -226,6 +226,9 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
     case 'flamethrower':
       defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
       break
+    case 'suspicious_card_played':
+      setContentModal(`La carta revelada del jugador es:${eventTurn.card_name}. A continuacion debes elegir una carta para intercambiar.`)
+      break
     default:
       break
   }
