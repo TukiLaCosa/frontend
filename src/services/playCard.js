@@ -5,6 +5,7 @@ import { playWhisky } from './plays/playWhisky'
 import { playChangePlaces } from './plays/playChangePlaces'
 import { playBetterRun } from './plays/playBetterRun'
 import { playWatchYourBack } from './plays/playWatchYourBack'
+import { playSuspicion } from './plays/playSuspicion'
 import { playAnalysis } from './plays/playAnalysis'
 import cards from './cards.JSON'
 
@@ -28,7 +29,6 @@ export const playCard = (
     setContentModal('¡No puedes jugar esta carta!')
     return
   }
-
   const buttons = [
     {
       text: 'Si',
@@ -64,15 +64,16 @@ export const playCard = (
           break
         case 'Sospecha':
           console.log('Suspicion')
+          playSuspicion(activeId,user,gameName,players,setContentModal)
           break
-        case 'Whisky': // whisky
+        case 'Whisky':
           console.log('Whisky')
           playWhisky(activeId, playerId, gameName)
           break
         case 'Determinación':
           console.log('Determination')
           break
-        case 'Vigila tus espaldas': // vigila tus espaldas
+        case 'Vigila tus espaldas': 
           console.log('Watch Your Back')
           playWatchYourBack(activeId, playerId, gameName)
           break

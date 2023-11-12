@@ -20,7 +20,6 @@ export const handleExchangeDone = (playerID, setCardsPlayer) => {
 
 export const handleExchangeIntention = (eventTurn, userId, setContentModal, gameName, cards) => {
   setContentModal(`${eventTurn.player_name} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
-  // make cards clickeables
   const selectionHandler = (e) => {
     exchangeResponse(e.target.dataset.cardId, userId, gameName)
     // removes eventlistener:
@@ -32,17 +31,37 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
     }
     removeEventListeners()
   }
+  //check if I am theThing
+  let theThing = false
   cards.forEach(card => {
-    const element = document.getElementById(`card_${card.id}`)
-    element.dataset.cardId = card.id
-    element.addEventListener('mousedown', selectionHandler)
+    if (card.name === 'La Cosa') { 
+      theThing = true
+    } 
+  })
+  // make cards mousedowneables
+  console.log(theThing)
+  cards.forEach(card => {
+    if (theThing) { // make all cards mousedowneable except LaCosa
+      if (card.name !== 'La Cosa'){
+        const element = document.getElementById(`card_${card.id}`)
+        element.dataset.cardId = card.id
+        element.addEventListener('mousedown', selectionHandler)  
+      }  
+    }
+    else {
+      if ((card.name !== '¡Infectado!')) {
+        const element = document.getElementById(`card_${card.id}`)
+        element.dataset.cardId = card.id
+        element.addEventListener('mousedown', selectionHandler)
+      }    
+    }
   })
 }
 
 export const handleInterchange = (setContentModal, userId, gameName, cards) => {
   console.log(cards)
   setContentModal('Selecciona una carta para intercambiar')
-  // make cards clickeables
+  // make cards mousedowneables
   const selectionHandler = (e) => {
     exchangeIntention(e.target.dataset.cardId, userId, gameName)
     // removes eventlistener:
@@ -54,10 +73,31 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
     }
     removeEventListeners()
   }
+  //check if I am theThing
+  let theThing = false
   cards.forEach(card => {
-    const element = document.getElementById(`card_${card.id}`)
-    element.dataset.cardId = card.id
-    element.addEventListener('mousedown', selectionHandler)
+    if (card.name === 'La Cosa') { 
+      theThing = true
+    } 
+  })
+  // make cards mousedowneables
+  console.log(theThing)
+  cards.forEach(card => {
+    if (theThing) { // make all cards mousedowneable except LaCosa
+      if (card.name !== 'La Cosa'){
+        const element = document.getElementById(`card_${card.id}`)
+        element.dataset.cardId = card.id
+        element.addEventListener('mousedown', selectionHandler)  
+      }  
+    }
+    else {
+      if ((card.name !== '¡Infectado!')) {
+        console.log('=====000')
+        const element = document.getElementById(`card_${card.id}`)
+        element.dataset.cardId = card.id
+        element.addEventListener('mousedown', selectionHandler)
+      }    
+    }
   })
 }
 
@@ -224,6 +264,9 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
         setTurnState(turnStates.EXCHANGE)
         handleInterchange(setContentModal, userID, gameName, cards)
       }
+      break
+    case 'suspicious_card_played':
+      setContentModal(`La carta revelada del jugador es:${eventTurn.card_name}. A continuacion debes elegir una carta para intercambiar.`)
       break
     default:
       break
