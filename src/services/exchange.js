@@ -20,18 +20,16 @@ export const exchangeIntention = async (cardId, userId, gameName) => {
   }
 }
 
-export const exchangeResponse = async (selectedCardId, userId, gameName, eventTurn) => {
-  const makePostRequest = (selectedCardId, userId, event) => {
+export const exchangeResponse = async (selectedCardId, userId, gameName) => {
+  const makePostRequest = (selectedCardId, userId) => {
     console.log(selectedCardId)
     console.log(userId)
     return {
       player_id: userId,
-      card_id: selectedCardId,
-      objective_player_id: event.player_id, // ID del jugador que inicia la intencion
-      objective_card_id: event.card_to_exchange
+      card_id: selectedCardId
     }
   }
-  const request = makePostRequest(selectedCardId, userId, eventTurn)
+  const request = makePostRequest(selectedCardId, userId)
   try {
     const response = await axios.patch(
       `http://localhost:8000/games/${gameName}/card-interchange-response`,

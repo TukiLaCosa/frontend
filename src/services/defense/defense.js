@@ -30,16 +30,21 @@ export const initDefense = async (msg, defCards, playerId, gameName, setContentM
 
     const handleFunction = (defDesicion) => {
       if (defDesicion) {
+        console.log("defensa decidida")
         addDefense(defCards)
       } else {
+        console.log("no defensa por decision")
         noDefense(gameName, playerId)
-        resolve(false) // Jugador eligió una opción que usa noDefense
+        resolve(false)
+        return false
       }
     }
 
     if (defCards.length === 0) {
+      console.log("no defensa por no tener carta")
       noDefense(gameName, playerId)
       resolve(false)
+      return false
     }
 
     setHandleFunction(() => handleFunction)
@@ -53,6 +58,7 @@ export const initDefense = async (msg, defCards, playerId, gameName, setContentM
         value: false
       }
     ]
+    console.log("NUNCA ACÁ")
     setButtons(buttons)
     setContentModal(msg)
   })

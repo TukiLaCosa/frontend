@@ -22,7 +22,7 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
   setContentModal(`${eventTurn.player_name} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
   // make cards clickeables
   const selectionHandler = (e) => {
-    exchangeResponse(e.target.dataset.cardId, userId, gameName, eventTurn)
+    exchangeResponse(e.target.dataset.cardId, userId, gameName)
     // removes eventlistener:
     const removeEventListeners = () => {
       cards.forEach(card => {
@@ -207,7 +207,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
           const defenseResult = await defenseSeduction(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
           if (!defenseResult) {
             setTurnState(turnStates.EXCHANGE)
-            handleExchangeIntention(setContentModal, userID, gameName, cards)
+            handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards)
           }
         } catch (error) {
           // Manejo de errores
