@@ -16,8 +16,7 @@ export const getAdjacent = (players, id) => {
 
 export const playSuspicion = async (activeId, user,gameName,players, setContentModal) => {
     const adyc = getAdjacent(players,user?.id)
-    //setTitleModal('JUGANDO CARTA DE SOSPECHA...')
-    setContentModal('Debes seleccionar un jugador adyacente para verle una carta...')
+    setContentModal('Debes seleccionar un jugador adyacente para revelarle una carta...')
     const left = document.getElementById(adyc?.left.id)
     const right = document.getElementById(adyc?.right.id)
 
@@ -28,6 +27,7 @@ export const playSuspicion = async (activeId, user,gameName,players, setContentM
     right.addEventListener('click', (e) => {
         suspicionPoint(adyc?.right.id)
     })
+    
     const suspicionPoint = async (idVictim) => {
         const makePostRequest = (activeId, userId, idVictim) => {
             return {
@@ -44,7 +44,6 @@ export const playSuspicion = async (activeId, user,gameName,players, setContentM
             )
             if (response?.status !== 200) {
             console.log(response)
-            //setContentModal(`La carta mostrada es ${response?.body?.name}`)
             }
             
         } catch (error) {
