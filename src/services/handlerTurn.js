@@ -129,9 +129,11 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       break
     case 'played_card':
       const cardWithIntention = ['Seducción', 'Lanzallamas', '¡Cambio de lugar!', '¡Más vale que corras!']
+      console.log('Seducci\u00f3n' === 'Seducción')
+      console.log(eventTurn?.card_name)
       if (eventTurn?.player_id === userID &&
         (!cardWithIntention.includes(eventTurn?.card_name) ||
-          (eventTurn?.card_name === 'Seducción'))
+          (eventTurn?.card_name !== 'Seducción'))
       ) {
         setTurnState(turnStates.EXCHANGE)
         handleInterchange(setContentModal, userID, gameName, cards)
