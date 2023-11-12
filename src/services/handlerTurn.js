@@ -31,29 +31,27 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
     }
     removeEventListeners()
   }
-  //check if I am theThing
+  // check if I am theThing
   let theThing = false
   cards.forEach(card => {
-    if (card.name === 'La Cosa') { 
+    if (card.name === 'La Cosa') {
       theThing = true
-    } 
+    }
   })
   // make cards mousedowneables
-  console.log(theThing)
   cards.forEach(card => {
     if (theThing) { // make all cards mousedowneable except LaCosa
-      if (card.name !== 'La Cosa'){
+      if (card.name !== 'La Cosa') {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
-        element.addEventListener('mousedown', selectionHandler)  
-      }  
-    }
-    else {
+        element.addEventListener('mousedown', selectionHandler)
+      }
+    } else {
       if ((card.name !== '¡Infectado!')) {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
         element.addEventListener('mousedown', selectionHandler)
-      }    
+      }
     }
   })
 }
@@ -73,30 +71,27 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
     }
     removeEventListeners()
   }
-  //check if I am theThing
+  // check if I am theThing
   let theThing = false
   cards.forEach(card => {
-    if (card.name === 'La Cosa') { 
+    if (card.name === 'La Cosa') {
       theThing = true
-    } 
+    }
   })
   // make cards mousedowneables
-  console.log(theThing)
   cards.forEach(card => {
     if (theThing) { // make all cards mousedowneable except LaCosa
-      if (card.name !== 'La Cosa'){
-        const element = document.getElementById(`card_${card.id}`)
-        element.dataset.cardId = card.id
-        element.addEventListener('mousedown', selectionHandler)  
-      }  
-    }
-    else {
-      if ((card.name !== '¡Infectado!')) {
-        console.log('=====000')
+      if (card.name !== 'La Cosa') {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
         element.addEventListener('mousedown', selectionHandler)
-      }    
+      }
+    } else {
+      if ((card.name !== '¡Infectado!')) {
+        const element = document.getElementById(`card_${card.id}`)
+        element.dataset.cardId = card.id
+        element.addEventListener('mousedown', selectionHandler)
+      }
     }
   })
 }
@@ -169,8 +164,6 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       break
     case 'played_card':
       const cardWithIntention = ['Seducción', 'Lanzallamas', '¡Cambio de lugar!', '¡Más vale que corras!']
-      console.log('Seducci\u00f3n' === 'Seducción')
-      console.log(eventTurn?.card_name)
       if (eventTurn?.player_id === userID &&
         (!cardWithIntention.includes(eventTurn?.card_name) ||
           (eventTurn?.card_name !== 'Seducción'))
