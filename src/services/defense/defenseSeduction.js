@@ -1,7 +1,8 @@
 import { initDefense } from './defense'
 
-export const defenseFlamethrower = async (defCards, playerId, gameName, setContentModal, setButtons, setHandleFunction, setCardsPlayer) => {
-  const msg = 'ALGUIEN TE QUEMA! Elegi una carta ¡Nada de Barbacoas! si queres defenderte.'
+export const defenseSeduction = async (defCards, playerId, gameName, setContentModal, setButtons, setHandleFunction, setCardsPlayer) => {
+  const msg = 'Quieren intercambiar. Elegi una carta ¡Aterrador!, ¡No, Gracias! o ¡Fallaste!'
+
   try {
     const result = await initDefense(msg, defCards, playerId, gameName, setContentModal, setButtons, setHandleFunction, setCardsPlayer);
     return result

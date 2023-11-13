@@ -5,6 +5,7 @@ import { defendChangePlaces, setFPlayers } from './plays/playChangePlaces'
 import { defendBetterRun } from './plays/playBetterRun'
 import axios from 'axios'
 import { defenseFlamethrower } from './defense/defenseFlamethrower'
+import { defenseSeduction } from './defense/defenseSeduction'
 
 export const turnStates = {
   NOTURN: 'NOTURN',
@@ -20,7 +21,7 @@ export const handleExchangeDone = (playerID, setCardsPlayer) => {
 export const handleExchangeIntention = (eventTurn, userId, setContentModal, gameName, cards) => {
   setContentModal(`${eventTurn.player_name} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
   const selectionHandler = (e) => {
-    exchangeResponse(e.target.dataset.cardId, userId, gameName, eventTurn)
+    exchangeResponse(e.target.dataset.cardId, userId, gameName)
     // removes eventlistener:
     const removeEventListeners = () => {
       cards.forEach(card => {
@@ -30,29 +31,27 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
     }
     removeEventListeners()
   }
-  //check if I am theThing
+  // check if I am theThing
   let theThing = false
   cards.forEach(card => {
-    if (card.name === 'La Cosa') { 
+    if (card.name === 'La Cosa') {
       theThing = true
-    } 
+    }
   })
   // make cards mousedowneables
-  console.log(theThing)
   cards.forEach(card => {
     if (theThing) { // make all cards mousedowneable except LaCosa
-      if (card.name !== 'La Cosa'){
+      if (card.name !== 'La Cosa') {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
-        element.addEventListener('mousedown', selectionHandler)  
-      }  
-    }
-    else {
+        element.addEventListener('mousedown', selectionHandler)
+      }
+    } else {
       if ((card.name !== '¡Infectado!')) {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
         element.addEventListener('mousedown', selectionHandler)
-      }    
+      }
     }
   })
 }
@@ -72,30 +71,27 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
     }
     removeEventListeners()
   }
-  //check if I am theThing
+  // check if I am theThing
   let theThing = false
   cards.forEach(card => {
-    if (card.name === 'La Cosa') { 
+    if (card.name === 'La Cosa') {
       theThing = true
-    } 
+    }
   })
   // make cards mousedowneables
-  console.log(theThing)
   cards.forEach(card => {
     if (theThing) { // make all cards mousedowneable except LaCosa
-      if (card.name !== 'La Cosa'){
-        const element = document.getElementById(`card_${card.id}`)
-        element.dataset.cardId = card.id
-        element.addEventListener('mousedown', selectionHandler)  
-      }  
-    }
-    else {
-      if ((card.name !== '¡Infectado!')) {
-        console.log('=====000')
+      if (card.name !== 'La Cosa') {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
         element.addEventListener('mousedown', selectionHandler)
-      }    
+      }
+    } else {
+      if ((card.name !== '¡Infectado!')) {
+        const element = document.getElementById(`card_${card.id}`)
+        element.dataset.cardId = card.id
+        element.addEventListener('mousedown', selectionHandler)
+      }
     }
   })
 }
@@ -167,7 +163,11 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       setTurn(eventTurn?.next_player_id)
       break
     case 'played_card':
-      if (eventTurn?.player_id === userID) {
+      const cardWithIntention = ['Seducción', 'Lanzallamas', '¡Cambio de lugar!', '¡Más vale que corras!']
+      if (eventTurn?.player_id === userID &&
+        (!cardWithIntention.includes(eventTurn?.card_name) ||
+          (eventTurn?.card_name !== 'Seducción'))
+      ) {
         setTurnState(turnStates.EXCHANGE)
         handleInterchange(setContentModal, userID, gameName, cards)
       }
@@ -197,7 +197,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       break
     case 'player_eliminated':
       handlePlayerEliminated(eventTurn, setPlayers, players)
-      const msg = '' + eventTurn?.player_name + ' eliminado por ' + eventTurn?.killer_player_name
+      const msg = '' + eventTurn?.eliminated_name + ' eliminado por ' + eventTurn?.killer_player_name
       setNewRecord(msg)
       if (eventTurn?.eliminated_player_id === user.id) { // modificacion para q funcione el boton de fin aun cuando se eliminan jugadores
         setUserValues({
@@ -210,18 +210,9 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
     case 'exchange_intention':
       handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards)
       break
-    case 'exchange_card_start':
-      break
-    case 'exchange_card_accept':
-      break
-    case 'exchange_card_finish':
-      break
     case 'exchange_done':
       handleExchangeDone(userID, setCardsPlayer)
       setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.objective_player_name}`)
-      break
-    case 'seduction_done':
-      fetchCards(userID, setCardsPlayer)
       break
     case 'whiskey_card_played':
       handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
@@ -236,7 +227,38 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       setFPlayers(gameName, setPlayers, eventTurn, setNewRecord)
       break
     case 'flamethrower':
-      defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
+      (async () => {
+        try {
+          await defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
+        } catch (error) {
+          // Manejo de errores
+          console.error('Error al manejar el evento:', error)
+        }
+      })()
+      break
+    case 'exchange_offer':
+      (async () => {
+        try {
+          const defenseResult = await defenseSeduction(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
+          if (!defenseResult) {
+            setTurnState(turnStates.EXCHANGE)
+            handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards)
+          }
+        } catch (error) {
+          // Manejo de errores
+          console.error('Error al manejar el evento:', error)
+        }
+      })()
+      break
+    case 'defense_card_played':
+      setNewRecord('El jugador ' + eventTurn?.objective_player_id + ' se defendio de ' + eventTurn?.action_type + ' lanzado por ' + eventTurn?.player_id)
+      if (eventTurn?.player_id === userID &&
+        eventTurn?.action_type !== 'exchange_offer') {
+        setTurnState(turnStates.EXCHANGE)
+        handleInterchange(setContentModal, userID, gameName, cards)
+      } else if (eventTurn?.objective_player_id === userID) {
+        setContentModal('La carta que quisieron intercambiarte era ' + eventTurn?.card_to_exchange)
+      }
       break
     case 'suspicious_card_played':
       setContentModal(`La carta revelada del jugador es:${eventTurn.card_name}. A continuacion debes elegir una carta para intercambiar.`)
