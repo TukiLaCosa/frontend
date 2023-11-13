@@ -27,7 +27,6 @@ export const handleExchangeDone = (playerID, setCardsPlayer) => {
 }
 
 export const handleExchangeIntention = (eventTurn, userId, setContentModal, gameName, cards, players) => {
-  console.log('Datos handleExchange', eventTurn)
   const playerName = getPlayerName(players, eventTurn.player_id)
   setContentModal(`${playerName} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
   const selectionHandler = (e) => {
@@ -41,22 +40,20 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
     removeEventListeners()
   }
 
-  let theThing = false
-  cards.forEach(card => {
-    if (card.name === 'La Cosa') {
-      theThing = true
-    }
-  })
-
+  const cardIds = cards.map(card => card.id)
+  console.log('handler turn Cards ids', cardIds)
+  const theThing = cardIds.includes(1)
+  console.log('handler turn i am thething', theThing)
+  const infectedCards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
   cards.forEach(card => {
     if (theThing) {
-      if (card.name !== 'La Cosa') {
+      if (card.id !== 1) {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
         element.addEventListener('mousedown', selectionHandler)
       }
     } else {
-      if ((card.name !== '¡Infectado!')) {
+      if (!infectedCards.includes(card.id)) {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
         element.addEventListener('mousedown', selectionHandler)
@@ -81,22 +78,20 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
     removeEventListeners()
   }
 
-  let theThing = false
-  cards.forEach(card => {
-    if (card.name === 'La Cosa') {
-      theThing = true
-    }
-  })
-
+  const cardIds = cards.map(card => card.id)
+  console.log('handler turn Cards ids', cardIds)
+  const theThing = cardIds.includes(1)
+  console.log('handler turn i am thething', theThing)
+  const infectedCards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
   cards.forEach(card => {
     if (theThing) {
-      if (card.name !== 'La Cosa') {
+      if (card.id !== 1) {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
         element.addEventListener('mousedown', selectionHandler)
       }
     } else {
-      if ((card.name !== '¡Infectado!')) {
+      if (!infectedCards.includes(card.id)) {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
         element.addEventListener('mousedown', selectionHandler)

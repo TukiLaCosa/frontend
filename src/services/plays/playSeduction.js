@@ -33,9 +33,12 @@ export const playSeduction = async (activeId, idPlayer, gameName, players, hand,
     const objetives = players.filter((player) => player.position !== -1 && player.id !== idPlayer)
     const selectedVictim = await waitForSelection('Selecciona algún jugador para intercambiar', objetives.map(player => player.id))
     const cardIds = hand.map(card => card.id)
+    console.log('Cards ids', cardIds)
+    const iAmTheThing = cardIds.includes(1)
+    console.log('i am thething', iAmTheThing)
     const nonSelectableCards = cardIds.filter(cardId => {
       const nameCard = cards.cards[cardId - 1].name
-      return nameCard === 'La Cosa' && nameCard === '¡Infectado!'
+      return nameCard === 'La Cosa' || (nameCard === '¡Infectado!' && iAmTheThing)
     })
 
     const selectableCards = cardIds.filter(cardId => !nonSelectableCards.includes(cardId))
