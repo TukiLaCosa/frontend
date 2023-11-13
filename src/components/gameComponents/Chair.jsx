@@ -1,4 +1,4 @@
-function Chair ({ rotation, size, type, className, player, turn }) {
+function Chair ({ rotation, size, type, className, player, turn, user }) {
   let source
   if (type === 'Whole') {
     source = '/backgrounds/sofa.png'
@@ -6,16 +6,25 @@ function Chair ({ rotation, size, type, className, player, turn }) {
     source = `/backgrounds/sofa${type}.png`
   }
 
-  const buttonInTurn = turn === player?.id
-    ? ''
-    : 'is-light is-outlined'
+  let buttonStyles = ''
+  if (!player?.id) {
+    buttonStyles = 'is-light is-outlined'
+  } else if (turn === player?.id && user?.id === player?.id) {
+    buttonStyles = 'is-player-turn'
+  } else if (turn === player?.id && user?.id !== player?.id) {
+    buttonStyles = 'is-turn'
+  } else if (turn !== player?.id && user?.id === player?.id) {
+    buttonStyles = 'is-player'
+  } else {
+    buttonStyles = 'is-success is-light is-outlined'
+  }
 
   return (
     <div className={className}>
       <h2>
         <button
           id={player?.id}
-          className={'button is-success ' + buttonInTurn}
+          className={'button ' + buttonStyles}
           style={{ margin: '10px', padding: '10px' }}
         >{player?.name}
         </button>

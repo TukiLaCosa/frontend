@@ -118,7 +118,7 @@ export const fetchResultsGame = async (gameName, setContentModal, setButtons, se
 }
 
 // FINALIZAR PARTIDA POR LA COSA
-// armar el body 
+// armar el body
 export const makeBodyRequest = (playerId) => {
   return ({
     player_id: playerId
@@ -129,7 +129,7 @@ export const makeBodyRequest = (playerId) => {
 export const endGame = async (gameName, playerId) => {
   try {
     const dataPatch = makeBodyRequest(playerId)
-    const response = await axios.patch(`http://localhost:8000/games/${gameName}/the-thing-end-game`, dataPatch)
+    await axios.patch(`http://localhost:8000/games/${gameName}/the-thing-end-game`, dataPatch)
   } catch (error) {
     console.error('Error:', error)
   }
@@ -246,7 +246,7 @@ function Table() {
             <button
               className='button is-success is-danger is-large'
               onClick={() => {
-                endGame(gameName, playerId);
+                endGame(gameName, playerId)
               }}
             >
               Soy La Cosa y gané
@@ -283,6 +283,7 @@ function Table() {
                   className='is-flex is-flex-direction-column has-text-centered'
                   player={players[0]}
                   turn={turn}
+                  user={user}
                 />
                 <Chair
                   rotation={0}
@@ -291,6 +292,7 @@ function Table() {
                   className='is-flex is-flex-direction-column has-text-centered'
                   player={players[1]}
                   turn={turn}
+                  user={user}
                 />
               </div>
               <div className='is-flex is-align-items-end is-justify-content-space-around item'>
@@ -301,6 +303,7 @@ function Table() {
                   className='is-flex is-flex-direction-column has-text-centered'
                   player={players[2]}
                   turn={turn}
+                  user={user}
                 />
                 <Chair
                   rotation={0}
@@ -309,6 +312,7 @@ function Table() {
                   className='is-flex is-flex-direction-column has-text-centered'
                   player={players[3]}
                   turn={turn}
+                  user={user}
                 />
               </div>
               <div className='is-flex is-align-items-end is-justify-content-start item' />
@@ -320,6 +324,7 @@ function Table() {
                   className='is-flex is-flex-direction-row has-text-centered'
                   player={players[11]}
                   turn={turn}
+                  user={user}
                 />
               </div>
               <div
@@ -350,6 +355,7 @@ function Table() {
                   className='is-flex is-flex-direction-row-reverse has-text-centered'
                   player={players[4]}
                   turn={turn}
+                  user={user}
                 />
               </div>
               <div className='is-flex is-align-items-center is-justify-content-end item'>
@@ -360,6 +366,7 @@ function Table() {
                   className='is-flex is-flex-direction-row has-text-centered'
                   player={players[10]}
                   turn={turn}
+                  user={user}
                 />
               </div>
               <div className='is-flex is-align-items-center is-justify-content-start item'>
@@ -370,6 +377,7 @@ function Table() {
                   className='is-flex is-flex-direction-row-reverse has-text-centered'
                   player={players[5]}
                   turn={turn}
+                  user={user}
                 />
               </div>
               <div className='is-flex is-align-items-start is-justify-content-end item' />
@@ -381,6 +389,7 @@ function Table() {
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
                   player={players[9]}
                   turn={turn}
+                  user={user}
                 />
                 <Chair
                   rotation={180}
@@ -389,6 +398,7 @@ function Table() {
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
                   player={players[8]}
                   turn={turn}
+                  user={user}
                 />
               </div>
               <div className='is-flex is-align-items-start is-justify-content-space-around item'>
@@ -399,6 +409,7 @@ function Table() {
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
                   player={players[7]}
                   turn={turn}
+                  user={user}
                 />
                 <Chair
                   rotation={180}
@@ -407,6 +418,7 @@ function Table() {
                   className='is-flex is-flex-direction-column-reverse has-text-centered'
                   player={players[6]}
                   turn={turn}
+                  user={user}
                 />
               </div>
               <div className='is-flex is-align-items-start is-justify-content-start item item' />
