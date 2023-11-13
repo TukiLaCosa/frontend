@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { removeFromHand } from '../removeFromHand'
 
 export const updateCardsAfterDefense = async (playerId, setCardsPlayer) => {
   const url = `http://localhost:8000/players/${playerId}/hand`
@@ -91,11 +92,12 @@ export const defendChangePlaces = async (
       console.log('POr llamar a la request')
       const response = await makeRequest(url, body)
       handleChangePlaces(response)
+      removeFromHand(setCardsPlayer, body.card_id)
       updateCardsAfterDefense(playerId, setCardsPlayer)
     }
 
     const handleMouseUp = (element) => {
-      element.removeEventListener('mousedown', handleMouseDown)
+      element?.removeEventListener('mousedown', handleMouseDown)
     }
 
     const handleDefense = async (defense) => {

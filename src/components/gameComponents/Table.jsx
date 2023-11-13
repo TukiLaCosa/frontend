@@ -135,7 +135,7 @@ export const endGame = async (gameName, playerId) => {
   }
 }
 
-function Table() {
+function Table () {
   const router = useRouter()
   const { user, game, setUserValues, setGameValues, setNewRecord } = useUserGame()
   const wsObject = useWebSocket()

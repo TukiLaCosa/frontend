@@ -41,10 +41,11 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
   }
 
   const cardIds = cards.map(card => card.id)
-  console.log('handler turn Cards ids', cardIds)
+  console.log('handler turn Cards', cards)
   const theThing = cardIds.includes(1)
   console.log('handler turn i am thething', theThing)
   const infectedCards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+  const panicCards = [89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108]
   cards.forEach(card => {
     if (theThing) {
       if (card.id !== 1) {
@@ -53,7 +54,7 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
         element.addEventListener('mousedown', selectionHandler)
       }
     } else {
-      if (!infectedCards.includes(card.id)) {
+      if (!infectedCards.includes(card.id) && !panicCards.includes(card.id)) {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
         element.addEventListener('mousedown', selectionHandler)
@@ -83,6 +84,7 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
   const theThing = cardIds.includes(1)
   console.log('handler turn i am thething', theThing)
   const infectedCards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+  const panicCards = [89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108]
   cards.forEach(card => {
     if (theThing) {
       if (card.id !== 1) {
@@ -91,7 +93,7 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
         element.addEventListener('mousedown', selectionHandler)
       }
     } else {
-      if (!infectedCards.includes(card.id)) {
+      if (!infectedCards.includes(card.id) && !panicCards.includes(card.id)) {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
         element.addEventListener('mousedown', selectionHandler)
