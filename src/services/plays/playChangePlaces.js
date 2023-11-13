@@ -106,7 +106,7 @@ export const defendChangePlaces = async (
           const idCard = `card_${card}`
           const cardElement = document.getElementById(idCard)
           cardElement.addEventListener('mousedown', handleMouseDown)
-          cardElement.addEventListener('mouseup', () => handleMouseUp(idCard))
+          cardElement.addEventListener('mouseup', () => handleMouseUp(cardElement))
         })
       } else {
         const response = await makeRequest(url, body)
