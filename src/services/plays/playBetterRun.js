@@ -1,5 +1,13 @@
 import axios from 'axios'
 
+export const updateCardsAfterDefense = async (playerId, setCardsPlayer) => {
+  const url = `http://localhost:8000/players/${playerId}/hand`
+  const response = await axios.get(url)
+  if (response.status === 200) {
+    setCardsPlayer(response.data)
+  }
+}
+
 export const handleChangePlaces = (response) => {
   console.log(response)
 }
@@ -16,7 +24,8 @@ export const defendBetterRun = async (
   eventBetterRun,
   setContentModal,
   setButtons,
-  setHandleFunction) => {
+  setHandleFunction,
+  setCardsPlayer) => {
   const cardsToDefend = eventBetterRun?.defense_cards
   const url = `http://localhost:8000/games/${gameName}/play-defense-card`
   const body = {
@@ -41,6 +50,7 @@ export const defendBetterRun = async (
       console.log('POr llamar a la request')
       const response = await makeRequest(url, body)
       handleChangePlaces(response)
+      updateCardsAfterDefense(playerId, setCardsPlayer)
     }
 
     const handleMouseUp = (element) => {

@@ -1,5 +1,13 @@
 import axios from 'axios'
 
+export const updateCardsAfterDefense = async (playerId, setCardsPlayer) => {
+  const url = `http://localhost:8000/players/${playerId}/hand`
+  const response = await axios.get(url)
+  if (response.status === 200) {
+    setCardsPlayer(response.data)
+  }
+}
+
 export const setFPlayers = async (gameName, setPlayers, eventTurn, setNewRecord) => {
   const url = `http://localhost:8000/games/${gameName}`
   const response = await axios.get(url)
@@ -57,7 +65,8 @@ export const defendChangePlaces = async (
   eventChangePlaces,
   setContentModal,
   setButtons,
-  setHandleFunction) => {
+  setHandleFunction,
+  setCardsPlayer) => {
   const cardsToDefend = eventChangePlaces?.defense_cards
   const url = `http://localhost:8000/games/${gameName}/play-defense-card`
   const body = {
@@ -82,6 +91,7 @@ export const defendChangePlaces = async (
       console.log('POr llamar a la request')
       const response = await makeRequest(url, body)
       handleChangePlaces(response)
+      updateCardsAfterDefense(playerId, setCardsPlayer)
     }
 
     const handleMouseUp = (element) => {

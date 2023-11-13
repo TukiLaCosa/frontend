@@ -146,7 +146,7 @@ export const handlerWhisky = async (playerId, playerName, setContentModal, setBu
   }
 }
 
-export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards,
+export const handlerTurn = async (eventTurn, user, setUserValues, players, game, cards,
   {
     setTurnState, setTurn, setDrawBG, setDiscardBG,
     setPlayBG, setPlayers, setNewRecord,
@@ -223,10 +223,10 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
       break
     case 'change_places':
-      defendChangePlaces(userID, gameName, eventTurn, setContentModal, setButtons, setHandleFunction)
+      await defendChangePlaces(userID, gameName, eventTurn, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
       break
     case 'better_run':
-      defendBetterRun(userID, gameName, eventTurn, setContentModal, setButtons, setHandleFunction)
+      await defendBetterRun(userID, gameName, eventTurn, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
       break
     case 'change_done':
       setFPlayers(gameName, setPlayers, eventTurn, setNewRecord)
