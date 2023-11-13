@@ -202,7 +202,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
     case 'player_eliminated':
       handlePlayerEliminated(eventTurn, setPlayers, players)
       // eslint-disable-next-line no-case-declarations
-      const msg = '' + eventTurn?.eliminated_name + ' eliminado por ' + eventTurn?.killer_player_name
+      const msg = '' + eventTurn?.eliminated_player_name + ' eliminado por ' + eventTurn?.killer_player_name
       setNewRecord(msg)
       if (eventTurn?.eliminated_player_id === user.id) {
         setUserValues({
