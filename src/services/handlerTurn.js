@@ -14,15 +14,24 @@ export const turnStates = {
   EXCHANGE: 'EXCHANGE'
 }
 
+export const getPlayerName = (players, playerId) => {
+  console.log('Datos entrada:', players, playerId)
+  const playerIndex = players?.findIndex((player) => player.id === playerId)
+  const playerName = players[playerIndex]?.name
+  console.log('getPlayerName:', playerIndex, playerName)
+  return playerName
+}
+
 export const handleExchangeDone = (playerID, setCardsPlayer) => {
   fetchCards(playerID, setCardsPlayer)
 }
 
-export const handleExchangeIntention = (eventTurn, userId, setContentModal, gameName, cards) => {
-  setContentModal(`${eventTurn.player_name} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
+export const handleExchangeIntention = (eventTurn, userId, setContentModal, gameName, cards, players) => {
+  console.log('Datos handleExchange', eventTurn)
+  const playerName = getPlayerName(players, eventTurn.player_id)
+  setContentModal(`${playerName} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
   const selectionHandler = (e) => {
     exchangeResponse(e.target.dataset.cardId, userId, gameName)
-    // removes eventlistener:
     const removeEventListeners = () => {
       cards.forEach(card => {
         const element = document.getElementById(`card_${card.id}`)
@@ -31,16 +40,16 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
     }
     removeEventListeners()
   }
-  // check if I am theThing
+
   let theThing = false
   cards.forEach(card => {
     if (card.name === 'La Cosa') {
       theThing = true
     }
   })
-  // make cards mousedowneables
+
   cards.forEach(card => {
-    if (theThing) { // make all cards mousedowneable except LaCosa
+    if (theThing) {
       if (card.name !== 'La Cosa') {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
@@ -59,10 +68,10 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
 export const handleInterchange = (setContentModal, userId, gameName, cards) => {
   console.log(cards)
   setContentModal('Selecciona una carta para intercambiar')
-  // make cards mousedowneables
+
   const selectionHandler = (e) => {
     exchangeIntention(e.target.dataset.cardId, userId, gameName)
-    // removes eventlistener:
+
     const removeEventListeners = () => {
       cards.forEach(card => {
         const element = document.getElementById(`card_${card.id}`)
@@ -71,16 +80,16 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
     }
     removeEventListeners()
   }
-  // check if I am theThing
+
   let theThing = false
   cards.forEach(card => {
     if (card.name === 'La Cosa') {
       theThing = true
     }
   })
-  // make cards mousedowneables
+
   cards.forEach(card => {
-    if (theThing) { // make all cards mousedowneable except LaCosa
+    if (theThing) {
       if (card.name !== 'La Cosa') {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
@@ -109,23 +118,22 @@ export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
 }
 
 export const handlerWhisky = async (playerId, playerName, setContentModal, setButtons, setHandleFunction) => {
-  try { // esto es un fetchCards (o sea, el servicio), pero todavia no lo tengo mergeado
+  try {
     const response = await axios.get(
-      `http://localhost:8000/players/${playerId}/hand` // luego de este get, se deben mostrar las cartas a todos los demas jugadores
+      `http://localhost:8000/players/${playerId}/hand`
     )
-    const data = response.data // guardo los datos q traigo en data
-    const cards = await data.map((card) => { // mapea los datos q trae
+    const data = response.data
+    const cards = await data.map((card) => {
       return {
         id: card.id,
         name: card.name
       }
     })
-    const cardNames = cards.map((card) => card.name) // obtengo solo el nombre de las cartas
-    const cardNamesString = cardNames.join(', ') // las uno
+    const cardNames = cards.map((card) => card.name)
+    const cardNamesString = cardNames.join(', ')
 
-    const cardIDs = cards.map((card) => card.id) // obtengo los id de las cartas. Por ahora no los uso
-    const cardIDsString = cardIDs.join(', ')
-    // modal
+    // const cardIDs = cards.map((card) => card.id) // obtengo los id de las cartas. Por ahora no los uso
+    // const cardIDsString = cardIDs.join(', ')
     const buttons = [
       {
         text: 'Entendido',
@@ -137,7 +145,7 @@ export const handlerWhisky = async (playerId, playerName, setContentModal, setBu
       setContentModal('')
     }
     setHandleFunction(() => handleEntendido)
-    setContentModal(`Las cartas de ${playerName} son: ${cardNamesString}`) // POSIBLE MEJORA: TENIENDO LOS ID DE LAS CARTAS, RENDERIZAR LAS CARTAS
+    setContentModal(`Las cartas de ${playerName} son: ${cardNamesString}`)
   } catch (error) {
     console.error('Error getting cards:', error)
   }
@@ -163,6 +171,7 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       setTurn(eventTurn?.next_player_id)
       break
     case 'played_card':
+      // eslint-disable-next-line no-case-declarations
       const cardWithIntention = ['Seducción', 'Lanzallamas', '¡Cambio de lugar!', '¡Más vale que corras!']
       if (eventTurn?.player_id === userID &&
         (!cardWithIntention.includes(eventTurn?.card_name) ||
@@ -197,22 +206,23 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       break
     case 'player_eliminated':
       handlePlayerEliminated(eventTurn, setPlayers, players)
+      // eslint-disable-next-line no-case-declarations
       const msg = '' + eventTurn?.eliminated_name + ' eliminado por ' + eventTurn?.killer_player_name
       setNewRecord(msg)
-      if (eventTurn?.eliminated_player_id === user.id) { // modificacion para q funcione el boton de fin aun cuando se eliminan jugadores
+      if (eventTurn?.eliminated_player_id === user.id) {
         setUserValues({
           id: user.id,
           name: user.name,
-          position: -1 // jugador está eliminado
+          position: -1
         })
       }
       break
     case 'exchange_intention':
-      handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards)
+      handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards, players)
       break
     case 'exchange_done':
       handleExchangeDone(userID, setCardsPlayer)
-      setNewRecord(`${eventTurn.player_name} Intercambio carta con el jugador: ${eventTurn.objective_player_name}`)
+      setNewRecord(`${eventTurn.player_name} intercambio carta con el jugador: ${eventTurn.objective_player_name}`)
       break
     case 'whiskey_card_played':
       handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
@@ -231,7 +241,6 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
         try {
           await defenseFlamethrower(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
         } catch (error) {
-          // Manejo de errores
           console.error('Error al manejar el evento:', error)
         }
       })()
@@ -242,10 +251,9 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
           const defenseResult = await defenseSeduction(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
           if (!defenseResult) {
             setTurnState(turnStates.EXCHANGE)
-            handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards)
+            handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards, players)
           }
         } catch (error) {
-          // Manejo de errores
           console.error('Error al manejar el evento:', error)
         }
       })()

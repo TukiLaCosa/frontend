@@ -64,7 +64,7 @@ export const playCard = (
           break
         case 'Sospecha':
           console.log('Suspicion')
-          playSuspicion(activeId,user,gameName,players,setContentModal)
+          playSuspicion(activeId, user, gameName, players, setContentModal)
           break
         case 'Whisky':
           console.log('Whisky')
@@ -73,7 +73,7 @@ export const playCard = (
         case 'Determinación':
           console.log('Determination')
           break
-        case 'Vigila tus espaldas': 
+        case 'Vigila tus espaldas':
           console.log('Watch Your Back')
           playWatchYourBack(activeId, playerId, gameName)
           break
