@@ -256,6 +256,8 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
         eventTurn?.action_type !== 'exchange_offer') {
         setTurnState(turnStates.EXCHANGE)
         handleInterchange(setContentModal, userID, gameName, cards)
+      } else if (eventTurn?.objective_player_id === userID) {
+        setContentModal('La carta que quisieron intercambiarte era ' + eventTurn?.card_to_exchange)
       }
       break
     case 'suspicious_card_played':
