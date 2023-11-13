@@ -279,6 +279,9 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
     case 'suspicious_card_played':
       setContentModal(`La carta revelada del jugador es:${eventTurn.card_name}. A continuacion debes elegir una carta para intercambiar.`)
       break
+    case 'analysis_card_played':
+      setContentModal(`Las cartas de ${eventTurn?.player_name} son: ${eventTurn?.cards}. A continuacion debes elegir una carta para intercambiar.`)
+      break
     default:
       break
   }
