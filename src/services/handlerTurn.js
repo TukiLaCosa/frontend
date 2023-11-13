@@ -259,7 +259,18 @@ export const handlerTurn = (eventTurn, user, setUserValues, players, game, cards
       })()
       break
     case 'defense_card_played':
-      setNewRecord('El jugador ' + eventTurn?.objective_player_id + ' se defendio de ' + eventTurn?.action_type + ' lanzado por ' + eventTurn?.player_id)
+      // eslint-disable-next-line no-case-declarations
+      const objectiveName = getPlayerName(players, eventTurn?.objective_player_id)
+      // eslint-disable-next-line no-case-declarations
+      const playerName = getPlayerName(players, eventTurn?.player_id)
+      // eslint-disable-next-line no-case-declarations
+      const defendedAction = {
+        exchange_offer: 'un intercambio de cartas',
+        change_places: 'un intercambio de lugares',
+        better_run: 'un intercambio de lugares',
+        flamethrower: 'un lanzallamazo'
+      }
+      setNewRecord('El jugador ' + objectiveName + ' se defendio de ' + defendedAction[eventTurn?.action_type] + ' lanzado por ' + playerName)
       if (eventTurn?.player_id === userID &&
         eventTurn?.action_type !== 'exchange_offer') {
         setTurnState(turnStates.EXCHANGE)
