@@ -182,7 +182,7 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
       const cardWithIntention = ['Seducción', 'Lanzallamas', '¡Cambio de lugar!', '¡Más vale que corras!']
       if (eventTurn?.player_id === userID &&
         (!cardWithIntention.includes(eventTurn?.card_name) ||
-          (eventTurn?.card_name !== 'Seducción'))
+          (eventTurn?.card_name === 'Seducción'))
       ) {
         setTurnState(turnStates.EXCHANGE)
         handleInterchange(setContentModal, userID, gameName, cards)
@@ -222,6 +222,10 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
           name: user.name,
           position: -1
         })
+      }
+      if (eventTurn?.killer_player_id === user.id) {
+        setTurnState(turnStates.EXCHANGE)
+        handleInterchange(setContentModal, userID, gameName, cards)
       }
       break
     case 'exchange_intention':
