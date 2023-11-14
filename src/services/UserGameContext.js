@@ -1,3 +1,4 @@
+import next from 'next'
 import React, { createContext, useContext, useState } from 'react'
 
 const UserGameContext = createContext()
@@ -35,23 +36,27 @@ export function UserGameProvider ({ children }) {
   }
 
   const setUserValues = ({ id, name, position, status, quarentine }) => {
-    setUser({
-      id,
-      name,
-      position,
-      status,
-      quarentine
+    setUser((user) => {
+      return {
+        id: id || user?.id,
+        name: name || user?.name,
+        position: position || user?.position,
+        status: status || user?.status,
+        quarentine: quarentine || user?.quarentine
+      }
     })
   }
 
   const setGameValues = ({ name, nextCard, turn, cards, theThing, doors }) => {
-    setGame({
-      name,
-      nextCard,
-      turn,
-      cards,
-      theThing,
-      doors
+    setGame((game) => {
+      return {
+        name: name || game?.name,
+        nextCard: nextCard || game?.nextCard,
+        turn: turn || game?.turn,
+        cards: cards || game?.cards,
+        theThing: theThing || game?.theThing,
+        doors: doors || game?.doors
+      }
     })
   }
 
