@@ -29,6 +29,14 @@ $github: #333;
 $github-invert: findColorInvert($github);
 $tuki: #134c15;
 $tuki-invert: findColorInvert($tuki);
+$turn: #f7f12e; 
+$turn-invert: findColorInvert($turn); 
+$player: #3498db;
+$player-invert: findColorInvert($player);
+$player-turn:#5ccd30;
+$player-turn-invert: findColorInvert($player-turn);
+$infected: #f5882f;
+$quarantine: #dd1818e8;
 
 // 5. Add new color variables to the color map.
 @import "../../node_modules/bulma/sass/utilities/derived-variables";
@@ -36,7 +44,10 @@ $addColors: (
   "twitter":($twitter, $twitter-invert),
   "linkedin": ($linkedin, $linkedin-invert),
   "github": ($github, $github-invert),
-  "tuki": ($tuki, $tuki-invert)
+  "tuki": ($tuki, $tuki-invert),
+  "turn": ($turn, $turn-invert),
+  "player": ($player, $player-invert),
+  "player-turn": ($player-turn, $player-turn-invert)
 );
 $colors: map-merge($colors, $addColors);
 

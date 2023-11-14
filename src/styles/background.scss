@@ -1,0 +1,11 @@
+.backgroundGlobal {
+    position: 'fixed';
+    background-image: 'url("/backgrounds/gif2.gif")';
+    top: 0;
+    left: 0;
+    background-size: 'cover';
+    width: '100%';
+    height: '100%';
+    z-index: '-1';
+}
+// para una futura modularizacion

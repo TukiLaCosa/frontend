@@ -1,21 +1,61 @@
-import Image from 'next/image';
+'use client'
 
-function DataGame({ data, refresh }) {
-  return (
-    <div className="notification is-tuki-modified dataGame is-flex is-justify-content-space-between is-align-items-center">
-      <div>
-        <p className="title is-5">Partida: {data.name}</p>
-        <p className="has-text-weight-bold">Creador: {data.host_player_name}</p>
-        <p className="has-text-weight-bold">Jugadores: {data.num_of_players}/{data.max_players}</p>
-        <p className="has-text-weight-bold">Jugadores mínimos: {data.min_players}</p>
-      </div>
-      <div>
-        <button className="button is-warning is-large" onClick={() => refresh(true)}>
-          <Image src="/images/refresh.svg" alt="Refresh" width={64} height={64} />
-        </button>
-      </div>
-    </div>
-  );
+import { useEffect, useState } from 'react'
+import { useUserGame } from '@/services/UserGameContext'
+import { useWebSocket } from '@/services/WebSocketContext'
+import axiosClient from '@/services/http-client/axios-client'
+
+export const getData = async (game, setData) => {
+  try {
+    const response = await axiosClient.get(`games/${game?.name}`)
+    setData(response.data)
+  } catch (error) {
+    console.error('Error getting players:', error)
+  }
 }
 
-export default DataGame;
+function DataGame () {
+  const [data, setData] = useState([])
+  const { game } = useUserGame()
+  const { event } = useWebSocket()
+
+  useEffect(() => {
+    getData(game, setData)
+  }, [])
+
+  useEffect(() => {
+    const eventJSON = JSON.parse(event)
+    if (eventJSON?.event === 'player_joined' ||
+      eventJSON?.event === 'player_left') {
+      getData(game, setData)
+    }
+  }, [event])
+
+  return (
+    <div className="notification is-tuki dataGame is-flex is-justify-content-space-between is-align-items-center">
+      <div>
+        <p className="title is-4">Partida: {data.name}</p>
+        <p className="has-text-weight-bold">Creador: {data.host_player_name}</p>
+        <p className="has-text-weight-bold">Jugadores mínimos: {data.min_players}</p>
+        <p className="has-text-weight-bold">Jugadores unidos: {data.num_of_players}/{data.max_players}</p>
+      </div>
+      <div
+        className="createG"
+        style={
+          {
+            backgroundImage: 'url("/backgrounds/gif2.gif")',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            backgroundSize: 'cover',
+            width: '100%',
+            height: '100%',
+            zIndex: '-1'
+          }
+        }>
+      </div>
+    </div>
+  )
+}
+
+export default DataGame

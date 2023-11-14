@@ -1,68 +1,85 @@
-'use client';
-import { useState, useRef, useEffect } from 'react';
+'use client'
 
-export function Chat() {
-  const [message, setMessage] = useState('');
-  const [chatLog, setChatLog] = useState([]);
-  const messagesEndRef = useRef(null);
-  let userName = "";
+import { useState, useRef, useEffect } from 'react'
+import { useWebSocket } from '@/services/WebSocketContext'
+import { useUserGame } from '@/services/UserGameContext'
 
-  try {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.name) {
-      userName = user.name + ":";
-    }
-  } catch (error) {
-    console.error("Error obteniendo el nombre de usuario:", error);
+const sendMessages = (message, userName, gameName, chatLog, setMessage, sendMessage, setChatLog) => {
+  if (message) {
+    setChatLog((chatLog) => [...chatLog, { content: `${message}`, type: 'sent', name: `${userName}` }])
+    sendMessage(message, userName, gameName)
+    setMessage('')
   }
-  const sendMessage = () => {
-    if (message) {
-      setChatLog([...chatLog, { content:`${message}`, type: 'sent' }]);
-      setMessage('');
-    }
-  };
+}
+
+export function Chat () {
+  const [message, setMessage] = useState('')
+  const [chatLog, setChatLog] = useState([])
+  const messagesEndRef = useRef(null)
+  const { user, game } = useUserGame()
+  const { event, sendMessage } = useWebSocket()
+
+  const userName = user?.name
+  const gameName = game?.name
+
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
     }
-  }, [chatLog]);
+  }, [chatLog])
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
+  useEffect(() => {
+    const eventJSON = JSON.parse(event)
+    if (eventJSON?.event === 'message') {
+      setChatLog((chatLog) => [
+        ...chatLog,
+        { content: `${eventJSON.message}`, type: 'received', name: `${eventJSON.from}` }
+      ])
     }
-  }
+  }, [event])
+
   return (
-    <div className="box is-shadowless is-flex is-flex-direction-column chat full-grid-area">
-      <div className="messages-container" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+    <div className='box is-shadowless is-flex is-flex-direction-column is-justify-content-end chat full-grid-area'>
+      <div className='messages-container' style={{ overflowY: 'auto' }}>
         {chatLog.map((msg, index) => (
           <div key={index} className={`message ${msg.type}`}>
-            <span className="user-name">{userName}</span> <span>{msg.content}</span>
+            <span className='user-name'>{msg.name}</span> <span>{msg.content}</span>
           </div>
         ))}
-        <div ref={messagesEndRef}></div>
+        <div ref={messagesEndRef} />
       </div>
 
-      <div className="field is-grouped">
-        <div className="control is-expanded">
+      <div className='field is-grouped'>
+        <div className='control is-expanded'>
           <input
-            className="input"
-            type="text"
-            placeholder="Escribe un mensaje..."
+            className='input'
+            type='text'
+            placeholder='Escribe un mensaje...'
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={handleKeyDown}
+            onKeyDown={
+              (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  sendMessages(message, userName, gameName, chatLog, setMessage, sendMessage, setChatLog)
+                }
+              }
+            }
           />
         </div>
-        <div className="control">
-          <button className="button is-info" onClick={sendMessage}>
+        <div className='control'>
+          <button
+            className='button is-info'
+            onClick={() => {
+              sendMessages(message, userName, gameName, chatLog, setMessage, sendMessage, setChatLog)
+            }}
+          >
             Enviar
           </button>
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 export default Chat

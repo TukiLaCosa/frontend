@@ -1,0 +1,1008 @@
+{
+  "name": {
+    "theThing": [
+      1,
+      1
+    ],
+    "infected": [
+      2,
+      21
+    ],
+    "flamethrowe": [
+      22,
+      26
+    ],
+    "analysis": [
+      27,
+      29
+    ],
+    "axe": [
+      30,
+      31
+    ],
+    "suspicion": [
+      32,
+      39
+    ],
+    "whisky": [
+      40,
+      42
+    ],
+    "determination": [
+      43,
+      47
+    ],
+    "watchYourBack": [
+      48,
+      49
+    ],
+    "changeOfLocation": [
+      50,
+      55
+    ],
+    "youBetterRun": [
+      55,
+      59
+    ],
+    "seduction": [
+      60,
+      66
+    ],
+    "frightening": [
+      67,
+      70
+    ],
+    "iAmFineHere": [
+      71,
+      73
+    ],
+    "noThanks": [
+      74,
+      77
+    ],
+    "youMissed": [
+      78,
+      80
+    ],
+    "noBarbecues": [
+      81,
+      83
+    ],
+    "quarantine": [
+      84,
+      85
+    ],
+    "lockedDoor": [
+      86,
+      88
+    ],
+    "rottenRopes": [
+      89,
+      90
+    ],
+    "oneTwo": [
+      91,
+      92
+    ],
+    "threeFour": [
+      93,
+      94
+    ],
+    "isThePartyHere": [
+      95,
+      96
+    ],
+    "getOutOfHere": [
+      97,
+      97
+    ],
+    "forgetful": [
+      98,
+      98
+    ],
+    "roundAndRound": [
+      99,
+      100
+    ],
+    "weCanNotBeFriends": [
+      101,
+      102
+    ],
+    "blindDate": [
+      103,
+      104
+    ],
+    "ups": [
+      105,
+      105
+    ],
+    "letItStayBetweenUs": [
+      105,
+      107
+    ],
+    "revelations": [
+      108,
+      108
+    ],
+    "turn": [
+      109,
+      109
+    ]
+  },
+  "type": {
+    "takeAway": [
+      2,
+      88
+    ],
+    "panic": [
+      88,
+      108
+    ]
+  },
+  "cards": [
+    {
+      "number": 4,
+      "type": "THE_THING",
+      "subtype": "CONTAGION",
+      "name": "La Cosa",
+      "description": "Sos La Cosa.",
+      "id": 1
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 2
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 3
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 4
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 5
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 6
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 7
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 8
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 9
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 10
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 11
+    },
+    {
+      "number": 7,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 12
+    },
+    {
+      "number": 7,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 13
+    },
+    {
+      "number": 8,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 14
+    },
+    {
+      "number": 9,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 15
+    },
+    {
+      "number": 9,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 16
+    },
+    {
+      "number": 10,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 17
+    },
+    {
+      "number": 10,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 18
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 19
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 20
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "CONTAGION",
+      "name": "¡Infectado!",
+      "description": "Si recibes esta carta de otro jugador, quedas Infectado y debes quedarte esta carta hasta el final de la partida.",
+      "id": 21
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Lanzallamas",
+      "description": "Elimina de la partida a un jugador adyacente.",
+      "id": 22
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Lanzallamas",
+      "description": "Elimina de la partida a un jugador adyacente.",
+      "id": 23
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Lanzallamas",
+      "description": "Elimina de la partida a un jugador adyacente.",
+      "id": 24
+    },
+    {
+      "number": 9,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Lanzallamas",
+      "description": "Elimina de la partida a un jugador adyacente.",
+      "id": 25
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Lanzallamas",
+      "description": "Elimina de la partida a un jugador adyacente.",
+      "id": 26
+    },
+    {
+      "number": 5,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Análisis",
+      "description": "Mira la mano de cartas de un jugador adyacente.",
+      "id": 27
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Análisis",
+      "description": "Mira la mano de cartas de un jugador adyacente.",
+      "id": 28
+    },
+    {
+      "number": 9,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Análisis",
+      "description": "Mira la mano de cartas de un jugador adyacente.",
+      "id": 29
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Hacha",
+      "description": "retira una carta “Puerta atrancada” o “Cuarentena” de ti mismo o de un jugador adyacente.",
+      "id": 30
+    },
+    {
+      "number": 9,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Hacha",
+      "description": "retira una carta “Puerta atrancada” o “Cuarentena” de ti mismo o de un jugador adyacente.",
+      "id": 31
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Sospecha",
+      "description": "Mira 1 carta aleatoria de la mano de un jugador adyacente.",
+      "id": 32
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Sospecha",
+      "description": "Mira 1 carta aleatoria de la mano de un jugador adyacente.",
+      "id": 33
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Sospecha",
+      "description": "Mira 1 carta aleatoria de la mano de un jugador adyacente.",
+      "id": 34
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Sospecha",
+      "description": "Mira 1 carta aleatoria de la mano de un jugador adyacente.",
+      "id": 35
+    },
+    {
+      "number": 7,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Sospecha",
+      "description": "Mira 1 carta aleatoria de la mano de un jugador adyacente.",
+      "id": 36
+    },
+    {
+      "number": 8,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Sospecha",
+      "description": "Mira 1 carta aleatoria de la mano de un jugador adyacente.",
+      "id": 37
+    },
+    {
+      "number": 9,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Sospecha",
+      "description": "Mira 1 carta aleatoria de la mano de un jugador adyacente.",
+      "id": 38
+    },
+    {
+      "number": 10,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Sospecha",
+      "description": "Mira 1 carta aleatoria de la mano de un jugador adyacente.",
+      "id": 39
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Whisky",
+      "description": "Muestra todas tus cartas a todos los jugadores. Sólo puedes jugar esta carta sobre ti mismo.",
+      "id": 40
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Whisky",
+      "description": "Muestra todas tus cartas a todos los jugadores. Sólo puedes jugar esta carta sobre ti mismo.",
+      "id": 41
+    },
+    {
+      "number": 10,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Whisky",
+      "description": "Muestra todas tus cartas a todos los jugadores. Sólo puedes jugar esta carta sobre ti mismo.",
+      "id": 42
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Determinación",
+      "description": "Roba 3 cartas “¡Aléjate!”, elige 1 para quedártela y descarta las demás. A continuación, juega o descarta 1 carta.",
+      "id": 43
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Determinación",
+      "description": "Roba 3 cartas “¡Aléjate!”, elige 1 para quedártela y descarta las demás. A continuación, juega o descarta 1 carta.",
+      "id": 44
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Determinación",
+      "description": "Roba 3 cartas “¡Aléjate!”, elige 1 para quedártela y descarta las demás. A continuación, juega o descarta 1 carta.",
+      "id": 45
+    },
+    {
+      "number": 9,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Determinación",
+      "description": "Roba 3 cartas “¡Aléjate!”, elige 1 para quedártela y descarta las demás. A continuación, juega o descarta 1 carta.",
+      "id": 46
+    },
+    {
+      "number": 10,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Determinación",
+      "description": "Roba 3 cartas “¡Aléjate!”, elige 1 para quedártela y descarta las demás. A continuación, juega o descarta 1 carta.",
+      "id": 47
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "¡Cambio de lugar!",
+      "description": "Cámbiate de sitio con un jugador adyacente que no esté en Cuarentena o tras una Puerta atrancada.",
+      "id": 48
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "¡Cambio de lugar!",
+      "description": "Cámbiate de sitio con un jugador adyacente que no esté en Cuarentena o tras una Puerta atrancada.",
+      "id": 49
+    },
+    {
+      "number": 7,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "¡Cambio de lugar!",
+      "description": "Cámbiate de sitio con un jugador adyacente que no esté en Cuarentena o tras una Puerta atrancada.",
+      "id": 50
+    },
+    {
+      "number": 9,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "¡Cambio de lugar!",
+      "description": "Cámbiate de sitio con un jugador adyacente que no esté en Cuarentena o tras una Puerta atrancada.",
+      "id": 51
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "¡Cambio de lugar!",
+      "description": "Cámbiate de sitio con un jugador adyacente que no esté en Cuarentena o tras una Puerta atrancada.",
+      "id": 52
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Vigila tus espaldas",
+      "description": "Invierte el orden de juego. Ahora, tanto el orden de turnos como los intercambios de cartas van en el sentido contrario.",
+      "id": 53
+    },
+    {
+      "number": 9,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Vigila tus espaldas",
+      "description": "Invierte el orden de juego. Ahora, tanto el orden de turnos como los intercambios de cartas van en el sentido contrario.",
+      "id": 54
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Seducción",
+      "description": "Intercambia una carta con cualquier jugador de tu elección que no esté en Cuarentena. Tu turno termina.",
+      "id": 55
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Seducción",
+      "description": "Intercambia una carta con cualquier jugador de tu elección que no esté en Cuarentena. Tu turno termina.",
+      "id": 56
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Seducción",
+      "description": "Intercambia una carta con cualquier jugador de tu elección que no esté en Cuarentena. Tu turno termina.",
+      "id": 57
+    },
+    {
+      "number": 7,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Seducción",
+      "description": "Intercambia una carta con cualquier jugador de tu elección que no esté en Cuarentena. Tu turno termina.",
+      "id": 58
+    },
+    {
+      "number": 8,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Seducción",
+      "description": "Intercambia una carta con cualquier jugador de tu elección que no esté en Cuarentena. Tu turno termina.",
+      "id": 59
+    },
+    {
+      "number": 10,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Seducción",
+      "description": "Intercambia una carta con cualquier jugador de tu elección que no esté en Cuarentena. Tu turno termina.",
+      "id": 60
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "Seducción",
+      "description": "Intercambia una carta con cualquier jugador de tu elección que no esté en Cuarentena. Tu turno termina.",
+      "id": 61
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "OBSTACLE",
+      "name": "Puerta atrancada",
+      "description": "Coloca esta carta entre un jugador adyacente y tú. No se permiten acciones entre este jugador y tú.",
+      "id": 62
+    },
+    {
+      "number": 7,
+      "type": "STAY_AWAY",
+      "subtype": "OBSTACLE",
+      "name": "Puerta atrancada",
+      "description": "Coloca esta carta entre un jugador adyacente y tú. No se permiten acciones entre este jugador y tú.",
+      "id": 63
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "OBSTACLE",
+      "name": "Puerta atrancada",
+      "description": "Coloca esta carta entre un jugador adyacente y tú. No se permiten acciones entre este jugador y tú.",
+      "id": 64
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "¡Más vale que corras!",
+      "description": "Cámbiate de sitio con cualquier jugador de tu elección que no esté en Cuarentena, ignorando cualquier puerta atrancada.",
+      "id": 65
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "¡Más vale que corras!",
+      "description": "Cámbiate de sitio con cualquier jugador de tu elección que no esté en Cuarentena, ignorando cualquier puerta atrancada.",
+      "id": 66
+    },
+    {
+      "number": 7,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "¡Más vale que corras!",
+      "description": "Cámbiate de sitio con cualquier jugador de tu elección que no esté en Cuarentena, ignorando cualquier puerta atrancada.",
+      "id": 67
+    },
+    {
+      "number": 9,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "¡Más vale que corras!",
+      "description": "Cámbiate de sitio con cualquier jugador de tu elección que no esté en Cuarentena, ignorando cualquier puerta atrancada.",
+      "id": 68
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "ACTION",
+      "name": "¡Más vale que corras!",
+      "description": "Cámbiate de sitio con cualquier jugador de tu elección que no esté en Cuarentena, ignorando cualquier puerta atrancada.",
+      "id": 69
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "Aquí estoy bien",
+      "description": "Cancela una carta “¡Cambio de lugar!” o “¡Más vale que corras!” de la que seas objetivo. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 70
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "Aquí estoy bien",
+      "description": "Cancela una carta “¡Cambio de lugar!” o “¡Más vale que corras!” de la que seas objetivo. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 71
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "Aquí estoy bien",
+      "description": "Cancela una carta “¡Cambio de lugar!” o “¡Más vale que corras!” de la que seas objetivo. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 72
+    },
+    {
+      "number": 5,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "Aterrador",
+      "description": "Niégate a un ofrecimiento de intercambio de cartas y mira la carta que te has negado a recibir. Roba 1 carta “Aléjate!” en sustitución de ésta.",
+      "id": 73
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "Aterrador",
+      "description": "Niégate a un ofrecimiento de intercambio de cartas y mira la carta que te has negado a recibir. Roba 1 carta “Aléjate!” en sustitución de ésta.",
+      "id": 74
+    },
+    {
+      "number": 8,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "Aterrador",
+      "description": "Niégate a un ofrecimiento de intercambio de cartas y mira la carta que te has negado a recibir. Roba 1 carta “Aléjate!” en sustitución de ésta.",
+      "id": 75
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "Aterrador",
+      "description": "Niégate a un ofrecimiento de intercambio de cartas y mira la carta que te has negado a recibir. Roba 1 carta “Aléjate!” en sustitución de ésta.",
+      "id": 76
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "¡No, gracias!",
+      "description": "Niégate a un ofrecimiento de intercambio de cartas. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 77
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "¡No, gracias!",
+      "description": "Niégate a un ofrecimiento de intercambio de cartas. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 78
+    },
+    {
+      "number": 8,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "¡No, gracias!",
+      "description": "Niégate a un ofrecimiento de intercambio de cartas. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 79
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "¡No, gracias!",
+      "description": "Niégate a un ofrecimiento de intercambio de cartas. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 80
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "¡Fallaste!",
+      "description": "El siguiente jugador después de ti realiza el intercambio de cartas en lugar de hacerlo tú. No queda Infectado si recibe una carta “¡Infectado!”. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 81
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "¡Fallaste!",
+      "description": "El siguiente jugador después de ti realiza el intercambio de cartas en lugar de hacerlo tú. No queda Infectado si recibe una carta “¡Infectado!”. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 82
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "¡Fallaste!",
+      "description": "El siguiente jugador después de ti realiza el intercambio de cartas en lugar de hacerlo tú. No queda Infectado si recibe una carta “¡Infectado!”. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 83
+    },
+    {
+      "number": 4,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "¡Nada de barbacoas!",
+      "description": "Cancela una carta “Lanzallamas” que te tenga como objetivo. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 84
+    },
+    {
+      "number": 6,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "¡Nada de barbacoas!",
+      "description": "Cancela una carta “Lanzallamas” que te tenga como objetivo. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 85
+    },
+    {
+      "number": 11,
+      "type": "STAY_AWAY",
+      "subtype": "DEFENSE",
+      "name": "¡Nada de barbacoas!",
+      "description": "Cancela una carta “Lanzallamas” que te tenga como objetivo. Roba 1 carta “¡Aléjate!” en sustitución de ésta.",
+      "id": 86
+    },
+    {
+      "number": 5,
+      "type": "STAY_AWAY",
+      "subtype": "OBSTACLE",
+      "name": "Cuarentena",
+      "description": "Durante 2 rondas, un jugador adyacente debe robar, descartar e intercambiar cartas boca arriba. No puede eliminar jugadores ni cambiar de sitio.",
+      "id": 87
+    },
+    {
+      "number": 9,
+      "type": "STAY_AWAY",
+      "subtype": "OBSTACLE",
+      "name": "Cuarentena",
+      "description": "Durante 2 rondas, un jugador adyacente debe robar, descartar e intercambiar cartas boca arriba. No puede eliminar jugadores ni cambiar de sitio.",
+      "id": 88
+    },
+    {
+      "number": 8,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Revelaciones",
+      "description": "Empezando por ti y siguiedo el orden del juego, cada jugador elige si revela o no su mano. La ronda de “Revelaciones” termina cuando un jugador muestre una carta “!Infectado!”, sin que tenga que revelar el resto de su mano.",
+      "id": 89
+    },
+    {
+      "number": 6,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Cuerdas podridas",
+      "description": "¡Las viejas cuerdas que usaste son fáciles de romper! Todas las cartas “Cuarentena” que haya en juego son descartadas.",
+      "id": 90
+    },
+    {
+      "number": 9,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Cuerdas podridas",
+      "description": "¡Las viejas cuerdas que usaste son fáciles de romper! Todas las cartas “Cuarentena” que haya en juego son descartadas.",
+      "id": 91
+    },
+    {
+      "number": 5,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "¡Sal de aquí!",
+      "description": "Cámbiate de sitio con cualquier jugador de tu elección que no esté en Cuarentena.",
+      "id": 92
+    },
+    {
+      "number": 4,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Olvidadizo",
+      "description": "Descarta 3 cartas de tu mano y roba 3 nuevas cartas “¡Aléjate!”, descartando cualquier carta de “¡Pánico!” robada.",
+      "id": 93
+    },
+    {
+      "number": 5,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Uno, dos…",
+      "description": "… con La Cosa ve diciendo adiós. Cámbiate de sitio con el tercer jugador que tengas a tu izquierda o a tu derecha (a tu elección=, ignorando cualquier carta “Puerta atrancada” que haya en juego. Si tú o ese jugador está en Cuarentena, el cambio no tiene lugar.",
+      "id": 94
+    },
+    {
+      "number": 9,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Uno, dos…",
+      "description": "… con La Cosa ve diciendo adiós. Cámbiate de sitio con el tercer jugador que tengas a tu izquierda o a tu derecha (a tu elección=, ignorando cualquier carta “Puerta atrancada” que haya en juego. Si tú o ese jugador está en Cuarentena, el cambio no tiene lugar.",
+      "id": 95
+    },
+    {
+      "number": 4,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Tres, cuatro…",
+      "description": "… se cuela sin trabajo. Todas las cartas “Puerta atrancada” que haya en juego son descartadas.",
+      "id": 96
+    },
+    {
+      "number": 9,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Tres, cuatro…",
+      "description": "… se cuela sin trabajo. Todas las cartas “Puerta atrancada” que haya en juego son descartadas.",
+      "id": 97
+    },
+    {
+      "number": 5,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "¿Es aquí la fiesta?",
+      "description": "Descarta todas las cartas “Cuarentena” y “Puerta atrancada” que haya en juego. A continuación, empezando por ti, todos los jugadores cambian de sitio por parejas, en el sentido de las agujas del reloj. Si hay un número impar de jugadores, el último jugador no se mueve.",
+      "id": 98
+    },
+    {
+      "number": 9,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "¿Es aquí la fiesta?",
+      "description": "Descarta todas las cartas “Cuarentena” y “Puerta atrancada” que haya en juego. A continuación, empezando por ti, todos los jugadores cambian de sitio por parejas, en el sentido de las agujas del reloj. Si hay un número impar de jugadores, el último jugador no se mueve.",
+      "id": 99
+    },
+    {
+      "number": 7,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Que quede entre nosotros…",
+      "description": "Muéstrate todas las cartas de tu mano a un jugador adyacente de tu elección.",
+      "id": 100
+    },
+    {
+      "number": 9,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Que quede entre nosotros…",
+      "description": "Muéstrate todas las cartas de tu mano a un jugador adyacente de tu elección.",
+      "id": 101
+    },
+    {
+      "number": 4,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Vuelta y vuelta",
+      "description": "Todos los jugadores deben darle 1 carta al siguiente jugador que tengan al lado, simultáneamente y en el sentido de juego actual, ignorando cualquier carta “Puerta atrancada” y “Cuarentena” que haya en juego. No puedes usar ninguna carta para evitar este intercambio. La Cosa puede infectar a otro jugador de esta forma, pasándole una carta “¡Infectado!”. Tu turno termina.",
+      "id": 102
+    },
+    {
+      "number": 9,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Vuelta y vuelta",
+      "description": "Todos los jugadores deben darle 1 carta al siguiente jugador que tengan al lado, simultáneamente y en el sentido de juego actual, ignorando cualquier carta “Puerta atrancada” y “Cuarentena” que haya en juego. No puedes usar ninguna carta para evitar este intercambio. La Cosa puede infectar a otro jugador de esta forma, pasándole una carta “¡Infectado!”. Tu turno termina.",
+      "id": 103
+    },
+    {
+      "number": 7,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "¿No podemos ser amigos?",
+      "description": "Intercambia 1 carta con cualquier jugador de tu elección que no esté en Cuarentena.",
+      "id": 104
+    },
+    {
+      "number": 9,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "¿No podemos ser amigos?",
+      "description": "Intercambia 1 carta con cualquier jugador de tu elección que no esté en Cuarentena.",
+      "id": 105
+    },
+    {
+      "number": 4,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Cita a ciegas",
+      "description": "Intercambia una carta de tu mano con la primera carta del mazo, descartando cualquier carta de “¡Pánico!” robada. Tu turno termina.",
+      "id": 106
+    },
+    {
+      "number": 9,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "Cita a ciegas",
+      "description": "Intercambia una carta de tu mano con la primera carta del mazo, descartando cualquier carta de “¡Pánico!” robada. Tu turno termina.",
+      "id": 107
+    },
+    {
+      "number": 10,
+      "type": "PANIC",
+      "subtype": "PANIC",
+      "name": "¡Ups!",
+      "description": "Muéstrales todas las cartas de tu mano a todos los jugadores.",
+      "id": 108
+    }
+  ]
+}

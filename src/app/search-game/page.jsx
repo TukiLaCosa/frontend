@@ -1,79 +1,110 @@
 'use client'
 
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import React from 'react';
-import { useRouter } from 'next/navigation';
-import Game from '@/components/Game';
+import { React, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useWebSocket } from '@/services/WebSocketContext'
+import { useUserGame } from '@/services/UserGameContext'
+import axiosClient from '@/services/http-client/axios-client'
+import Game from '@/components/Game'
 
-export function handleInput(event, gameName, passwords, setPasswords) {
-    const newPasswords = { ...passwords };
-    newPasswords[gameName] = event.target.value;
-    console.log(gameName);
-    setPasswords(newPasswords);
+export const handleInput = (event, gameName, passwords, setPasswords) => {
+  const newPasswords = { ...passwords }
+  newPasswords[gameName] = event.target.value
+  setPasswords(newPasswords)
 }
 
-export function makeBodyRequest(id, password) {
-    return ({
-        "player_id": id,
-        "password": password !== '' ? password : null
-    });
+export const makeBodyRequest = (id, password) => {
+  return ({
+    player_id: id,
+    password: password !== '' ? password : null
+  })
 }
 
-export async function handleClick(gameName, passwords, router) {
-    let user = JSON.parse(localStorage.getItem('user'));
-    const password = passwords[gameName] || '';
-    try {
-        const data_patch = makeBodyRequest(user.id, password);
-        const response = await axios.patch(`http://localhost:8000/games/join/${gameName}`, data_patch);
-        if (response?.status == 200) {
-            localStorage.setItem('game', `{ "name": "${gameName}"}`);
-            router.push('/lobby');
-        }
+export const handleClick = async (gameName, passwords, router, user, setGameValues) => {
+  const password = passwords[gameName] || ''
+  try {
+    const dataPatch = makeBodyRequest(user.id, password)
+    const response = await axiosClient.patch(`games/join/${gameName}`, dataPatch)
+    if (response?.status === 200) {
+      const gameParams = {
+        name: gameName
+      }
+      setGameValues(gameParams)
+      router.push('/lobby')
     }
-    catch (error) {
-        console.error('Error:', error);
-    }
+  } catch (error) {
+    console.error('Error:', error)
+  }
 }
 
-function SearchGame() {
-    const [games, setGames] = useState([]);
-    const router = useRouter();
-    const [passwords, setPasswords] = useState({});
+export const fetchGames = async (setGames) => {
+  try {
+    const response = await axiosClient.get('games')
+    setGames(response.data)
+  } catch (error) {
+    console.error('Error getting games:', error)
+  }
+}
 
-    useEffect(() => {
-        async function fetchGames() {
-            try {
-                const response = await axios.get('http://localhost:8000/games');
-                setGames(response.data);
-            } catch (error) {
-                console.error('Error getting games:', error);
-            }
-        }
-        fetchGames();
-    }, []);
+function SearchGame () {
+  const [games, setGames] = useState([])
+  const [passwords, setPasswords] = useState({})
+  const router = useRouter()
+  const { event } = useWebSocket()
+  const { user, setGameValues } = useUserGame()
 
-    return (
-        <div className='has-text-centered'>
-            <h2 className='title is-1 is-uppercase is-italic has-text-centered section'>Partidas Disponibles</h2>
-            <div className='columns is-centered'>
-                <div className='column is-two-thirds'>
-                    {
-                        games.length === 0 ?
-                            (
-                                <p className='notification is-warning'>No hay partidas disponibles en este momento. Intentá más tarde o creá una.</p>
-                            ) :
-                            (
-                                <ul>
-                                    {games.map((game, index) => (
-                                        <Game key={index} game={game} handleClick={(gameName) => handleClick(gameName, passwords, router)} handleInput={(event, gameName) => handleInput(event, gameName, passwords, setPasswords)}></Game>
-                                    ))}
-                                </ul>
-                            )}
-                </div>
-            </div>
+  useEffect(() => {
+    fetchGames(setGames)
+  }, [])
+
+  useEffect(() => {
+    const eventType = JSON.parse(event)?.event
+    if (eventType === 'game_deleted' ||
+        eventType === 'game_created' ||
+        eventType === 'game_started' ||
+        eventType === 'game_updated' ||
+        eventType === 'player_joined') {
+      fetchGames(setGames)
+    }
+  }, [event])
+
+  return (
+    <div className='has-text-centered'>
+      <h2 className='title is-1 is-uppercase is-italic has-text-centered section'>Partidas Disponibles</h2>
+      <div className='columns is-centered'>
+        <div className='column is-two-thirds'>
+          {
+            games.length === 0
+              ? (
+                <p className='notification is-warning'>No hay partidas disponibles en este momento. Intentá más tarde o creá una.</p>
+                )
+              : (
+                <ul>
+                  {games.map((game, index) => (
+                    <Game key={index} game={game} handleClick={(gameName) => handleClick(gameName, passwords, router, user, setGameValues)} handleInput={(event, gameName) => handleInput(event, gameName, passwords, setPasswords)} />
+                  ))}
+                </ul>
+                )
+          }
         </div>
-    );
+      </div>
+      <div
+        className='searchG'
+        style={
+          {
+            backgroundImage: 'url("/backgrounds/gif2.gif")',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            backgroundSize: 'cover',
+            width: '100%',
+            height: '100%',
+            zIndex: '-1'
+          }
+        }
+      />
+    </div>
+  )
 }
 
-export default SearchGame;
+export default SearchGame
