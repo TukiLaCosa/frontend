@@ -1,9 +1,9 @@
-import axios from "axios"
+import axiosClient from "./http-client/axios-client"
 
 export const deleteGame = async (gameName) => {
   try {
-    const url = `http://localhost:8000/games/${gameName}`
-    const response = await axios.delete(url)
+    const url = `games/${gameName}`
+    const response = await axiosClient.delete(url)
     if (!response?.ok) {
       console.log(response)
     }

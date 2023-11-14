@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axiosClient from "../http-client/axios-client"
 
 export const makePostRequest = (activeId, playerId, victimId) => {
   return {
@@ -12,8 +12,8 @@ export const makePostRequest = (activeId, playerId, victimId) => {
 export const playWatchYourBack = async (activeId, playerId, gameName) => {
   const request = makePostRequest(activeId, playerId)
   try {
-    const response = await axios.post( // desde el front se le pega al endpoint y luego el back manda el evento de played_card y el de new_turn
-      `http://localhost:8000/games/${gameName}/play-action-card`,
+    const response = await axiosClient.post( // desde el front se le pega al endpoint y luego el back manda el evento de played_card y el de new_turn
+      `games/${gameName}/play-action-card`,
       request
     )
     if (!response?.ok) {

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axiosClient from "./http-client/axios-client"
 
 export const exchangeIntention = async (cardId, userId, gameName) => {
   const makePostRequest = (userId, cardId) => {
@@ -11,8 +11,8 @@ export const exchangeIntention = async (cardId, userId, gameName) => {
   }
   const request = makePostRequest(userId, cardId)
   try {
-    const response = await axios.patch(
-      `http://localhost:8000/games/${gameName}/intention-to-interchange-card`,
+    const response = await axiosClient.patch(
+      `games/${gameName}/intention-to-interchange-card`,
       request
     )
     if (!response.ok) {
@@ -34,8 +34,8 @@ export const exchangeResponse = async (selectedCardId, userId, gameName) => {
   }
   const request = makePostRequest(selectedCardId, userId)
   try {
-    const response = await axios.patch(
-      `http://localhost:8000/games/${gameName}/card-interchange-response`,
+    const response = await axiosClient.patch(
+      `games/${gameName}/card-interchange-response`,
       request
     )
     if (!response.ok) {

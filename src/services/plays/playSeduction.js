@@ -1,5 +1,5 @@
 import cards from '../cards.JSON'
-import axios from 'axios'
+import axiosClient from '../http-client/axios-client'
 
 export const playSeduction = async (activeId, idPlayer, gameName, players, hand, setContentModal) => {
   // Función para mostrar una alerta y esperar a que el jugador haga una selección.
@@ -51,7 +51,7 @@ export const playSeduction = async (activeId, idPlayer, gameName, players, hand,
       objective_player_id: selectedVictim,
       card_to_exchange: cardID
     }
-    await axios.post(`http://localhost:8000/games/${gameName}/play-action-card`, request)
+    await axiosClient.post(`games/${gameName}/play-action-card`, request)
   } catch (error) {
     console.error('play-action-card-error', error)
   }

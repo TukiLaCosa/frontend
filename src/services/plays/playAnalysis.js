@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axiosClient from "../http-client/axios-client"
 
 // función q obtiene los adyacentes
 export const getAdjacent = (players, id) => {
@@ -44,8 +44,8 @@ export const playAnalysis = async (activeId, user, game, players, setContentModa
         const request = makePostRequest(activeId, user?.id, idVictim)
 
         try {
-            const response = await axios.post(
-                `http://localhost:8000/games/${game?.name}/play-action-card`,
+            const response = await axiosClient.post(
+                `games/${game?.name}/play-action-card`,
                 request
             )
         } catch (error) {

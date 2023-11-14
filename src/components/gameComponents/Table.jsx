@@ -22,7 +22,7 @@ import { deleteGame } from '@/services/deleteGame'
 import { useUserGame } from '@/services/UserGameContext'
 import { useWebSocket } from '@/services/WebSocketContext'
 import { handlerTurn, turnStates } from '@/services/handlerTurn'
-import axios from 'axios'
+import axiosClient from '@/services/http-client/axios-client'
 import '@/styles/game_ended.scss'
 import Record from './Record'
 
@@ -65,8 +65,8 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
 
 export const fetchCards = async (playerId, setCardsPlayer) => {
   try {
-    const response = await axios.get(
-      `http://localhost:8000/players/${playerId}/hand`
+    const response = await axiosClient.get(
+      `players/${playerId}/hand`
     )
     const cards = await response.data.map((card) => {
       return {
@@ -83,8 +83,8 @@ export const fetchCards = async (playerId, setCardsPlayer) => {
 
 export const fetchResultsGame = async (gameName, setContentModal, setButtons, setHandleFunction) => {
   try {
-    const response = await axios.get(
-      `http://localhost:8000/games/${gameName}/result`
+    const response = await axiosClient.get(
+      `games/${gameName}/result`
     )
     const data = response.data
     const reason = data.reason // aca guardo la reason
@@ -129,7 +129,7 @@ export const makeBodyRequest = (playerId) => {
 export const endGame = async (gameName, playerId) => {
   try {
     const dataPatch = makeBodyRequest(playerId)
-    await axios.patch(`http://localhost:8000/games/${gameName}/the-thing-end-game`, dataPatch)
+    await axiosClient.patch(`games/${gameName}/the-thing-end-game`, dataPatch)
   } catch (error) {
     console.error('Error:', error)
   }
@@ -160,8 +160,8 @@ function Table () {
     const gameName = game?.name
     const fetchGameData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8000/games/${gameName}`
+        const response = await axiosClient.get(
+          `games/${gameName}`
         )
 
         const listPlayers = response.data.list_of_players

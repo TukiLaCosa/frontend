@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axiosClient from "../http-client/axios-client"
 
 // para armar el body
 export const makePostRequest = (activeId, playerId, victimId) => {
@@ -13,8 +13,8 @@ export const makePostRequest = (activeId, playerId, victimId) => {
 export const playWhisky = async (activeId, playerId, gameName) => {
   const request = makePostRequest(activeId, playerId)
   try {
-    const response = await axios.post(
-      `http://localhost:8000/games/${gameName}/play-action-card`,
+    const response = await axiosClient.post(
+      `games/${gameName}/play-action-card`,
       request
     )
     if (!response?.ok) {

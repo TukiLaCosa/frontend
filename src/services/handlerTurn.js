@@ -3,7 +3,7 @@ import { exchangeIntention, exchangeResponse } from './exchange'
 import { setPath } from './setPath'
 import { defendChangePlaces, setFPlayers } from './plays/playChangePlaces'
 import { defendBetterRun } from './plays/playBetterRun'
-import axios from 'axios'
+import axiosClient from './http-client/axios-client'
 import { defenseFlamethrower } from './defense/defenseFlamethrower'
 import { defenseSeduction } from './defense/defenseSeduction'
 
@@ -126,8 +126,8 @@ export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
 
 export const handlerWhisky = async (playerId, playerName, setContentModal, setButtons, setHandleFunction) => {
   try {
-    const response = await axios.get(
-      `http://localhost:8000/players/${playerId}/hand`
+    const response = await axiosClient.get(
+      `players/${playerId}/hand`
     )
     const data = response.data
     const cards = await data.map((card) => {
