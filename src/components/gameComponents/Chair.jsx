@@ -1,4 +1,4 @@
-function Chair ({ rotation, size, type, className, player, turn, user }) {
+function Chair ({ rotation, size, type, className, player, turn, user, theThing }) {
   let source
   if (type === 'Whole') {
     source = '/backgrounds/sofa.png'
@@ -7,7 +7,9 @@ function Chair ({ rotation, size, type, className, player, turn, user }) {
   }
 
   let buttonStyles = ''
-  if (!player?.id) {
+  if (player?.position === -1) {
+    buttonStyles = 'is-danger'
+  } else if (!player?.id) {
     buttonStyles = 'is-light is-outlined'
   } else if (turn === player?.id && user?.id === player?.id) {
     buttonStyles = 'is-player-turn'
@@ -17,6 +19,10 @@ function Chair ({ rotation, size, type, className, player, turn, user }) {
     buttonStyles = 'is-player'
   } else {
     buttonStyles = 'is-success is-light is-outlined'
+  }
+
+  if (player?.id === theThing && player?.id !== user?.id) {
+    buttonStyles = 'is-tuki'
   }
 
   return (

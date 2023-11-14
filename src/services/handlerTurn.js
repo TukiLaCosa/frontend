@@ -14,6 +14,16 @@ export const turnStates = {
   EXCHANGE: 'EXCHANGE'
 }
 
+export const setInfected = (userId, setUserValues, setGameValues, infectedEvent, setContentModal) => {
+  if (infectedEvent.infected_id === userId) {
+    setUserValues({ status: 'INFECTED' })
+    setContentModal('Has sido infectado por ' + infectedEvent.the_thing_name)
+    setGameValues({ theThing: infectedEvent.the_thing_id })
+  } else if (infectedEvent.the_thing_id === userId) {
+    setContentModal('Has infectado a ' + infectedEvent.infected_name)
+  }
+}
+
 export const getPlayerName = (players, playerId) => {
   console.log('Datos entrada:', players, playerId)
   const playerIndex = players?.findIndex((player) => player.id === playerId)
@@ -148,7 +158,7 @@ export const handlerWhisky = async (playerId, playerName, setContentModal, setBu
   }
 }
 
-export const handlerTurn = async (eventTurn, user, setUserValues, players, game, cards,
+export const handlerTurn = async (eventTurn, user, setUserValues, players, game, cards, setGameValues,
   {
     setTurnState, setTurn, setDrawBG, setDiscardBG,
     setPlayBG, setPlayers, setNewRecord,
@@ -172,7 +182,7 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
       const cardWithIntention = ['Seducción', 'Lanzallamas', '¡Cambio de lugar!', '¡Más vale que corras!']
       if (eventTurn?.player_id === userID &&
         (!cardWithIntention.includes(eventTurn?.card_name) ||
-          (eventTurn?.card_name !== 'Seducción'))
+          (eventTurn?.card_name === 'Seducción'))
       ) {
         setTurnState(turnStates.EXCHANGE)
         handleInterchange(setContentModal, userID, gameName, cards)
@@ -212,6 +222,10 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
           name: user.name,
           position: -1
         })
+      }
+      if (eventTurn?.killer_player_id === user.id) {
+        setTurnState(turnStates.EXCHANGE)
+        handleInterchange(setContentModal, userID, gameName, cards)
       }
       break
     case 'exchange_intention':
@@ -283,6 +297,9 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
       break
     case 'analysis_card_played':
       setContentModal(`Las cartas de ${eventTurn?.player_name} son: ${eventTurn?.cards}. A continuacion debes elegir una carta para intercambiar.`)
+      break
+    case 'new_infected':
+      setInfected(userID, setUserValues, setGameValues, eventTurn, setContentModal)
       break
     default:
       break
