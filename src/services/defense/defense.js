@@ -1,11 +1,11 @@
 import { fetchCards } from '@/components/gameComponents/Table'
-import axios from 'axios'
+import axiosClient from '../http-client/axios-client'
 
 export const initDefense = async (msg, defCards, playerId, gameName, setContentModal, setButtons, setHandleFunction, setCardsPlayer) => {
   return new Promise((resolve, reject) => {
     const selectionHandler = async (e) => {
       try {
-        await axios.post(`http://localhost:8000/games/${gameName}/play-defense-card`,
+        await axiosClient.post(`games/${gameName}/play-defense-card`,
           { player_id: playerId, card_id: e.target.dataset.cardId }
         )
         defCards.forEach(card => {
@@ -62,7 +62,7 @@ export const initDefense = async (msg, defCards, playerId, gameName, setContentM
 
 export const noDefense = async (gameName, playerId) => {
   try {
-    await axios.post(`http://localhost:8000/games/${gameName}/play-defense-card`,
+    await axiosClient.post(`games/${gameName}/play-defense-card`,
       { player_id: playerId }
     )
   } catch (error) {

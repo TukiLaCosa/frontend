@@ -4,7 +4,7 @@ import { React, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useWebSocket } from '@/services/WebSocketContext'
 import { useUserGame } from '@/services/UserGameContext'
-import axios from 'axios'
+import axiosClient from '@/services/http-client/axios-client'
 import Game from '@/components/Game'
 
 export const handleInput = (event, gameName, passwords, setPasswords) => {
@@ -24,7 +24,7 @@ export const handleClick = async (gameName, passwords, router, user, setGameValu
   const password = passwords[gameName] || ''
   try {
     const dataPatch = makeBodyRequest(user.id, password)
-    const response = await axios.patch(`http://localhost:8000/games/join/${gameName}`, dataPatch)
+    const response = await axiosClient.patch(`games/join/${gameName}`, dataPatch)
     if (response?.status === 200) {
       const gameParams = {
         name: gameName
@@ -39,7 +39,7 @@ export const handleClick = async (gameName, passwords, router, user, setGameValu
 
 export const fetchGames = async (setGames) => {
   try {
-    const response = await axios.get('http://localhost:8000/games')
+    const response = await axiosClient.get('games')
     setGames(response.data)
   } catch (error) {
     console.error('Error getting games:', error)

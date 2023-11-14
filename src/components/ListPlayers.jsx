@@ -4,12 +4,11 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { useWebSocket } from '@/services/WebSocketContext'
 import { useUserGame } from '@/services/UserGameContext'
-import axios from 'axios'
-
+import axiosClient from '@/services/http-client/axios-client'
 export const fetchDataGame = async (gameName, setDataGame, setHostId) => {
   try {
-    const url = `http://127.0.0.1:8000/games/${gameName}`
-    const response = await axios.get(url)
+    const url = `games/${gameName}`
+    const response = await axiosClient.get(url)
 
     if (response?.status !== 200) {
       throw new Error('Network response was not ok [ListPlayers]')

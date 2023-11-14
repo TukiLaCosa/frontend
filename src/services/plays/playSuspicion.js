@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosClient from "../http-client/axios-client"
 
 
 export const getAdjacent = (players, id) => {
@@ -38,8 +38,8 @@ export const playSuspicion = async (activeId, user,gameName,players, setContentM
         }
         const request = makePostRequest(activeId,user?.id, idVictim)
         try {
-            const response = await axios.post(
-            `http://localhost:8000/games/${gameName}/play-action-card`,
+            const response = await axiosClient.post(
+            `games/${gameName}/play-action-card`,
             request
             )
             if (response?.status !== 200) {

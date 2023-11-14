@@ -8,7 +8,7 @@ export function WebSocketProvider ({ children }) {
 
   const initializeWebSocket = (id) => {
     if (id) {
-      const newSocket = new WebSocket(`ws://127.0.0.1:8000/ws/${id}`)
+      const newSocket = new WebSocket(`${process.env.WS_BASE_URL}/${id}`)
       setSocket(newSocket)
 
       newSocket.onopen = () => {
@@ -22,7 +22,7 @@ export function WebSocketProvider ({ children }) {
 
       newSocket.onclose = () => {
         console.log('WebSocket connection closed')
-        setSocket(new WebSocket(`ws://127.0.0.1:8000/ws/${id}`))
+        setSocket(new WebSocket(`${process.env.WS_BASE_URL}/${id}`))
       }
 
       newSocket.onerror = (e) => {

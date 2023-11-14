@@ -3,10 +3,11 @@
 import { useEffect, useState } from 'react'
 import { useUserGame } from '@/services/UserGameContext'
 import { useWebSocket } from '@/services/WebSocketContext'
+import axiosClient from '@/services/http-client/axios-client'
 
 export const getData = async (game, setData) => {
   try {
-    const response = await fetch(`http://localhost:8000/games/${game?.name}`)
+    const response = await axiosClient.get(`games/${game?.name}`)
     if (!response.ok) {
       throw new Error('Network response was not ok [DataGame]')
     }

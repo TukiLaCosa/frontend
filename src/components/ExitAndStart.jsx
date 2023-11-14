@@ -2,13 +2,13 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useWebSocket } from '@/services/WebSocketContext'
-import axios from 'axios'
+import axiosClient from '@/services/http-client/axios-client'
 import { useUserGame } from '@/services/UserGameContext'
 
 export const fetchDataGame = async (user, gameName, setIsHost, setHostId, setIsReady) => {
   try {
-    const url = `http://127.0.0.1:8000/games/${gameName}`
-    const response = await axios.get(url)
+    const url = `games/${gameName}`
+    const response = await axiosClient.get(url)
 
     if (response?.status !== 200) {
       throw new Error('Network response was not ok [ListPlayers]')
@@ -23,8 +23,8 @@ export const fetchDataGame = async (user, gameName, setIsHost, setHostId, setIsR
 }
 
 export const initGame = async (gameName, hostID, router, setGameValues) => {
-  const url = `http://127.0.0.1:8000/games/${gameName}/init?host_player_id=${hostID}`
-  const response = await axios.patch(url)
+  const url = `games/${gameName}/init?host_player_id=${hostID}`
+  const response = await axiosClient.patch(url)
   if (!response?.ok) {
     console.log(response)
   }
@@ -39,8 +39,8 @@ export const initGame = async (gameName, hostID, router, setGameValues) => {
 export const cancelGame = async (user, gameName, router) => {
   try {
     const playerID = user?.id
-    const url = `http://localhost:8000/games/cancel/${gameName}?player_id=${playerID}`
-    const response = await axios.delete(url)
+    const url = `games/cancel/${gameName}?player_id=${playerID}`
+    const response = await axiosClient.delete(url)
     if (!response?.ok) {
       console.log(response)
     }
@@ -55,8 +55,8 @@ export const leaveGame = async (user, game, router) => {
   try {
     const playerID = user?.id
     const gameName = game?.name
-    const url = `http://localhost:8000/games/leave/${gameName}?player_id=${playerID}`
-    const response = await axios.patch(url)
+    const url = `games/leave/${gameName}?player_id=${playerID}`
+    const response = await axiosClient.patch(url)
     if (!response?.ok) {
       console.log(response)
     }

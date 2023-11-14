@@ -1,17 +1,17 @@
-import axios from 'axios'
+import axiosClient from '../http-client/axios-client'
 import { removeFromHand } from '../removeFromHand'
 
 export const updateCardsAfterDefense = async (playerId, setCardsPlayer) => {
-  const url = `http://localhost:8000/players/${playerId}/hand`
-  const response = await axios.get(url)
+  const url = `players/${playerId}/hand`
+  const response = await axiosClient.get(url)
   if (response.status === 200) {
     setCardsPlayer(response.data)
   }
 }
 
 export const setFPlayers = async (gameName, setPlayers, eventTurn, setNewRecord) => {
-  const url = `http://localhost:8000/games/${gameName}`
-  const response = await axios.get(url)
+  const url = `games/${gameName}`
+  const response = await axiosClient.get(url)
   if (response.status === 200) {
     console.log(response)
     const players = response.data.list_of_players
@@ -34,7 +34,7 @@ export const handleChangePlaces = (response) => {
 
 export const makeRequest = async (url, body) => {
   console.log('haciendo request: ', url, body)
-  const response = await axios.post(url, body)
+  const response = await axiosClient.post(url, body)
   return response
 }
 
@@ -53,7 +53,7 @@ export const getAdjacentIndex = (players, id) => {
 
 const tryChangePlace = async (body, gameName) => {
   console.log('Intentando cambio de lugar')
-  const url = `http://localhost:8000/games/${gameName}/play-action-card`
+  const url = `games/${gameName}/play-action-card`
   const response = await makeRequest(url, body)
   if (!response.ok) {
     console.log(response)
@@ -69,7 +69,7 @@ export const defendChangePlaces = async (
   setHandleFunction,
   setCardsPlayer) => {
   const cardsToDefend = eventChangePlaces?.defense_cards
-  const url = `http://localhost:8000/games/${gameName}/play-defense-card`
+  const url = `games/${gameName}/play-defense-card`
   const body = {
     player_id: playerId
   }

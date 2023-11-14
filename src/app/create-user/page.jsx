@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useWebSocket } from '@/services/WebSocketContext'
 import { useUserGame } from '@/services/UserGameContext'
 import Link from 'next/link'
-import axios from 'axios'
+import axiosClient from '@/services/http-client/axios-client'
 
 let userNameInput
 let searchGameButton
@@ -37,8 +37,8 @@ export const editUser = async (setExistUser, userID) => {
   userNameInput.removeAttribute('disabled')
   createGameButton.setAttribute('disabled', '')
   searchGameButton.setAttribute('disabled', '')
-  const url = `http://127.0.0.1:8000/players/${userID}`
-  const response = await axios.delete(url)
+  const url = `players/${userID}`
+  const response = await axiosClient.delete(url)
   if (!response?.ok) {
     console.log(response)
   }
@@ -49,7 +49,7 @@ export const createUser = async (isCorrect, setClassName, setExistUser, initiali
     const newUser = { name: userNameInput.value }
 
     try {
-      const response = await axios.post('http://localhost:8000/players/', newUser)
+      const response = await axiosClient.post('players/', newUser)
       if (response?.status === 201) {
         onUserExist(setExistUser)
         setClassName('is-success')

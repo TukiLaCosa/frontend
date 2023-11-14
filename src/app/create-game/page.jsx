@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect } from 'react'
-import axios from 'axios'
 import { useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import { useUserGame } from '@/services/UserGameContext'
+import axiosClient from '@/services/http-client/axios-client'
 
 export const verifyUser = (router, user) => {
   if (user == null) {
@@ -27,7 +27,7 @@ export const makeBodyRequest = (data, user) => {
 export const createGame = async (data, router, user, setGameValues) => {
   const newGame = makeBodyRequest(data, user)
   try {
-    const response = await axios.post('http://localhost:8000/games/', newGame)
+    const response = await axiosClient.post('games/', newGame)
     if (response?.status === 201) {
       const gameParams = {
         name: data.name
