@@ -14,6 +14,15 @@ export const turnStates = {
   EXCHANGE: 'EXCHANGE'
 }
 
+export const isNeighbor = (players, idPlayer, idNeighbor) => {
+  const playersAlive = players.filter((player) => player.position !== -1)
+  const myIndex = playersAlive.findIndex((player) => player.id === idPlayer)
+  const neiIndex = playersAlive.findIndex((player) => player.id === idNeighbor)
+  const left = (myIndex + 1) % playersAlive.length
+  const right = (myIndex - 1) % playersAlive.length
+  return left === neiIndex || right === neiIndex
+}
+
 export const setInfected = async (userId, setUserValues, setGameValues, infectedEvent, setContentModal) => {
   if (infectedEvent.infected_id === userId) {
     await setUserValues({ status: 'INFECTED' })
@@ -175,16 +184,15 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
       } else if (eventTurn?.next_player_id === userID) {
         await setTurnState(turnStates.DRAW)
       }
+      await setGameValues({ turn: eventTurn?.next_player_id })
       await setTurn(eventTurn?.next_player_id)
       break
     case 'played_card':
       // eslint-disable-next-line no-case-declarations
       const cardWithIntention = ['Seducción', 'Lanzallamas', '¡Cambio de lugar!', '¡Más vale que corras!']
       if (eventTurn?.player_id === userID &&
-        (!cardWithIntention.includes(eventTurn?.card_name) ||
-          (eventTurn?.card_name === 'Seducción'))
+        (!cardWithIntention.includes(eventTurn?.card_name))
       ) {
-        await setTurnState(turnStates.EXCHANGE)
         await handleInterchange(setContentModal, userID, gameName, cards)
       }
       await setPlayBG(setPath(eventTurn?.card_id))
@@ -232,6 +240,9 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
       await handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards, players)
       break
     case 'exchange_done':
+      if (eventTurn.player_name === user?.name) {
+        await setTurnState(turnStates.EXCHANGE)
+      }
       await handleExchangeDone(userID, setCardsPlayer)
       await setNewRecord(`${eventTurn.player_name} intercambio carta con el jugador: ${eventTurn.objective_player_name}`)
       break
@@ -246,6 +257,10 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
       break
     case 'change_done':
       await setFPlayers(gameName, setPlayers, eventTurn, setNewRecord)
+      if (eventTurn.player_id === user.id) {
+        await setTurnState(turnStates.EXCHANGE)
+        await handleInterchange(setContentModal, userID, gameName, cards)
+      }
       break
     case 'flamethrower':
       (async () => {
@@ -300,6 +315,13 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
       break
     case 'new_infected':
       await setInfected(userID, setUserValues, setGameValues, eventTurn, setContentModal)
+      if (userID === eventTurn.infected_id && isNeighbor(players, userID, eventTurn.the_thing_id)) {
+        await setTurn(userID)
+        await setTurnState(turnStates.DRAW)
+      } else if (userID === eventTurn.the_thing_id && isNeighbor(players, userID, eventTurn.infected_id)) {
+        await setTurn(eventTurn.the_thing_i)
+        await setTurnState(turnStates.NOTURN)
+      }
       break
     default:
       break

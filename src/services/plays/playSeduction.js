@@ -1,4 +1,3 @@
-import cards from '../cards.JSON'
 import axiosClient from '../http-client/axios-client'
 
 export const playSeduction = async (activeId, idPlayer, gameName, players, hand, setContentModal) => {
@@ -37,8 +36,7 @@ export const playSeduction = async (activeId, idPlayer, gameName, players, hand,
     const iAmTheThing = cardIds.includes(1)
     console.log('i am thething', iAmTheThing)
     const nonSelectableCards = cardIds.filter(cardId => {
-      const nameCard = cards.cards[cardId - 1].name
-      return nameCard === 'La Cosa' || (nameCard === '¡Infectado!' && iAmTheThing)
+      return cardId === 1 || (cardId >= 2 && cardId <= 21 && !iAmTheThing)
     })
 
     const selectableCards = cardIds.filter(cardId => !nonSelectableCards.includes(cardId))
@@ -51,7 +49,10 @@ export const playSeduction = async (activeId, idPlayer, gameName, players, hand,
       objective_player_id: selectedVictim,
       card_to_exchange: cardID
     }
-    await axiosClient.post(`games/${gameName}/play-action-card`, request)
+    const response = await axiosClient.post(`games/${gameName}/play-action-card`, request)
+    if (!response.ok) {
+      console.log(response)
+    }
   } catch (error) {
     console.error('play-action-card-error', error)
   }
