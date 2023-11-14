@@ -7,7 +7,9 @@ function Chair ({ rotation, size, type, className, player, turn, user, theThing 
   }
 
   let buttonStyles = ''
-  if (!player?.id) {
+  if (player?.position === -1) {
+    buttonStyles = 'is-danger'
+  } else if (!player?.id) {
     buttonStyles = 'is-light is-outlined'
   } else if (turn === player?.id && user?.id === player?.id) {
     buttonStyles = 'is-player-turn'
