@@ -1,4 +1,4 @@
-import axiosClient from "./http-client/axios-client"
+import axiosClient from './http-client/axios-client'
 
 export const exchangeIntention = async (cardId, userId, gameName) => {
   const makePostRequest = (userId, cardId) => {
