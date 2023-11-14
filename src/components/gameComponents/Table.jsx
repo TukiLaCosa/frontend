@@ -228,7 +228,7 @@ function Table () {
     } else if (eventType === 'cheat_used') {
       fetchCards(user?.id, setCardsPlayer)
     } else {
-      handlerTurn(eventJSON, user, setUserValues, players, game, cardsPlayer, turnSeters)
+      handlerTurn(eventJSON, user, setUserValues, players, game, cardsPlayer, setGameValues, turnSeters)
     }
   }, [wsEvent])
 
@@ -242,16 +242,25 @@ function Table () {
           }} // as onChange
         >
           {/* Verificación para renderizar el botón solo si el jugador es La Cosa */}
-          {user?.status === 'THETHING' && (
-            <button
-              className='button is-success is-danger is-large'
-              onClick={() => {
-                endGame(gameName, playerId)
-              }}
-            >
-              Soy La Cosa y gané
-            </button>
-          )}
+          {
+            user?.status === 'THETHING' && (
+              <button
+                className='button is-success is-danger is-large'
+                onClick={() => {
+                  endGame(gameName, playerId)
+                }}
+              >
+                Soy La Cosa y gané
+              </button>
+            )
+          }
+          {
+            user?.status === 'INFECTED' && (
+              <button className='button is-success is-danger is-large'>
+                Estoy infectado, tengo que ayuda a La Cosa para ganar
+              </button>
+            )
+          }
           <Modal
             contentModal={contentModal}
             setContentModal={setContentModal}
@@ -284,6 +293,7 @@ function Table () {
                   player={players[0]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
                 <Chair
                   rotation={0}
@@ -293,6 +303,7 @@ function Table () {
                   player={players[1]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
               </div>
               <div className='is-flex is-align-items-end is-justify-content-space-around item'>
@@ -304,6 +315,7 @@ function Table () {
                   player={players[2]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
                 <Chair
                   rotation={0}
@@ -313,6 +325,7 @@ function Table () {
                   player={players[3]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
               </div>
               <div className='is-flex is-align-items-end is-justify-content-start item' />
@@ -325,6 +338,7 @@ function Table () {
                   player={players[11]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
               </div>
               <div
@@ -356,6 +370,7 @@ function Table () {
                   player={players[4]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
               </div>
               <div className='is-flex is-align-items-center is-justify-content-end item'>
@@ -367,6 +382,7 @@ function Table () {
                   player={players[10]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
               </div>
               <div className='is-flex is-align-items-center is-justify-content-start item'>
@@ -378,6 +394,7 @@ function Table () {
                   player={players[5]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
               </div>
               <div className='is-flex is-align-items-start is-justify-content-end item' />
@@ -390,6 +407,7 @@ function Table () {
                   player={players[9]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
                 <Chair
                   rotation={180}
@@ -399,6 +417,7 @@ function Table () {
                   player={players[8]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
               </div>
               <div className='is-flex is-align-items-start is-justify-content-space-around item'>
@@ -410,6 +429,7 @@ function Table () {
                   player={players[7]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
                 <Chair
                   rotation={180}
@@ -419,6 +439,7 @@ function Table () {
                   player={players[6]}
                   turn={turn}
                   user={user}
+                  theThing={game?.theThing}
                 />
               </div>
               <div className='is-flex is-align-items-start is-justify-content-start item item' />

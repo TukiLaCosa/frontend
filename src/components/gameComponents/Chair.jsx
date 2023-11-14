@@ -1,4 +1,4 @@
-function Chair ({ rotation, size, type, className, player, turn, user }) {
+function Chair ({ rotation, size, type, className, player, turn, user, theThing }) {
   let source
   if (type === 'Whole') {
     source = '/backgrounds/sofa.png'
@@ -17,6 +17,10 @@ function Chair ({ rotation, size, type, className, player, turn, user }) {
     buttonStyles = 'is-player'
   } else {
     buttonStyles = 'is-success is-light is-outlined'
+  }
+
+  if (player?.id === theThing) {
+    buttonStyles = 'is-danger'
   }
 
   return (
