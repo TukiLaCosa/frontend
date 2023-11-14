@@ -19,8 +19,8 @@ function Chair ({ rotation, size, type, className, player, turn, user, theThing 
     buttonStyles = 'is-success is-light is-outlined'
   }
 
-  if (player?.id === theThing) {
-    buttonStyles = 'is-danger'
+  if (player?.id === theThing && player?.id !== user?.id) {
+    buttonStyles = 'is-tuki'
   }
 
   return (
