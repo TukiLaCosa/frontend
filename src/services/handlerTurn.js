@@ -14,13 +14,28 @@ export const turnStates = {
   EXCHANGE: 'EXCHANGE'
 }
 
-export const setInfected = (userId, setUserValues, setGameValues, infectedEvent, setContentModal) => {
+export const isNeighbor = (players, idPlayer, idNeighbor) => {
+  console.log('players: ', players)
+  console.log('idPlayer:', idPlayer)
+  console.log('idVecino: ', idNeighbor)
+  const playersAlive = players.filter((player) => player.position !== -1)
+  const myIndex = playersAlive.findIndex((player) => player.id === idPlayer)
+  const neiIndex = playersAlive.findIndex((player) => player.id === idNeighbor)
+  console.log('My index: ', myIndex, 'index vecino: ', neiIndex)
+  const left = (((myIndex + 1) % playersAlive.length) + playersAlive.length) % playersAlive.length
+  const right = (((myIndex - 1) % playersAlive.length) + playersAlive.length) % playersAlive.length
+  console.log('left: ', left, 'right: ', right)
+  console.log('resultado: ', left === neiIndex || right === neiIndex)
+  return left === neiIndex || right === neiIndex
+}
+
+export const setInfected = async (userId, setUserValues, setGameValues, infectedEvent, setContentModal) => {
   if (infectedEvent.infected_id === userId) {
-    setUserValues({ status: 'INFECTED' })
-    setContentModal('Has sido infectado por ' + infectedEvent.the_thing_name)
-    setGameValues({ theThing: infectedEvent.the_thing_id })
+    await setUserValues({ status: 'INFECTED' })
+    await setContentModal('Has sido infectado por ' + infectedEvent.the_thing_name)
+    await setGameValues({ theThing: infectedEvent.the_thing_id })
   } else if (infectedEvent.the_thing_id === userId) {
-    setContentModal('Has infectado a ' + infectedEvent.infected_name)
+    await setContentModal('Has infectado a ' + infectedEvent.infected_name)
   }
 }
 
@@ -32,15 +47,15 @@ export const getPlayerName = (players, playerId) => {
   return playerName
 }
 
-export const handleExchangeDone = (playerID, setCardsPlayer) => {
-  fetchCards(playerID, setCardsPlayer)
+export const handleExchangeDone = async (playerID, setCardsPlayer) => {
+  await fetchCards(playerID, setCardsPlayer)
 }
 
-export const handleExchangeIntention = (eventTurn, userId, setContentModal, gameName, cards, players) => {
+export const handleExchangeIntention = async (eventTurn, userId, setContentModal, gameName, cards, players) => {
   const playerName = getPlayerName(players, eventTurn.player_id)
-  setContentModal(`${playerName} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
-  const selectionHandler = (e) => {
-    exchangeResponse(e.target.dataset.cardId, userId, gameName)
+  await setContentModal(`${playerName} debe intercambiar carta con vos! A continuacion debes seleccionar una carta para intercambiar.`)
+  const selectionHandler = async (e) => {
+    await exchangeResponse(e.target.dataset.cardId, userId, gameName)
     const removeEventListeners = () => {
       cards.forEach(card => {
         const element = document.getElementById(`card_${card.id}`)
@@ -57,7 +72,7 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
   const infectedCards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
   const panicCards = [89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108]
   cards.forEach(card => {
-    if (theThing) {
+    if (theThing && !panicCards.includes(card.id)) {
       if (card.id !== 1) {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
@@ -73,9 +88,9 @@ export const handleExchangeIntention = (eventTurn, userId, setContentModal, game
   })
 }
 
-export const handleInterchange = (setContentModal, userId, gameName, cards) => {
+export const handleInterchange = async (setContentModal, userId, gameName, cards) => {
   console.log(cards)
-  setContentModal('Selecciona una carta para intercambiar')
+  await setContentModal('Selecciona una carta para intercambiar')
 
   const selectionHandler = (e) => {
     exchangeIntention(e.target.dataset.cardId, userId, gameName)
@@ -96,7 +111,7 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
   const infectedCards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
   const panicCards = [89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108]
   cards.forEach(card => {
-    if (theThing) {
+    if (theThing && !panicCards.includes(card.id)) {
       if (card.id !== 1) {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
@@ -112,13 +127,13 @@ export const handleInterchange = (setContentModal, userId, gameName, cards) => {
   })
 }
 
-export const handlePlayerEliminated = (eventTurn, setPlayers, players) => {
+export const handlePlayerEliminated = async (eventTurn, setPlayers, players) => {
   const newPlayers = [...players]
   const index = newPlayers.findIndex((player) => player.id === eventTurn?.eliminated_player_id)
   if (newPlayers[index] !== undefined) {
     newPlayers[index].position = -1
   }
-  setPlayers(newPlayers)
+  await setPlayers(newPlayers)
   const elem = document.getElementById(eventTurn?.eliminated_player_id)
   elem?.removeAttribute('is-success')
   elem?.setAttribute('class', 'button is-danger')
@@ -171,51 +186,50 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
       break
     case 'new_turn':
       if (eventTurn?.next_player_id !== userID) {
-        setTurnState(turnStates.NOTURN)
+        await setTurnState(turnStates.NOTURN)
       } else if (eventTurn?.next_player_id === userID) {
-        setTurnState(turnStates.DRAW)
+        await setTurnState(turnStates.DRAW)
       }
-      setTurn(eventTurn?.next_player_id)
+      await setGameValues({ turn: eventTurn?.next_player_id })
+      await setTurn(eventTurn?.next_player_id)
       break
     case 'played_card':
       // eslint-disable-next-line no-case-declarations
       const cardWithIntention = ['Seducción', 'Lanzallamas', '¡Cambio de lugar!', '¡Más vale que corras!']
       if (eventTurn?.player_id === userID &&
-        (!cardWithIntention.includes(eventTurn?.card_name) ||
-          (eventTurn?.card_name === 'Seducción'))
+        (!cardWithIntention.includes(eventTurn?.card_name))
       ) {
-        setTurnState(turnStates.EXCHANGE)
-        handleInterchange(setContentModal, userID, gameName, cards)
+        await handleInterchange(setContentModal, userID, gameName, cards)
       }
-      setPlayBG(setPath(eventTurn?.card_id))
-      setNewRecord(`${eventTurn?.player_name} jugó la carta ${eventTurn?.card_name}`)
+      await setPlayBG(setPath(eventTurn?.card_id))
+      await setNewRecord(`${eventTurn?.player_name} jugó la carta ${eventTurn?.card_name}`)
       break
     case 'player_draw_card':
       if (eventTurn?.player_id === userID) {
-        setTurnState(turnStates.PLAY)
+        await setTurnState(turnStates.PLAY)
       }
       if (eventTurn?.next_card === 'STAY_AWAY') {
-        setDrawBG('/cards/rev/revTakeAway.png')
+        await setDrawBG('/cards/rev/revTakeAway.png')
       } else if (eventTurn?.next_card === 'PANIC') {
-        setDrawBG('/cards/rev/revPanic.png')
+        await setDrawBG('/cards/rev/revPanic.png')
       }
       break
     case 'discard_card':
       if (eventTurn?.card_type === 'STAY_AWAY') {
-        setDiscardBG('/cards/rev/revTakeAway.png')
+        await setDiscardBG('/cards/rev/revTakeAway.png')
       } else if (eventTurn?.card_type === 'PANIC') {
-        setDiscardBG('/cards/rev/revPanic.png')
+        await setDiscardBG('/cards/rev/revPanic.png')
       }
       if (eventTurn.player_id === userID) {
-        setTurnState(turnStates.EXCHANGE)
-        handleInterchange(setContentModal, userID, gameName, cards)
+        await setTurnState(turnStates.EXCHANGE)
+        await handleInterchange(setContentModal, userID, gameName, cards)
       }
       break
     case 'player_eliminated':
-      handlePlayerEliminated(eventTurn, setPlayers, players)
+      await handlePlayerEliminated(eventTurn, setPlayers, players)
       // eslint-disable-next-line no-case-declarations
       const msg = '' + eventTurn?.eliminated_player_name + ' eliminado por ' + eventTurn?.killer_player_name
-      setNewRecord(msg)
+      await setNewRecord(msg)
       if (eventTurn?.eliminated_player_id === user.id) {
         setUserValues({
           id: user.id,
@@ -224,19 +238,22 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
         })
       }
       if (eventTurn?.killer_player_id === user.id) {
-        setTurnState(turnStates.EXCHANGE)
-        handleInterchange(setContentModal, userID, gameName, cards)
+        await setTurnState(turnStates.EXCHANGE)
+        await handleInterchange(setContentModal, userID, gameName, cards)
       }
       break
     case 'exchange_intention':
-      handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards, players)
+      await handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards, players)
       break
     case 'exchange_done':
-      handleExchangeDone(userID, setCardsPlayer)
-      setNewRecord(`${eventTurn.player_name} intercambio carta con el jugador: ${eventTurn.objective_player_name}`)
+      if (eventTurn.player_name === user?.name) {
+        await setTurnState(turnStates.EXCHANGE)
+      }
+      await handleExchangeDone(userID, setCardsPlayer)
+      await setNewRecord(`${eventTurn.player_name} intercambio carta con el jugador: ${eventTurn.objective_player_name}`)
       break
     case 'whiskey_card_played':
-      handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
+      await handlerWhisky(eventTurn?.player_id, eventTurn?.player_name, setContentModal, setButtons, setHandleFunction)
       break
     case 'change_places':
       await defendChangePlaces(userID, gameName, eventTurn, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
@@ -245,7 +262,11 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
       await defendBetterRun(userID, gameName, eventTurn, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
       break
     case 'change_done':
-      setFPlayers(gameName, setPlayers, eventTurn, setNewRecord)
+      await setFPlayers(gameName, setPlayers, eventTurn, setNewRecord)
+      if (eventTurn.player_id === user.id) {
+        await setTurnState(turnStates.EXCHANGE)
+        await handleInterchange(setContentModal, userID, gameName, cards)
+      }
       break
     case 'flamethrower':
       (async () => {
@@ -261,8 +282,8 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
         try {
           const defenseResult = await defenseSeduction(eventTurn?.defense_cards, userID, game?.name, setContentModal, setButtons, setHandleFunction, setCardsPlayer)
           if (!defenseResult) {
-            setTurnState(turnStates.EXCHANGE)
-            handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards, players)
+            await setTurnState(turnStates.EXCHANGE)
+            await handleExchangeIntention(eventTurn, userID, setContentModal, gameName, cards, players)
           }
         } catch (error) {
           console.error('Error al manejar el evento:', error)
@@ -281,25 +302,32 @@ export const handlerTurn = async (eventTurn, user, setUserValues, players, game,
         better_run: 'un intercambio de lugares',
         flamethrower: 'un lanzallamazo'
       }
-      setNewRecord('El jugador ' + objectiveName + ' se defendio de ' + defendedAction[eventTurn?.action_type] + ' lanzado por ' + playerName)
+      await setNewRecord('El jugador ' + objectiveName + ' se defendio de ' + defendedAction[eventTurn?.action_type] + ' lanzado por ' + playerName)
       if (eventTurn?.player_id === userID &&
         eventTurn?.action_type !== 'exchange_offer') {
-        setTurnState(turnStates.EXCHANGE)
-        handleInterchange(setContentModal, userID, gameName, cards)
+        await setTurnState(turnStates.EXCHANGE)
+        await handleInterchange(setContentModal, userID, gameName, cards)
       } else if (eventTurn?.objective_player_id === userID &&
         eventTurn?.card_id >= 73 &&
         eventTurn?.card_id <= 76) {
-        setContentModal('La carta que quisieron intercambiarte era ' + eventTurn?.card_to_exchange)
+        await setContentModal('La carta que quisieron intercambiarte era ' + eventTurn?.card_to_exchange)
       }
       break
     case 'suspicious_card_played':
-      setContentModal(`La carta revelada del jugador es:${eventTurn.card_name}. A continuacion debes elegir una carta para intercambiar.`)
+      await setContentModal(`La carta revelada del jugador es:${eventTurn.card_name}. A continuacion debes elegir una carta para intercambiar.`)
       break
     case 'analysis_card_played':
-      setContentModal(`Las cartas de ${eventTurn?.player_name} son: ${eventTurn?.cards}. A continuacion debes elegir una carta para intercambiar.`)
+      await setContentModal(`Las cartas de ${eventTurn?.player_name} son: ${eventTurn?.cards}. A continuacion debes elegir una carta para intercambiar.`)
       break
     case 'new_infected':
-      setInfected(userID, setUserValues, setGameValues, eventTurn, setContentModal)
+      await setInfected(userID, setUserValues, setGameValues, eventTurn, setContentModal)
+      if (userID === eventTurn.infected_id && isNeighbor(players, userID, eventTurn.the_thing_id)) {
+        await setTurn(userID)
+        await setTurnState(turnStates.DRAW)
+      } else if (userID === eventTurn.the_thing_id && isNeighbor(players, userID, eventTurn.infected_id)) {
+        await setTurn(eventTurn.the_thing_i)
+        await setTurnState(turnStates.NOTURN)
+      }
       break
     default:
       break

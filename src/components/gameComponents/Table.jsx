@@ -31,7 +31,11 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
 
   if (over.id === 'discard-deck' && turnState === turnStates.PLAY) {
     // Discarding
-    if (active.id === 1) {
+    const cardsInfected = cardsPlayer.filter(objeto => objeto.id >= 2 && objeto.id <= 21)
+    if (active.id === 1 ||
+      (active.id >= 2 && active.id <= 21 &&
+      cardsInfected.length === 1 &&
+      user?.status === 'INFECTED')) {
       setContentModal('No puedes descartar esta carta')
     } else {
       const handleFunction = (value) => {
@@ -157,6 +161,39 @@ function Table () {
   const gameName = game?.name
 
   useEffect(() => {
+    const updateGame = async () => {
+      const response = axiosClient.get(
+        `games/${gameName}`
+      ).then(res => {
+        console.log('esto me llego: ', res)
+        console.log('game: ', game)
+        console.log('turn', turn)
+        console.log('turn of game', game?.turn)
+        if (game?.turn) {
+          console.log('cambie el turno porque debia')
+          setTurn(game?.turn)
+        }
+        res.data?.list_of_players.forEach((player) => {
+          const { id, name, position } = player
+          setUserValues((user) => {
+            return {
+              id,
+              name,
+              position,
+              status: user.status,
+              quarentine: user.quarentine
+            }
+          })
+        })
+      })
+      if (!response.ok) {
+        console.log(response)
+      }
+    }
+    updateGame()
+  }, [game])
+
+  useEffect(() => {
     const gameName = game?.name
     const fetchGameData = async () => {
       try {
@@ -175,7 +212,10 @@ function Table () {
         )
 
         setPlayers(sortedPlayers)
-        setTurn(sortedPlayers[0].id)
+        if (!game?.turn) {
+          console.log('cambie el turno porque recien empieza esto')
+          setTurn(sortedPlayers[0].id)
+        }
 
         if (user?.id === sortedPlayers[0].id) {
           setTurnState(turnStates.DRAW)
