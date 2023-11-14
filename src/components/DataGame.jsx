@@ -8,11 +8,7 @@ import axiosClient from '@/services/http-client/axios-client'
 export const getData = async (game, setData) => {
   try {
     const response = await axiosClient.get(`games/${game?.name}`)
-    if (!response.ok) {
-      throw new Error('Network response was not ok [DataGame]')
-    }
-    const data = await response.json()
-    setData(data)
+    setData(response.data)
   } catch (error) {
     console.error('Error getting players:', error)
   }
