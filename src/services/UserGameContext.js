@@ -1,4 +1,3 @@
-import next from 'next'
 import React, { createContext, useContext, useState } from 'react'
 
 const UserGameContext = createContext()

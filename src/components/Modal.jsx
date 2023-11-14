@@ -32,7 +32,7 @@ const Modal = ({ contentModal, setContentModal, buttons, setButtons, handleButto
           <header className='modal-card-head'>
             <p className='modal-card-title'>Opciones</p>
             {
-              buttons && buttons.length > 0 &&
+              (!buttons || buttons.length === 0) &&
                 <button className='delete' aria-label='close' onClick={() => { setContentModal('') }} />
             }
           </header>

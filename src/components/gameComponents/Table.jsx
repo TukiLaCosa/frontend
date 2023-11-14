@@ -161,6 +161,39 @@ function Table () {
   const gameName = game?.name
 
   useEffect(() => {
+    const updateGame = async () => {
+      const response = axiosClient.get(
+        `games/${gameName}`
+      ).then(res => {
+        console.log('esto me llego: ', res)
+        console.log('game: ', game)
+        console.log('turn', turn)
+        console.log('turn of game', game?.turn)
+        if (game?.turn) {
+          console.log('cambie el turno porque debia')
+          setTurn(game?.turn)
+        }
+        res.data?.list_of_players.forEach((player) => {
+          const { id, name, position } = player
+          setUserValues((user) => {
+            return {
+              id,
+              name,
+              position,
+              status: user.status,
+              quarentine: user.quarentine
+            }
+          })
+        })
+      })
+      if (!response.ok) {
+        console.log(response)
+      }
+    }
+    updateGame()
+  }, [game])
+
+  useEffect(() => {
     const gameName = game?.name
     const fetchGameData = async () => {
       try {
@@ -179,7 +212,10 @@ function Table () {
         )
 
         setPlayers(sortedPlayers)
-        setTurn(sortedPlayers[0].id)
+        if (!game?.turn) {
+          console.log('cambie el turno porque recien empieza esto')
+          setTurn(sortedPlayers[0].id)
+        }
 
         if (user?.id === sortedPlayers[0].id) {
           setTurnState(turnStates.DRAW)
