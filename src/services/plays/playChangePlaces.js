@@ -155,7 +155,7 @@ export const playChangePlaces = (
   console.log(leftPlayer)
   console.log(rightPlayer)
   leftPlayer.addEventListener('mousedown', handleMouseDown)
-  leftPlayer.addEventListener('mouseup', handleMouseUp(leftPlayer))
+  leftPlayer.addEventListener('mouseup', () => handleMouseUp(leftPlayer))
   rightPlayer.addEventListener('mousedown', handleMouseDown)
   rightPlayer.addEventListener('mouseup', () => handleMouseUp(rightPlayer))
 }

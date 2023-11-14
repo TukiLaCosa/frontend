@@ -15,11 +15,17 @@ export const turnStates = {
 }
 
 export const isNeighbor = (players, idPlayer, idNeighbor) => {
+  console.log('players: ', players)
+  console.log('idPlayer:', idPlayer)
+  console.log('idVecino: ', idNeighbor)
   const playersAlive = players.filter((player) => player.position !== -1)
   const myIndex = playersAlive.findIndex((player) => player.id === idPlayer)
   const neiIndex = playersAlive.findIndex((player) => player.id === idNeighbor)
+  console.log('My index: ', myIndex, 'index vecino: ', neiIndex)
   const left = (myIndex + 1) % playersAlive.length
   const right = (myIndex - 1) % playersAlive.length
+  console.log('left: ', left, 'right: ', right)
+  console.log('resultado: ', left === neiIndex || right === neiIndex)
   return left === neiIndex || right === neiIndex
 }
 
@@ -66,7 +72,7 @@ export const handleExchangeIntention = async (eventTurn, userId, setContentModal
   const infectedCards = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
   const panicCards = [89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108]
   cards.forEach(card => {
-    if (theThing) {
+    if (theThing && !panicCards.includes(card.id)) {
       if (card.id !== 1) {
         const element = document.getElementById(`card_${card.id}`)
         element.dataset.cardId = card.id
