@@ -22,8 +22,8 @@ export const isNeighbor = (players, idPlayer, idNeighbor) => {
   const myIndex = playersAlive.findIndex((player) => player.id === idPlayer)
   const neiIndex = playersAlive.findIndex((player) => player.id === idNeighbor)
   console.log('My index: ', myIndex, 'index vecino: ', neiIndex)
-  const left = (myIndex + 1) % playersAlive.length
-  const right = (myIndex - 1) % playersAlive.length
+  const left = (((myIndex + 1) % playersAlive.length) + playersAlive.length) % playersAlive.length
+  const right = (((myIndex - 1) % playersAlive.length) + playersAlive.length) % playersAlive.length
   console.log('left: ', left, 'right: ', right)
   console.log('resultado: ', left === neiIndex || right === neiIndex)
   return left === neiIndex || right === neiIndex
