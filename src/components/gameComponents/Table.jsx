@@ -31,7 +31,9 @@ export const handleDragEnd = (event, turnState, user, game, setCardsPlayer, play
 
   if (over.id === 'discard-deck' && turnState === turnStates.PLAY) {
     // Discarding
-    if (active.id === 1) {
+    const cardsInfected = cardsPlayer.filter(objeto => objeto.id >= 2 && objeto.id <= 21)
+    if (active.id === 1 || (active.id >= 2 && active.id <= 21 &&
+      user?.status === 'INFECTED')) {
       setContentModal('No puedes descartar esta carta')
     } else {
       const handleFunction = (value) => {
